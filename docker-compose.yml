@@ -2,7 +2,10 @@ version: "3.9"
 
 services:
     db_server:
-        image: postgres
+        build:
+            context: .
+            dockerfile: ./Dockerfiles/Dockerfile_postgres
+        image: postgres_server:latest
         restart: always
         environment:
             POSTGRES_PASSWORD: password
