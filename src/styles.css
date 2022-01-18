@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+aside {
+    min-width: 200px;
+    flex: 1;
+    background-color: red;
+}
+main {
+    flex: 5;
+    background-color: green;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
