@@ -7,7 +7,7 @@ class Database
 
     function __construct()
     {
-        $this->connexion = new PDO('pgsql:host=db_server;port=5432;dbname=school', 'postgres', 'password');
+        $this->connexion = new PDO('pgsql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_NAME'), 'postgres', 'password');
     }
 
     function getStudent(): array

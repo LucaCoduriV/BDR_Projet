@@ -1,5 +1,9 @@
 <?php
 require_once('db.php');
+require_once('DotEnv.php');
+
+
+(new DotEnv(__DIR__ . '/.env'))->load();
 
 $test = new Database();
 print_R($test->getStudent());
