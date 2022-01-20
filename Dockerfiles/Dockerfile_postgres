@@ -1,2 +1,3 @@
 FROM postgres:latest
-COPY ./scripts/ /docker-entrypoint-initdb.d/
+COPY ./scripts/A_Script_DB.sql /docker-entrypoint-initdb.d/A_Script_DB.sql
+COPY ./scripts/B_data.sql /docker-entrypoint-initdb.d/B_data.sql
