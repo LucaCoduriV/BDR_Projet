@@ -13,6 +13,18 @@ class Database
         $this->connexion = new PDO('pgsql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_NAME'), getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
     }
 
+    function getEtudiant() 
+    {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM etudiant
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+
+        return $sth->fetchAll();
+    }
+
     function getHoraire(): array
     {
         $sql = <<<'SQL'
