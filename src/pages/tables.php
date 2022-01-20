@@ -15,7 +15,7 @@ include_once("../db.php");
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Dashboard</title>
+    <title>SMS</title>
 
     <!-- Custom fonts for this template-->
     <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -86,7 +86,7 @@ include_once("../db.php");
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Ajouter un TRUC</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Ajouter un étudiant</h6>
                     </div>
                     <div class="card-body">
                         <form method="post" action="/index.php" id="send">
@@ -112,43 +112,40 @@ include_once("../db.php");
                    <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Liste des étudiants</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Position</th>
-                                        <th>Office</th>
-                                        <th>Age</th>
-                                        <th>Start date</th>
-                                        <th>Salary</th>
+                                        <th>ID</th>
+                                        <th>Nom</th>
+                                        <th>Prénom</th>
+                                        <th>Date Naissance</th>
+                                        <th>Statut</th>
+                                        <th>Souhaite macaron</th>
+                                        <th>Distance domicile [Km]</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    
-                                    var_dump($db->getStudent());
+                                    foreach($db->getEtudiant() as $etudiant) {
+                                        $date = date_create($etudiant['datenaissance']);
+                                        ?>
+                                        <tr>
+                                            <td><?= $etudiant['id']; ?></td>
+                                            <td><?= $etudiant['nom']; ?></td>
+                                            <td><?= $etudiant['prénom']; ?></td>
+                                            <td><?= date_format($date, 'd.m.Y'); ?></td>
+                                            <td><?= $etudiant['statut']; ?></td>
+                                            <td><?= $etudiant['souhaitemacaron'] ? 'oui' : 'non'; ?></td>
+                                            <td><?= $etudiant['distancedomicilekm']; ?></td>
+                                        </tr>
+                                        <?php
 
+                                    }
                                     ?>
-                                    <tr>
-                                        <td>Tiger Nixon</td>
-                                        <td>System Architect</td>
-                                        <td>Edinburgh</td>
-                                        <td>61</td>
-                                        <td>2011/04/25</td>
-                                        <td>$320,800</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Garrett Winters</td>
-                                        <td>Accountant</td>
-                                        <td>Tokyo</td>
-                                        <td>63</td>
-                                        <td>2011/07/25</td>
-                                        <td>$170,750</td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -156,16 +153,6 @@ include_once("../db.php");
                 </div>
             </div>
             <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->
