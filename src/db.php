@@ -1,5 +1,8 @@
 <?php
-require_once('./models/Student.php');
+//require_once('../models/Student.php');
+
+require_once('DotEnv.php');
+(new DotEnv(__DIR__ . '/.env'))->load();
 
 class Database
 {
@@ -14,6 +17,10 @@ class Database
     {
         $sql = 'SELECT * FROM etudiant';
         $request = $this->connexion->query($sql);
-        return $request->fetchAll(PDO::FETCH_CLASS, 'Student');;
+        return $request->fetchAll(PDO::FETCH_CLASS);
     }
 }
+
+$db = new Database();
+
+?>
