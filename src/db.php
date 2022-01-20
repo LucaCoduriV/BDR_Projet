@@ -18,9 +18,12 @@ class Database
         $sql = <<<'SQL'
         SELECT *
         FROM etudiant
+        INNER JOIN personne on etudiant.idpersonne = personne.id
+        INNER JOIN prénom on personne.id = prénom.idpersonne;
         SQL;
 
         $sth = $this->connexion->prepare($sql);
+        $sth->execute();
 
         return $sth->fetchAll();
     }
