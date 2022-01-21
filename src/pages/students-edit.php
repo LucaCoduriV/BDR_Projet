@@ -2,6 +2,27 @@
 
 include_once("../db.php");
 
+
+if(!isset($_GET['idEtudiant'])) {
+    header("Location: students-view.php");
+}
+
+$etudiant = $db->getEtudiant($_GET['idEtudiant']);
+
+if(isset($_POST['modifierEtudiant'])) {
+    $res = $db->modifierEtudiant(
+        $_GET['idEtudiant'],
+        $_POST['nom'],
+        $_POST['prenom'],
+        $_POST['dateNaissance'],
+        $_POST['statut'],
+        $_POST['souhaiteMacaron'] ? 'true' : 'false',
+        $_POST['distanceDomicile'],
+    );
+
+    header("Location: students-view.php");
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -86,69 +107,44 @@ include_once("../db.php");
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Ajouter un étudiant</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Modifier un étudiant</h6>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="/index.php" id="send">
+                        <form method="post" action="">
                             <div id="dataTable_filter" class="dataTables_filter">
-                                <label>Champ 1
-                                    <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                <label>Nom
+                                    <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['nom']; ?>">
                                 </label>
-                                <label>Champ 2
-                                    <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                <label>Prénom
+                                    <input name="prenom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['prénom'] ?>">
                                 </label>
-                                <label>Champ 3
-                                    <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                <label>Date naissance
+                                    <input name="dateNaissance" type="date" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['datenaissance'] ?>">
                                 </label>
-                                <br>
-                                <a class="btn btn-primary btn-icon-split" onclick="document.getElementById('send').submit()">
-                                    <span class="text">Ajouter</span>
+                                <label>Statut
+                                    <select name="statut" class="form-control" name="pets" id="pet-select">
+                                    <?php
+                                    
+                                    foreach($db->getStatut() as $statut) {
+                                        ?>
+                                            <option value="<?= $statut['libellé'] ?>" <?= $etudiant[0]['statut'] == $statut['libellé'] ? 'selected' : '' ?>><?= $statut['libellé']?></option>
+                                            <?php
+                                    }
+                                    ?>
+                                    </select>
+                                </label>
+                                <label>Souhaite macaron
+                                    <input name="souhaiteMacaron" type="checkbox" class="" placeholder="" aria-controls="dataTable" checked="<? $etudiant[0]['souhaitemacaron'] ? 'checked' : '' ?>">
+                                </label>
+                                <label>Distance domicile
+                                    <input name="distanceDomicile" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['distancedomicilekm'] ?>">
+                                </label>
+                                <label>
+                                    <input type="submit" name="modifierEtudiant" class="form-control btn btn-primary" value="Modifier"/>
+                                </label>
                                 </a>
                             </div>
                         </form>
-                    </div>
-                </div>
-
-                   <!-- DataTales Example -->
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Liste des étudiants</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nom</th>
-                                        <th>Prénom</th>
-                                        <th>Date Naissance</th>
-                                        <th>Statut</th>
-                                        <th>Souhaite macaron</th>
-                                        <th>Distance domicile [Km]</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    foreach($db->getEtudiant() as $etudiant) {
-                                        $date = date_create($etudiant['datenaissance']);
-                                        ?>
-                                        <tr>
-                                            <td><?= $etudiant['id']; ?></td>
-                                            <td><?= $etudiant['nom']; ?></td>
-                                            <td><?= $etudiant['prénom']; ?></td>
-                                            <td><?= date_format($date, 'd.m.Y'); ?></td>
-                                            <td><?= $etudiant['statut']; ?></td>
-                                            <td><?= $etudiant['souhaitemacaron'] ? 'oui' : 'non'; ?></td>
-                                            <td><?= $etudiant['distancedomicilekm']; ?></td>
-                                        </tr>
-                                        <?php
-
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
             </div>

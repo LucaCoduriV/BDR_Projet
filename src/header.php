@@ -26,14 +26,14 @@
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="./pages/tables.php">
+        <a class="nav-link" href="">
             <i class="fas fa-fw fa-cog"></i>
             <span>Semestre</span></a>
     </li>
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="/pages/students-view.php">
             <i class="fas fa-fw fa-cog"></i>
             <span>Etudiants</span></a>
     </li>
