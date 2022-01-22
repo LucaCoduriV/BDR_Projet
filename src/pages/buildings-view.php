@@ -2,27 +2,18 @@
 
 include_once("../db.php");
 
+$res = false;
 
-if(!isset($_GET['idEtudiant'])) {
-    header("Location: students-view.php");
+if(isset($_POST['newBatiment'])) {
+
+    $error = $db->ajouterBatiment(
+        $_POST['nom'],
+        $_POST['nbrplaceparking']
+    );
 }
 
-$etudiant = $db->getEtudiant($_GET['idEtudiant']);
-
-if(isset($_POST['modifierEtudiant'])) {
-    $error = $db->modifierEtudiant(
-        $_GET['idEtudiant'],
-        $_POST['nom'],
-        $_POST['prenom'],
-        $_POST['dateNaissance'],
-        $_POST['statut'],
-        $_POST['souhaiteMacaron'] ? 'true' : 'false',
-        $_POST['distanceDomicile'],
-    );
-
-    if(!$error || $error[0] == "00000") {
-        header("Location: students-view.php");
-    }
+if(isset($_POST['supprimerBatiment'])) {
+    $error = $db->supprimerBatiment($_POST['nom']);
 }
 
 ?>
@@ -65,7 +56,6 @@ if(isset($_POST['modifierEtudiant'])) {
 
             <!-- Main Content -->
             <div id="content">
-
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -121,44 +111,65 @@ if(isset($_POST['modifierEtudiant'])) {
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Modifier un étudiant</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Ajouter un bâtiment</h6>
                     </div>
                     <div class="card-body">
                         <form method="post" action="">
                             <div id="dataTable_filter" class="dataTables_filter">
                                 <label>Nom
-                                    <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['nom']; ?>">
+                                    <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
-                                <label>Prénom
-                                    <input name="prenom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['prénom'] ?>">
-                                </label>
-                                <label>Date naissance
-                                    <input name="dateNaissance" type="date" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['datenaissance'] ?>">
-                                </label>
-                                <label>Statut
-                                    <select name="statut" class="form-control" name="pets" id="pet-select">
-                                    <?php
-                                    
-                                    foreach($db->getStatut() as $statut) {
-                                        ?>
-                                            <option value="<?= $statut['libellé'] ?>" <?= $etudiant[0]['statut'] == $statut['libellé'] ? 'selected' : '' ?>><?= $statut['libellé']?></option>
-                                            <?php
-                                    }
-                                    ?>
-                                    </select>
-                                </label>
-                                <label>Souhaite macaron
-                                    <input name="souhaiteMacaron" type="checkbox" class="" placeholder="" aria-controls="dataTable" checked="<? $etudiant[0]['souhaitemacaron'] ? 'checked' : '' ?>">
-                                </label>
-                                <label>Distance domicile
-                                    <input name="distanceDomicile" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['distancedomicilekm'] ?>">
+                                <label>Nbr places de parking
+                                    <input name="nbrplaceparking" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
                                 <label>
-                                    <input type="submit" name="modifierEtudiant" class="form-control btn btn-primary" value="Modifier"/>
+                                    <input type="submit" name="newBatiment" class="form-control btn btn-primary" />
                                 </label>
                                 </a>
                             </div>
                         </form>
+                    </div>
+                </div>
+
+                   <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Liste des bâtiments</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th>Nbr places de parking</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    foreach($db->getBatiments() as $batiment) {
+                                        ?>
+                                        <tr>
+                                            <td><?= $batiment['nom'] ?></td>
+                                            <td><?= $batiment['nbrplacesparking'] ?></td>
+                                            <td>
+                                                <form action="" method="post">
+                                                    <input type="hidden" name="nom" value="<?= $batiment['nom'] ?>">
+                                                    <input type="submit" name="supprimerBatiment" class="form-control btn btn-danger" value="Supprimer"/>
+                                                </form>
+                                                <form action="buildings-edit.php" method="GET">
+                                                    <input type="hidden" name="nom" value="<?= $batiment['nom'] ?>">
+                                                    <input type="submit" class="form-control btn btn-warning" value="Modifier"/>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

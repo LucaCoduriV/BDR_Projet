@@ -3,25 +3,21 @@
 include_once("../db.php");
 
 
-if(!isset($_GET['idEtudiant'])) {
-    header("Location: students-view.php");
+if(!(isset($_GET['nom']))) {
+    header("Location: buildings-view.php");
 }
 
-$etudiant = $db->getEtudiant($_GET['idEtudiant']);
+$batiment = $db->getBatiment($_GET['nom']);
 
-if(isset($_POST['modifierEtudiant'])) {
-    $error = $db->modifierEtudiant(
-        $_GET['idEtudiant'],
+if(isset($_POST['modifierBatiment'])) {
+    $error = $db->modifierBatiment(
+        $_POST['oldnom'],
         $_POST['nom'],
-        $_POST['prenom'],
-        $_POST['dateNaissance'],
-        $_POST['statut'],
-        $_POST['souhaiteMacaron'] ? 'true' : 'false',
-        $_POST['distanceDomicile'],
+        $_POST['nbrplaceparking']
     );
 
     if(!$error || $error[0] == "00000") {
-        header("Location: students-view.php");
+        header("Location: buildings-view.php");
     }
 }
 
@@ -121,40 +117,20 @@ if(isset($_POST['modifierEtudiant'])) {
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Modifier un étudiant</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Modifier un bâtiment</h6>
                     </div>
                     <div class="card-body">
                         <form method="post" action="">
                             <div id="dataTable_filter" class="dataTables_filter">
                                 <label>Nom
-                                    <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['nom']; ?>">
+                                    <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $batiment[0]['nom']; ?>">
                                 </label>
-                                <label>Prénom
-                                    <input name="prenom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['prénom'] ?>">
-                                </label>
-                                <label>Date naissance
-                                    <input name="dateNaissance" type="date" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['datenaissance'] ?>">
-                                </label>
-                                <label>Statut
-                                    <select name="statut" class="form-control" name="pets" id="pet-select">
-                                    <?php
-                                    
-                                    foreach($db->getStatut() as $statut) {
-                                        ?>
-                                            <option value="<?= $statut['libellé'] ?>" <?= $etudiant[0]['statut'] == $statut['libellé'] ? 'selected' : '' ?>><?= $statut['libellé']?></option>
-                                            <?php
-                                    }
-                                    ?>
-                                    </select>
-                                </label>
-                                <label>Souhaite macaron
-                                    <input name="souhaiteMacaron" type="checkbox" class="" placeholder="" aria-controls="dataTable" checked="<? $etudiant[0]['souhaitemacaron'] ? 'checked' : '' ?>">
-                                </label>
-                                <label>Distance domicile
-                                    <input name="distanceDomicile" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['distancedomicilekm'] ?>">
+                                <label>Nbr places de parking
+                                    <input name="nbrplaceparking" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $batiment[0]['nbrplacesparking']; ?>">
                                 </label>
                                 <label>
-                                    <input type="submit" name="modifierEtudiant" class="form-control btn btn-primary" value="Modifier"/>
+                                    <input name="oldnom" type="hidden" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $batiment[0]['nom']; ?>">
+                                    <input type="submit" name="modifierBatiment" class="form-control btn btn-primary" value="Modifier"/>
                                 </label>
                                 </a>
                             </div>
