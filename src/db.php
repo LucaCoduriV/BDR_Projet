@@ -7,11 +7,11 @@ require_once('DotEnv.php');
 class Database
 {
     private PDO $connexion;
-    private $dbconn;
 
     function __construct()
     {
         $this->connexion = new PDO('pgsql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_NAME'), getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
+        $this->connexion->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT );
     }
 
     function getStatut()
@@ -34,6 +34,7 @@ class Database
         WHERE id = :id
         SQL;
 
+        $sth->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('nom', $nom);
         $sth->bindParam('dateNaissance', $dateNaissance);
@@ -67,6 +68,7 @@ class Database
 
         $res = $sth->execute();
 
+        return $sth->errorInfo();
     }
 
     function ajouterEtudiant($nom, $prenom, $dateNaissance, $souhaiteMacaron, $distanceDomicile, $statut) {
@@ -104,6 +106,8 @@ class Database
         $sth->bindParam('id', $id);
         $sth->bindParam('statut', $statut);
         $res = $sth->execute();
+
+        return $sth->errorInfo();
     }
 
     function getEtudiant($id) {
@@ -151,7 +155,7 @@ class Database
      
         $sth->execute();
 
-        return;
+        return $sth->errorInfo();
     }
 
     function getHoraire(): array
@@ -353,7 +357,7 @@ class Database
         $sth->bindParam('semainefin', $semaineFin);
 
         $sth->execute();
-        return;
+        return $sth->errorInfo();
     }
 
     function supprimerSemestre($annee, $numero) {
@@ -367,15 +371,15 @@ class Database
      
         $sth->execute();
 
-        return;
+        return $sth->errorInfo();
     }
 
-    function modifierSemestre($annee, $numero, $semainedebut, $semainefin)
+    function modifierSemestre($oldannee, $oldnumero, $annee, $numero, $semainedebut, $semainefin)
     {
         $sql = <<<'SQL'
         UPDATE semestre
         SET année = :annee, numéro = :numero, semainedébut = :semainedebut, semainefin = :semainefin
-        WHERE année = :annee AND numéro = :numero
+        WHERE année = :oldannee AND numéro = :oldnumero
         SQL;
 
         $sth = $this->connexion->prepare($sql);
@@ -383,9 +387,11 @@ class Database
         $sth->bindParam('numero', $numero);
         $sth->bindParam('semainedebut', $semainedebut);
         $sth->bindParam('semainefin', $semainefin);
+        $sth->bindParam('oldannee', $oldannee);
+        $sth->bindParam('oldnumero', $oldnumero);
 
         $sth->execute();
-        return;
+        return $sth->errorInfo();
     }
 }
 

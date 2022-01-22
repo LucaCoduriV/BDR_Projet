@@ -10,14 +10,18 @@ if(!(isset($_GET['annee']) && isset($_GET['numero']))) {
 $semestre = $db->getSemestre($_GET['annee'], $_GET['numero']);
 
 if(isset($_POST['modifierSemestre'])) {
-    $res = $db->modifierSemestre(
+    $error = $db->modifierSemestre(
+        $_POST['oldannee'],
+        $_POST['oldnumero'],
         $_GET['annee'],
         $_POST['numero'],
         $_POST['semaineDebut'],
         $_POST['semaineFin'],
     );
 
-    header("Location: semesters-view.php");
+    if(!$error || $error[0] == "00000") {
+        header("Location: semesters-view.php");
+    }
 }
 
 ?>
@@ -102,6 +106,18 @@ if(isset($_POST['modifierSemestre'])) {
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
+                <?php
+                if(isset($error) && $error[0] != "00000") {
+                    ?>
+                    <div class="card mb-4 py-3 border-left-danger">
+                        <div class="card-body">
+                            <?= empty($error[2]) ? "Une erreur est survenue" : $error[2] ?>
+                        </div>
+                    </div>
+                    <?php
+                }
+                ?>
+
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Modifier un semsestre</h6>
@@ -122,6 +138,8 @@ if(isset($_POST['modifierSemestre'])) {
                                     <input name="semaineFin" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $semestre[0]['semainefin']; ?>">
                                 </label>
                                 <label>
+                                    <input name="oldannee" type="hidden" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $semestre[0]['année']; ?>">
+                                    <input name="oldnumero" type="hidden" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $semestre[0]['numéro']; ?>">
                                     <input type="submit" name="modifierSemestre" class="form-control btn btn-primary" value="Modifier"/>
                                 </label>
                                 </a>

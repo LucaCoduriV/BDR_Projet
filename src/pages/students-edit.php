@@ -10,7 +10,7 @@ if(!isset($_GET['idEtudiant'])) {
 $etudiant = $db->getEtudiant($_GET['idEtudiant']);
 
 if(isset($_POST['modifierEtudiant'])) {
-    $res = $db->modifierEtudiant(
+    $error = $db->modifierEtudiant(
         $_GET['idEtudiant'],
         $_POST['nom'],
         $_POST['prenom'],

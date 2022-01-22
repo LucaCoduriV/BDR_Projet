@@ -6,7 +6,7 @@ $res = false;
 
 if(isset($_POST['newSemestre'])) {
 
-    $res = $db->ajouterSemestre(
+    $error = $db->ajouterSemestre(
         $_POST['annee'],
         $_POST['numero'],
         $_POST['semaineDebut'],
@@ -15,7 +15,7 @@ if(isset($_POST['newSemestre'])) {
 }
 
 if(isset($_POST['supprimerSemestre'])) {
-    $res = $db->supprimerSemestre($_POST['annee'], $_POST['numero']);
+    $error = $db->supprimerSemestre($_POST['annee'], $_POST['numero']);
 }
 
 ?>
@@ -98,6 +98,18 @@ if(isset($_POST['supprimerSemestre'])) {
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+
+                <?php
+                if(isset($error) && $error[0] != "00000") {
+                    ?>
+                    <div class="card mb-4 py-3 border-left-danger">
+                        <div class="card-body">
+                            <?= empty($error[2]) ? "Une erreur est survenue" : $error[2] ?>
+                        </div>
+                    </div>
+                    <?php
+                }
+                ?>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
