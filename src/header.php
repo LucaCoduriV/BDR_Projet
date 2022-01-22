@@ -68,7 +68,7 @@
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="/pages/timerange-view.php">
             <i class="fas fa-fw fa-cog"></i>
             <span>Plage horaire</span></a>
     </li>
