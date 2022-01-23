@@ -75,7 +75,7 @@
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="/pages/testtype-view.php">
             <i class="fas fa-fw fa-cog"></i>
             <span>Type test</span></a>
     </li>

@@ -137,7 +137,7 @@ if(isset($_POST['supprimerEtudiant'])) {
                                     <input name="distanceDomicile" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
                                 <label>
-                                    <input type="submit" name="newEtudiant" class="form-control btn btn-primary" />
+                                    <input type="submit" name="newEtudiant" class="form-control btn btn-primary" value="Ajouter"/>
                                 </label>
                                 </a>
                             </div>

@@ -131,7 +131,7 @@ if(isset($_POST['supprimerSemestre'])) {
                                     <input name="semaineFin" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
                                 <label>
-                                    <input type="submit" name="newSemestre" class="form-control btn btn-primary" />
+                                    <input type="submit" name="newSemestre" class="form-control btn btn-primary" value="Ajouter"/>
                                 </label>
                                 </a>
                             </div>

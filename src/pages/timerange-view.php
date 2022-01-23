@@ -127,7 +127,7 @@ if(isset($_POST['supprimerPlageHoraire'])) {
                                     <input name="heurefin" type="time" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
                                 <label>
-                                    <input type="submit" name="newPlageHoraire" class="form-control btn btn-primary" />
+                                    <input type="submit" name="newPlageHoraire" class="form-control btn btn-primary" value="Ajouter"/>
                                 </label>
                                 </a>
                             </div>

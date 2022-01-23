@@ -4,16 +4,16 @@ include_once("../db.php");
 
 $res = false;
 
-if(isset($_POST['newBatiment'])) {
+if(isset($_POST['newTypeTest'])) {
 
-    $error = $db->ajouterBatiment(
-        $_POST['nom'],
-        $_POST['nbrplaceparking']
+    $error = $db->ajouterTypeTest(
+        $_POST['libelle'],
+        $_POST['coefficient']
     );
 }
 
-if(isset($_POST['supprimerBatiment'])) {
-    $error = $db->supprimerBatiment($_POST['nom']);
+if(isset($_POST['supprimerTypeTest'])) {
+    $error = $db->supprimerTypeTest($_POST['libelle']);
 }
 
 ?>
@@ -111,19 +111,19 @@ if(isset($_POST['supprimerBatiment'])) {
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Ajouter un bâtiment</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Ajouter un type de test</h6>
                     </div>
                     <div class="card-body">
                         <form method="post" action="">
                             <div id="dataTable_filter" class="dataTables_filter">
-                                <label>Nom
-                                    <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                <label>Libellé
+                                    <input name="libelle" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
-                                <label>Nbr places de parking
-                                    <input name="nbrplaceparking" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                <label>Coefficient
+                                    <input name="coefficient" type="number" step="0.1" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
                                 <label>
-                                    <input type="submit" name="newBatiment" class="form-control btn btn-primary" value="Ajouter"/>
+                                    <input type="submit" name="newTypeTest" class="form-control btn btn-primary" value="Ajouter"/>
                                 </label>
                                 </a>
                             </div>
@@ -134,32 +134,32 @@ if(isset($_POST['supprimerBatiment'])) {
                    <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Liste des bâtiments</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Liste les types de test</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>Nom</th>
-                                        <th>Nbr places de parking</th>
+                                        <th>Libellé</th>
+                                        <th>Coefficient</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getBatiments() as $batiment) {
+                                    foreach($db->getTypesTest() as $type) {
                                         ?>
                                         <tr>
-                                            <td><?= $batiment['nom'] ?></td>
-                                            <td><?= $batiment['nbrplacesparking'] ?></td>
+                                            <td><?= $type['libellé'] ?></td>
+                                            <td><?= $type['coefficient']  ?></td>
                                             <td>
                                                 <form action="" method="post">
-                                                    <input type="hidden" name="nom" value="<?= $batiment['nom'] ?>">
-                                                    <input type="submit" name="supprimerBatiment" class="form-control btn btn-danger" value="Supprimer"/>
+                                                    <input type="hidden" name="libelle" value="<?= $type['libellé'] ?>">
+                                                    <input type="submit" name="supprimerTypeTest" class="form-control btn btn-danger" value="Supprimer"/>
                                                 </form>
-                                                <form action="buildings-edit.php" method="GET">
-                                                    <input type="hidden" name="nom" value="<?= $batiment['nom'] ?>">
+                                                <form action="testtype-edit.php" method="GET">
+                                                    <input type="hidden" name="libelle" value="<?= $type['libellé'] ?>">
                                                     <input type="submit" class="form-control btn btn-warning" value="Modifier"/>
                                                 </form>
                                             </td>
