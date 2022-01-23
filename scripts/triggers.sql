@@ -17,12 +17,7 @@ WHERE el.idetudiant = NEW.idetudiant AND EXISTS(select * FROM test t WHERE t.id 
 end;
 $BODY$;
 
-CREATE OR REPLACE TRIGGER before_insert_etudiant_test
-BEFORE INSERT ON etudiant_test
-FOR EACH ROW
-EXECUTE FUNCTION check_if_user_has_cours();
-
-CREATE OR REPLACE TRIGGER before_update_etudiant_test
-BEFORE UPDATE ON etudiant_test
+CREATE OR REPLACE TRIGGER before_insert_or_update_etudiant_test
+BEFORE INSERT OR UPDATE ON etudiant_test
 FOR EACH ROW
 EXECUTE FUNCTION check_if_user_has_cours();
