@@ -143,7 +143,7 @@ if(isset($_POST['supprimerStatut'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getAllStatus() as $status) {
+                                    foreach($db->getStatut() as $status) {
                                         ?>
                                         <tr>
                                             <td><?= $status['libellé']; ?></td>

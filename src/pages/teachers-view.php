@@ -4,22 +4,22 @@ include_once("../db.php");
 
 $res = false;
 
-if(isset($_POST['newEtudiant'])) {
+if(isset($_POST['ajouterProfesseur'])) {
 
     $souhaiteMacaron = !isset($_POST['souhaiteMacaron']) ? 'false' : 'true';
 
-    $error = $db->ajouterEtudiant(
+    $error = $db->ajouterProfesseur(
         $_POST['nom'],
         $_POST['prenom'],
         $_POST['dateNaissance'],
         $souhaiteMacaron,
         $_POST['distanceDomicile'],
-        $_POST['statut']
+        $_POST['trigramme']
     );
 }
 
-if(isset($_POST['supprimerEtudiant'])) {
-    $error = $db->supprimerEtudiant($_POST['id']);
+if(isset($_POST['supprimerProfesseur'])) {
+    $error = $db->supprimerProfesseur($_POST['id']);
 }
 
 ?>
@@ -117,7 +117,7 @@ if(isset($_POST['supprimerEtudiant'])) {
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Ajouter un étudiant</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Ajouter un professeur</h6>
                     </div>
                     <div class="card-body">
                         <form method="post" action="">
@@ -131,16 +131,8 @@ if(isset($_POST['supprimerEtudiant'])) {
                                 <label>Date naissance
                                     <input name="dateNaissance" type="date" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
-                                <label>Statut
-                                    <select name="statut" class="form-control" name="pets" id="pet-select">
-                                    <?php
-                                    foreach($db->getStatut() as $statut) {
-                                        ?>
-                                            <option value="<?= $statut['libellé'] ?>"><?= $statut['libellé']?></option>
-                                            <?php
-                                    }
-                                    ?>
-                                    </select>
+                                <label>Trigramme
+                                    <input name="trigramme" type="text" size="3" maxlength="3" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
                                 <label>Souhaite macaron
                                     <input name="souhaiteMacaron" type="checkbox" class="" placeholder="" aria-controls="dataTable">
@@ -149,7 +141,7 @@ if(isset($_POST['supprimerEtudiant'])) {
                                     <input name="distanceDomicile" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
                                 <label>
-                                    <input type="submit" name="newEtudiant" class="form-control btn btn-primary" value="Ajouter"/>
+                                    <input type="submit" name="ajouterProfesseur" class="form-control btn btn-primary" value="Ajouter"/>
                                 </label>
                                 </a>
                             </div>
@@ -160,7 +152,7 @@ if(isset($_POST['supprimerEtudiant'])) {
                    <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Liste des étudiants</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Liste des professeurs</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -171,7 +163,7 @@ if(isset($_POST['supprimerEtudiant'])) {
                                         <th>Nom</th>
                                         <th>Prénom</th>
                                         <th>Date Naissance</th>
-                                        <th>Statut</th>
+                                        <th>Trigramme</th>
                                         <th>Souhaite macaron</th>
                                         <th>Distance domicile [Km]</th>
                                         <th>Action</th>
@@ -179,24 +171,24 @@ if(isset($_POST['supprimerEtudiant'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getEtudiants() as $etudiant) {
-                                        $date = date_create($etudiant['datenaissance']);
+                                    foreach($db->getProfesseurs() as $prof) {
+                                        $date = date_create($prof['datenaissance']);
                                         ?>
                                         <tr>
-                                            <td><?= $etudiant['id']; ?></td>
-                                            <td><?= $etudiant['nom']; ?></td>
-                                            <td><?= $etudiant['prénom']; ?></td>
+                                            <td><?= $prof['id']; ?></td>
+                                            <td><?= $prof['nom']; ?></td>
+                                            <td><?= $prof['prénom']; ?></td>
                                             <td><?= date_format($date, 'd.m.Y'); ?></td>
-                                            <td><?= $etudiant['statut']; ?></td>
-                                            <td><?= $etudiant['souhaitemacaron'] ? 'oui' : 'non'; ?></td>
-                                            <td><?= $etudiant['distancedomicilekm']; ?></td>
+                                            <td><?= $prof['trigramme']; ?></td>
+                                            <td><?= $prof['souhaitemacaron'] ? 'oui' : 'non'; ?></td>
+                                            <td><?= $prof['distancedomicilekm']; ?></td>
                                             <td>
                                                 <form action="" method="post">
-                                                    <input type="hidden" name="id" value="<?= $etudiant['id'] ?>">
-                                                    <input type="submit" name="supprimerEtudiant" class="form-control btn btn-danger" value="Supprimer"/>
+                                                    <input type="hidden" name="id" value="<?= $prof['id'] ?>">
+                                                    <input type="submit" name="supprimerProfesseur" class="form-control btn btn-danger" value="Supprimer"/>
                                                 </form>
-                                                <form action="students-edit.php" method="GET">
-                                                    <input type="hidden" name="idEtudiant" value="<?= $etudiant['id'] ?>">
+                                                <form action="teachers-edit.php" method="GET">
+                                                    <input type="hidden" name="idProfesseur" value="<?= $prof['id'] ?>">
                                                     <input type="submit" class="form-control btn btn-warning" value="Modifier"/>
                                                 </form>
                                             </td>

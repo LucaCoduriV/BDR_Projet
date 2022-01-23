@@ -2,24 +2,30 @@
 
 include_once("../db.php");
 
-$res = false;
 
-if(isset($_POST['newEtudiant'])) {
+if(!isset($_GET['idProfesseur'])) {
+    header("Location: teachers-view.php");
+}
+
+$etudiant = $db->getProfesseur($_GET['idProfesseur']);
+
+if(isset($_POST['modifierProfesseur'])) {
 
     $souhaiteMacaron = !isset($_POST['souhaiteMacaron']) ? 'false' : 'true';
 
-    $error = $db->ajouterEtudiant(
+    $error = $db->modifierProfesseur(
+        $_GET['idProfesseur'],
         $_POST['nom'],
         $_POST['prenom'],
         $_POST['dateNaissance'],
+        $_POST['trigramme'],
         $souhaiteMacaron,
         $_POST['distanceDomicile'],
-        $_POST['statut']
     );
-}
 
-if(isset($_POST['supprimerEtudiant'])) {
-    $error = $db->supprimerEtudiant($_POST['id']);
+    if(!$error || $error[0] == "00000") {
+        header("Location: teachers-view.php");
+    }
 }
 
 ?>
@@ -62,6 +68,7 @@ if(isset($_POST['supprimerEtudiant'])) {
 
             <!-- Main Content -->
             <div id="content">
+
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -117,97 +124,35 @@ if(isset($_POST['supprimerEtudiant'])) {
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Ajouter un étudiant</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Modifier un professeur</h6>
                     </div>
                     <div class="card-body">
                         <form method="post" action="">
                             <div id="dataTable_filter" class="dataTables_filter">
                                 <label>Nom
-                                    <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                    <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['nom']; ?>">
                                 </label>
                                 <label>Prénom
-                                    <input name="prenom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                    <input name="prenom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['prénom'] ?>">
                                 </label>
                                 <label>Date naissance
-                                    <input name="dateNaissance" type="date" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                    <input name="dateNaissance" type="date" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['datenaissance'] ?>">
                                 </label>
-                                <label>Statut
-                                    <select name="statut" class="form-control" name="pets" id="pet-select">
-                                    <?php
-                                    foreach($db->getStatut() as $statut) {
-                                        ?>
-                                            <option value="<?= $statut['libellé'] ?>"><?= $statut['libellé']?></option>
-                                            <?php
-                                    }
-                                    ?>
-                                    </select>
+                                <label>Trigramme
+                                    <input name="trigramme" type="text" size="3" maxlength="3" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['trigramme'] ?>">
                                 </label>
                                 <label>Souhaite macaron
-                                    <input name="souhaiteMacaron" type="checkbox" class="" placeholder="" aria-controls="dataTable">
+                                    <input name="souhaiteMacaron" type="checkbox" class="" placeholder="" aria-controls="dataTable" <? $etudiant[0]['souhaitemacaron'] ? 'checked' : '' ?>>
                                 </label>
                                 <label>Distance domicile
-                                    <input name="distanceDomicile" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                    <input name="distanceDomicile" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['distancedomicilekm'] ?>">
                                 </label>
                                 <label>
-                                    <input type="submit" name="newEtudiant" class="form-control btn btn-primary" value="Ajouter"/>
+                                    <input type="submit" name="modifierProfesseur" class="form-control btn btn-primary" value="Modifier"/>
                                 </label>
                                 </a>
                             </div>
                         </form>
-                    </div>
-                </div>
-
-                   <!-- DataTales Example -->
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Liste des étudiants</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nom</th>
-                                        <th>Prénom</th>
-                                        <th>Date Naissance</th>
-                                        <th>Statut</th>
-                                        <th>Souhaite macaron</th>
-                                        <th>Distance domicile [Km]</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    foreach($db->getEtudiants() as $etudiant) {
-                                        $date = date_create($etudiant['datenaissance']);
-                                        ?>
-                                        <tr>
-                                            <td><?= $etudiant['id']; ?></td>
-                                            <td><?= $etudiant['nom']; ?></td>
-                                            <td><?= $etudiant['prénom']; ?></td>
-                                            <td><?= date_format($date, 'd.m.Y'); ?></td>
-                                            <td><?= $etudiant['statut']; ?></td>
-                                            <td><?= $etudiant['souhaitemacaron'] ? 'oui' : 'non'; ?></td>
-                                            <td><?= $etudiant['distancedomicilekm']; ?></td>
-                                            <td>
-                                                <form action="" method="post">
-                                                    <input type="hidden" name="id" value="<?= $etudiant['id'] ?>">
-                                                    <input type="submit" name="supprimerEtudiant" class="form-control btn btn-danger" value="Supprimer"/>
-                                                </form>
-                                                <form action="students-edit.php" method="GET">
-                                                    <input type="hidden" name="idEtudiant" value="<?= $etudiant['id'] ?>">
-                                                    <input type="submit" class="form-control btn btn-warning" value="Modifier"/>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        <?php
-
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
             </div>
