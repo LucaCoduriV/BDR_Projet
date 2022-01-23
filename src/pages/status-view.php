@@ -4,16 +4,15 @@ include_once("../db.php");
 
 $res = false;
 
-if(isset($_POST['newBatiment'])) {
+if(isset($_POST['newStatut'])) {
 
-    $error = $db->ajouterBatiment(
-        $_POST['nom'],
-        $_POST['nbrplaceparking']
+    $error = $db->ajouterStatut(
+        $_POST['libelle']
     );
 }
 
-if(isset($_POST['supprimerBatiment'])) {
-    $error = $db->supprimerBatiment($_POST['nom']);
+if(isset($_POST['supprimerStatut'])) {
+    $error = $db->supprimerStatut($_POST['libelle']);
 }
 
 ?>
@@ -111,19 +110,16 @@ if(isset($_POST['supprimerBatiment'])) {
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Ajouter un bâtiment</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Ajouter un statut</h6>
                     </div>
                     <div class="card-body">
                         <form method="post" action="">
                             <div id="dataTable_filter" class="dataTables_filter">
-                                <label>Nom
-                                    <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
-                                </label>
-                                <label>Nbr places de parking
-                                    <input name="nbrplaceparking" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                <label>Libellé
+                                    <input name="libelle" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
                                 <label>
-                                    <input type="submit" name="newBatiment" class="form-control btn btn-primary" value="Ajouter"/>
+                                    <input type="submit" name="newStatut" class="form-control btn btn-primary" value="Ajouter"/>
                                 </label>
                                 </a>
                             </div>
@@ -134,37 +130,36 @@ if(isset($_POST['supprimerBatiment'])) {
                    <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Liste des bâtiments</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Liste des statuts</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>Nom</th>
-                                        <th>Nbr places de parking</th>
-                                        <th>Actions</th>
+                                        <th>Libellé</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getBatiments() as $batiment) {
+                                    foreach($db->getStatut() as $status) {
                                         ?>
                                         <tr>
-                                            <td><?= $batiment['nom'] ?></td>
-                                            <td><?= $batiment['nbrplacesparking'] ?></td>
+                                            <td><?= $status['libellé']; ?></td>
                                             <td>
                                                 <form action="" method="post">
-                                                    <input type="hidden" name="nom" value="<?= $batiment['nom'] ?>">
-                                                    <input type="submit" name="supprimerBatiment" class="form-control btn btn-danger" value="Supprimer"/>
+                                                    <input type="hidden" name="libelle" value="<?= $status['libellé'] ?>">
+                                                    <input type="submit" name="supprimerStatut" class="form-control btn btn-danger" value="Supprimer"/>
                                                 </form>
-                                                <form action="buildings-edit.php" method="GET">
-                                                    <input type="hidden" name="nom" value="<?= $batiment['nom'] ?>">
+                                                <form action="status-edit.php" method="GET">
+                                                    <input type="hidden" name="libelle" value="<?= $status['libellé'] ?>">
                                                     <input type="submit" class="form-control btn btn-warning" value="Modifier"/>
                                                 </form>
                                             </td>
                                         </tr>
                                         <?php
+
                                     }
                                     ?>
                                 </tbody>

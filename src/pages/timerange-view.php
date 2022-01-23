@@ -4,16 +4,17 @@ include_once("../db.php");
 
 $res = false;
 
-if(isset($_POST['newBatiment'])) {
+if(isset($_POST['newPlageHoraire'])) {
 
-    $error = $db->ajouterBatiment(
-        $_POST['nom'],
-        $_POST['nbrplaceparking']
+    $error = $db->ajouterPlageHoraire(
+        $_POST['numero'],
+        $_POST['heuredebut'], 
+        $_POST['heurefin'],
     );
 }
 
-if(isset($_POST['supprimerBatiment'])) {
-    $error = $db->supprimerBatiment($_POST['nom']);
+if(isset($_POST['supprimerPlageHoraire'])) {
+    $error = $db->supprimerPlageHoraire($_POST['numero']);
 }
 
 ?>
@@ -111,19 +112,22 @@ if(isset($_POST['supprimerBatiment'])) {
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Ajouter un bâtiment</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Ajouter une plage horaire</h6>
                     </div>
                     <div class="card-body">
                         <form method="post" action="">
                             <div id="dataTable_filter" class="dataTables_filter">
-                                <label>Nom
-                                    <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                <label>Numéro
+                                    <input name="numero" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
-                                <label>Nbr places de parking
-                                    <input name="nbrplaceparking" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                <label>Heure de début
+                                    <input name="heuredebut" type="time" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                </label>
+                                <label>Heure de fin
+                                    <input name="heurefin" type="time" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
                                 <label>
-                                    <input type="submit" name="newBatiment" class="form-control btn btn-primary" value="Ajouter"/>
+                                    <input type="submit" name="newPlageHoraire" class="form-control btn btn-primary" value="Ajouter"/>
                                 </label>
                                 </a>
                             </div>
@@ -134,32 +138,36 @@ if(isset($_POST['supprimerBatiment'])) {
                    <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Liste des bâtiments</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Liste des plages horaire</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>Nom</th>
-                                        <th>Nbr places de parking</th>
+                                        <th>Numéro</th>
+                                        <th>Heure de début</th>
+                                        <th>Heure de fin</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getBatiments() as $batiment) {
+                                    foreach($db->getPlagesHoraire() as $plage) {
+                                        $dateDebut = date_create($plage['heuredébut']);
+                                        $dateFin = date_create($plage['heurefin']);
                                         ?>
                                         <tr>
-                                            <td><?= $batiment['nom'] ?></td>
-                                            <td><?= $batiment['nbrplacesparking'] ?></td>
+                                            <td><?= $plage['numéro'] ?></td>
+                                            <td><?= date_format($dateDebut, 'H:i');  ?></td>
+                                            <td><?= date_format($dateFin, 'H:i'); ?></td>
                                             <td>
                                                 <form action="" method="post">
-                                                    <input type="hidden" name="nom" value="<?= $batiment['nom'] ?>">
-                                                    <input type="submit" name="supprimerBatiment" class="form-control btn btn-danger" value="Supprimer"/>
+                                                    <input type="hidden" name="numero" value="<?= $plage['numéro'] ?>">
+                                                    <input type="submit" name="supprimerPlageHoraire" class="form-control btn btn-danger" value="Supprimer"/>
                                                 </form>
-                                                <form action="buildings-edit.php" method="GET">
-                                                    <input type="hidden" name="nom" value="<?= $batiment['nom'] ?>">
+                                                <form action="timerange-edit.php" method="GET">
+                                                    <input type="hidden" name="numero" value="<?= $plage['numéro'] ?>">
                                                     <input type="submit" class="form-control btn btn-warning" value="Modifier"/>
                                                 </form>
                                             </td>

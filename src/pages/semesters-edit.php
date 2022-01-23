@@ -1,3 +1,31 @@
+<?php
+
+include_once("../db.php");
+
+
+if(!(isset($_GET['annee']) && isset($_GET['numero']))) {
+    header("Location: students-view.php");
+}
+
+$semestre = $db->getSemestre($_GET['annee'], $_GET['numero']);
+
+if(isset($_POST['modifierSemestre'])) {
+    $error = $db->modifierSemestre(
+        $_POST['oldannee'],
+        $_POST['oldnumero'],
+        $_GET['annee'],
+        $_POST['numero'],
+        $_POST['semaineDebut'],
+        $_POST['semaineFin'],
+    );
+
+    if(!$error || $error[0] == "00000") {
+        header("Location: semesters-view.php");
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,16 +37,16 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Dashboard</title>
+    <title>SMS</title>
 
     <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
@@ -28,7 +56,7 @@
     <div id="wrapper">
 
         <?php
-        include_once("header.php");
+        include_once("../header.php");
         ?>
 
         <!-- Content Wrapper -->
@@ -78,72 +106,49 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                   <!-- DataTales Example -->
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Position</th>
-                                        <th>Office</th>
-                                        <th>Age</th>
-                                        <th>Start date</th>
-                                        <th>Salary</th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Position</th>
-                                        <th>Office</th>
-                                        <th>Age</th>
-                                        <th>Start date</th>
-                                        <th>Salary</th>
-                                    </tr>
-                                </tfoot>
-                                <tbody>
-                                    <tr>
-                                        <td>Tiger Nixon</td>
-                                        <td>System Architect</td>
-                                        <td>Edinburgh</td>
-                                        <td>61</td>
-                                        <td>2011/04/25</td>
-                                        <td>$320,800</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Garrett Winters</td>
-                                        <td>Accountant</td>
-                                        <td>Tokyo</td>
-                                        <td>63</td>
-                                        <td>2011/07/25</td>
-                                        <td>$170,750</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                <?php
+                if(isset($error) && $error[0] != "00000") {
+                    ?>
+                    <div class="card mb-4 py-3 border-left-danger">
+                        <div class="card-body">
+                            <?= empty($error[2]) ? "Une erreur est survenue" : $error[2] ?>
                         </div>
                     </div>
-                </div>
+                    <?php
+                }
+                ?>
 
-                </div>
-                <!-- /.container-fluid -->
-
-            </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Modifier un semsestre</h6>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="">
+                            <div id="dataTable_filter" class="dataTables_filter">
+                                <label>Année
+                                    <input name="annee" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $semestre[0]['année']; ?>">
+                                </label>
+                                <label>Numéro
+                                    <input name="numero" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $semestre[0]['numéro']; ?>">
+                                </label>
+                                <label>Semaine début
+                                    <input name="semaineDebut" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $semestre[0]['semainedébut']; ?>">
+                                </label>
+                                <label>Semaine fin
+                                    <input name="semaineFin" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $semestre[0]['semainefin']; ?>">
+                                </label>
+                                <label>
+                                    <input name="oldannee" type="hidden" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $semestre[0]['année']; ?>">
+                                    <input name="oldnumero" type="hidden" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $semestre[0]['numéro']; ?>">
+                                    <input type="submit" name="modifierSemestre" class="form-control btn btn-primary" value="Modifier"/>
+                                </label>
+                                </a>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </footer>
-            <!-- End of Footer -->
+            </div>
+            <!-- End of Main Content -->
 
         </div>
         <!-- End of Content Wrapper -->
@@ -157,21 +162,14 @@
     </a>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
+    <script src="../js/sb-admin-2.min.js"></script>
 
 </body>
 

@@ -4,16 +4,18 @@ include_once("../db.php");
 
 $res = false;
 
-if(isset($_POST['newBatiment'])) {
+if(isset($_POST['newSemestre'])) {
 
-    $error = $db->ajouterBatiment(
-        $_POST['nom'],
-        $_POST['nbrplaceparking']
+    $error = $db->ajouterSemestre(
+        $_POST['annee'],
+        $_POST['numero'],
+        $_POST['semaineDebut'],
+        $_POST['semaineFin']
     );
 }
 
-if(isset($_POST['supprimerBatiment'])) {
-    $error = $db->supprimerBatiment($_POST['nom']);
+if(isset($_POST['supprimerSemestre'])) {
+    $error = $db->supprimerSemestre($_POST['annee'], $_POST['numero']);
 }
 
 ?>
@@ -111,19 +113,25 @@ if(isset($_POST['supprimerBatiment'])) {
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Ajouter un bâtiment</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Ajouter un semestre</h6>
                     </div>
                     <div class="card-body">
                         <form method="post" action="">
                             <div id="dataTable_filter" class="dataTables_filter">
-                                <label>Nom
-                                    <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                <label>Année
+                                    <input name="annee" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
-                                <label>Nbr places de parking
-                                    <input name="nbrplaceparking" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                <label>Numéro
+                                    <input name="numero" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                </label>
+                                <label>Semaine début
+                                    <input name="semaineDebut" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                </label>
+                                <label>Semaine fin
+                                    <input name="semaineFin" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
                                 <label>
-                                    <input type="submit" name="newBatiment" class="form-control btn btn-primary" value="Ajouter"/>
+                                    <input type="submit" name="newSemestre" class="form-control btn btn-primary" value="Ajouter"/>
                                 </label>
                                 </a>
                             </div>
@@ -134,37 +142,44 @@ if(isset($_POST['supprimerBatiment'])) {
                    <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Liste des bâtiments</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Liste des semestres</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>Nom</th>
-                                        <th>Nbr places de parking</th>
-                                        <th>Actions</th>
+                                        <th>Année</th>
+                                        <th>Numéro</th>
+                                        <th>Semaine début</th>
+                                        <th>Semaine fin</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getBatiments() as $batiment) {
+                                    foreach($db->getSemestres() as $semestre) {
                                         ?>
                                         <tr>
-                                            <td><?= $batiment['nom'] ?></td>
-                                            <td><?= $batiment['nbrplacesparking'] ?></td>
+                                            <td><?= $semestre['année']; ?></td>
+                                            <td><?= $semestre['numéro']; ?></td>
+                                            <td><?= $semestre['semainedébut']; ?></td>
+                                            <td><?= $semestre['semainefin']; ?></td>
                                             <td>
                                                 <form action="" method="post">
-                                                    <input type="hidden" name="nom" value="<?= $batiment['nom'] ?>">
-                                                    <input type="submit" name="supprimerBatiment" class="form-control btn btn-danger" value="Supprimer"/>
+                                                    <input type="hidden" name="annee" value="<?= $semestre['année'] ?>">
+                                                    <input type="hidden" name="numero" value="<?= $semestre['numéro'] ?>">
+                                                    <input type="submit" name="supprimerSemestre" class="form-control btn btn-danger" value="Supprimer"/>
                                                 </form>
-                                                <form action="buildings-edit.php" method="GET">
-                                                    <input type="hidden" name="nom" value="<?= $batiment['nom'] ?>">
+                                                <form action="semesters-edit.php" method="GET">
+                                                    <input type="hidden" name="annee" value="<?= $semestre['année'] ?>">
+                                                    <input type="hidden" name="numero" value="<?= $semestre['numéro'] ?>">
                                                     <input type="submit" class="form-control btn btn-warning" value="Modifier"/>
                                                 </form>
                                             </td>
                                         </tr>
                                         <?php
+
                                     }
                                     ?>
                                 </tbody>

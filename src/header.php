@@ -26,21 +26,21 @@
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="./pages/tables.php">
+        <a class="nav-link" href="/pages/semesters-view.php">
             <i class="fas fa-fw fa-cog"></i>
             <span>Semestre</span></a>
     </li>
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="/pages/students-view.php">
             <i class="fas fa-fw fa-cog"></i>
             <span>Etudiants</span></a>
     </li>
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="/pages/teachers-view.php">
             <i class="fas fa-fw fa-cog"></i>
             <span>Professeurs</span></a>
     </li>
@@ -54,7 +54,7 @@
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="/pages/buildings-view.php">
             <i class="fas fa-fw fa-cog"></i>
             <span>Bâtiment</span></a>
     </li>
@@ -68,21 +68,21 @@
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="/pages/timerange-view.php">
             <i class="fas fa-fw fa-cog"></i>
             <span>Plage horaire</span></a>
     </li>
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="/pages/testtype-view.php">
             <i class="fas fa-fw fa-cog"></i>
             <span>Type test</span></a>
     </li>
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="/pages/status-view.php">
             <i class="fas fa-fw fa-cog"></i>
             <span>Statut</span></a>
     </li>

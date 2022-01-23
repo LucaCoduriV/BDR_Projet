@@ -11,21 +11,153 @@ class Database
     function __construct()
     {
         $this->connexion = new PDO('pgsql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_NAME'), getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
+        $this->connexion->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT );
     }
 
-    function getEtudiant() 
+    function getStatut()
     {
         $sql = <<<'SQL'
         SELECT *
-        FROM etudiant
-        INNER JOIN personne on etudiant.idpersonne = personne.id
-        INNER JOIN prénom on personne.id = prénom.idpersonne;
+        FROM statut;
         SQL;
 
         $sth = $this->connexion->prepare($sql);
         $sth->execute();
 
         return $sth->fetchAll();
+    }
+
+    function modifierEtudiant($id, $nom, $prenom, $dateNaissance, $statut, $souhaiteMacaron, $distanceDomicile) {
+        $sql = <<<'SQL'
+        UPDATE personne
+        SET nom = :nom, datenaissance = :dateNaissance, souhaitemacaron = :souhaitemacaron, distancedomicilekm = :distancedomicilekm
+        WHERE id = :id
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('nom', $nom);
+        $sth->bindParam('dateNaissance', $dateNaissance);
+        $sth->bindParam('souhaitemacaron', $souhaiteMacaron);
+        $sth->bindParam('distancedomicilekm', $distanceDomicile);
+        $sth->bindParam('id', $id);
+
+        $res = $sth->execute();
+
+        if($sth->errorInfo()[0] != "00000") {
+            return $sth->errorInfo();
+        }
+
+        $sql = <<<'SQL'
+        UPDATE etudiant
+        SET statut = :statut
+        WHERE idpersonne = :idpersonne
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('statut', $statut);
+        $sth->bindParam('idpersonne', $id);
+
+        $res = $sth->execute();
+
+        $sql = <<<'SQL'
+        UPDATE prénom
+        SET prénom = :prenom
+        WHERE idpersonne = :idpersonne
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('prenom', $prenom);
+        $sth->bindParam('idpersonne', $id);
+
+        $res = $sth->execute();
+
+        return $sth->errorInfo();
+    }
+
+    function ajouterEtudiant($nom, $prenom, $dateNaissance, $souhaiteMacaron, $distanceDomicile, $statut) {
+    
+        $sql = <<<'SQL'
+        INSERT INTO personne (nom, datenaissance, souhaitemacaron, distancedomicilekm) 
+        VALUES (:nom, :dateNaissance, :souhaitemacaron, :distancedomicile);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('nom', $nom);
+        $sth->bindParam('dateNaissance', $dateNaissance);
+        $sth->bindParam('souhaitemacaron', $souhaiteMacaron);
+        $sth->bindParam('distancedomicile', $distanceDomicile);
+
+        $res = $sth->execute();
+        $id = $this->connexion->lastInsertId();
+
+        $sql = <<<'SQL'
+        INSERT INTO prénom (idpersonne, prénom) 
+        VALUES (:idpersonne, :prenom);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('prenom', $prenom);
+        $sth->bindParam('idpersonne', $id);
+        $sth->execute();
+
+        $sql = <<<'SQL'
+        INSERT INTO etudiant (idpersonne, statut)
+        VALUES (:id, :statut);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('id', $id);
+        $sth->bindParam('statut', $statut);
+        $res = $sth->execute();
+
+        return $sth->errorInfo();
+    }
+
+    function getEtudiant($id) {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM etudiant
+        INNER JOIN personne on etudiant.idpersonne = personne.id
+        INNER JOIN prénom on personne.id = prénom.idpersonne
+        WHERE personne.id = :id;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('id', $id);
+     
+        $sth->execute();
+
+        return $sth->fetchAll();
+    }
+
+    function getEtudiants() 
+    {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM etudiant
+        INNER JOIN personne on etudiant.idpersonne = personne.id
+        INNER JOIN prénom on personne.id = prénom.idpersonne
+        ORDER BY etudiant.idpersonne DESC;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->execute();
+
+        return $sth->fetchAll();
+    }
+
+    function supprimerEtudiant($id)
+    {
+        $sql = <<<'SQL'
+        DELETE FROM personne WHERE id = :id;
+        SQL;
+        
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('id', $id);
+     
+        $sth->execute();
+
+        return $sth->errorInfo();
     }
 
     function getHoraire(): array
@@ -182,6 +314,502 @@ class Database
 
         $sth = $this->connexion->prepare($sql);
         return $sth->fetchAll();
+    }
+
+    function getSemestres()
+    {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM semestre
+        ORDER BY année DESC;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->execute();
+        return $sth->fetchAll();
+    }
+
+    function getSemestre($annee, $numero)
+    {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM semestre
+        WHERE année = :annee AND numéro = :numero;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('annee', $annee);
+        $sth->bindParam('numero', $numero);
+
+        $sth->execute();
+        return $sth->fetchAll();
+    }
+
+    function ajouterSemestre($annee, $numero, $semaineDebut, $semaineFin)
+    {
+        $sql = <<<'SQL'
+        INSERT INTO semestre (année, numéro, semainedébut, semainefin) 
+        VALUES (:annee, :numero, :semainedebut, :semainefin);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('annee', $annee);
+        $sth->bindParam('numero', $numero);
+        $sth->bindParam('semainedebut', $semaineDebut);
+        $sth->bindParam('semainefin', $semaineFin);
+
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
+    function supprimerSemestre($annee, $numero) {
+        $sql = <<<'SQL'
+        DELETE FROM semestre WHERE année = :annee AND numéro = :numero;
+        SQL;
+        
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('annee', $annee);
+        $sth->bindParam('numero', $numero);
+     
+        $sth->execute();
+
+        return $sth->errorInfo();
+    }
+
+    function modifierSemestre($oldannee, $oldnumero, $annee, $numero, $semainedebut, $semainefin)
+    {
+        $sql = <<<'SQL'
+        UPDATE semestre
+        SET année = :annee, numéro = :numero, semainedébut = :semainedebut, semainefin = :semainefin
+        WHERE année = :oldannee AND numéro = :oldnumero
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('annee', $annee);
+        $sth->bindParam('numero', $numero);
+        $sth->bindParam('semainedebut', $semainedebut);
+        $sth->bindParam('semainefin', $semainefin);
+        $sth->bindParam('oldannee', $oldannee);
+        $sth->bindParam('oldnumero', $oldnumero);
+
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
+    function getBatiments()
+    {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM bâtiment;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+
+        $sth->execute();
+        return $sth->fetchAll();
+    }
+
+    function getBatiment($nom)
+    {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM bâtiment
+        WHERE nom = :nom;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('nom', $nom);
+
+        $sth->execute();
+        return $sth->fetchAll();
+    }
+
+    function ajouterBatiment($nom, $nbrplaceparking)
+    {
+        $sql = <<<'SQL'
+        INSERT INTO bâtiment (nom, nbrplacesparking)
+        VALUES (:nom, :nbrplacesparking);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('nom', $nom);
+        $sth->bindParam('nbrplacesparking', $nbrplaceparking);
+
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
+    function supprimerBatiment($nom) {
+        $sql = <<<'SQL'
+        DELETE FROM bâtiment WHERE nom = :nom;
+        SQL;
+        
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('nom', $nom);
+     
+        $sth->execute();
+
+        return $sth->errorInfo();
+    }
+
+    function modifierBatiment($oldnom, $nom, $nbrplacesparking)
+    {
+        $sql = <<<'SQL'
+        UPDATE bâtiment
+        SET nom = :nom, nbrplacesparking = :nbrplacesparking
+        WHERE nom = :oldnom
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('nom', $nom);
+        $sth->bindParam('nbrplacesparking', $nbrplacesparking);
+        $sth->bindParam('oldnom', $oldnom);
+
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
+    function getPlagesHoraire()
+    {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM plagehoraire;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+
+        $sth->execute();
+        return $sth->fetchAll();
+    }
+
+    function ajouterPlageHoraire($numero, $heuredebut, $heurefin)
+    {
+        $sql = <<<'SQL'
+        INSERT INTO plagehoraire (numéro, heuredébut, heurefin)
+        VALUES (:numero, :heuredebut, :heurefin);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('numero', $numero);
+        $sth->bindParam('heuredebut', $heuredebut);
+        $sth->bindParam('heurefin', $heurefin);
+
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
+    function supprimerPlageHoraire($numero) {
+        $sql = <<<'SQL'
+        DELETE FROM plagehoraire WHERE numéro = :numero;
+        SQL;
+        
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('numero', $numero);
+     
+        $sth->execute();
+
+        return $sth->errorInfo();
+    }
+
+    function getPlageHoraire($numero)
+    {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM plagehoraire
+        WHERE numéro = :numero;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('numero', $numero);
+
+        $sth->execute();
+        return $sth->fetchAll();
+    }
+
+    function modifierPlageHoraire($oldnumero, $numero, $heuredebut, $heurefin)
+    {
+        $sql = <<<'SQL'
+        UPDATE plagehoraire
+        SET numéro = :numero, heuredébut = :heuredebut, heurefin = :heurefin
+        WHERE numéro = :oldnumero;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('numero', $numero);
+        $sth->bindParam('heuredebut', $heuredebut);
+        $sth->bindParam('heurefin', $heurefin);
+        $sth->bindParam('oldnumero', $oldnumero);
+
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
+    function getTypesTest()
+    {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM typetest;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+
+        $sth->execute();
+        return $sth->fetchAll();
+    }
+
+    function ajouterTypeTest($libelle, $coefficient)
+    {
+        $sql = <<<'SQL'
+        INSERT INTO typetest (libellé, coefficient)
+        VALUES (:libelle, :coefficient);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('libelle', $libelle);
+        $sth->bindParam('coefficient', $coefficient);
+
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
+    function supprimerTypeTest($libelle)
+    {
+        $sql = <<<'SQL'
+        DELETE FROM typetest WHERE libellé = :libelle;
+        SQL;
+        
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('libelle', $libelle);
+     
+        $sth->execute();
+
+        return $sth->errorInfo();
+    }
+
+    function getTypeTest($libelle)
+    {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM typetest
+        WHERE libellé = :libelle;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('libelle', $libelle);
+
+        $sth->execute();
+        return $sth->fetchAll();
+    }
+
+    function modifierTypeTest($oldlibelle, $libelle, $coefficient)
+    {
+        $sql = <<<'SQL'
+        UPDATE typetest
+        SET libellé = :libelle, coefficient = :coefficient
+        WHERE libellé = :oldlibelle;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('libelle', $libelle);
+        $sth->bindParam('coefficient', $coefficient);
+        $sth->bindParam('oldlibelle', $oldlibelle);
+
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
+    function ajouterStatut($libelle)
+    {
+        $sql = <<<'SQL'
+        INSERT INTO statut (libellé)
+        VALUES (:libelle);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('libelle', $libelle);
+
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
+    function supprimerStatut($libelle)
+    {
+        $sql = <<<'SQL'
+        DELETE FROM statut WHERE libellé = :libelle;
+        SQL;
+        
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('libelle', $libelle);
+     
+        $sth->execute();
+
+        return $sth->errorInfo();
+    }
+
+    function getStatus($libelle)
+    {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM statut
+        WHERE libellé = :libelle;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('libelle', $libelle);
+
+        $sth->execute();
+        return $sth->fetchAll();
+    }
+
+    function modifierStatut($oldlibelle, $libelle)
+    {
+        $sql = <<<'SQL'
+        UPDATE statut
+        SET libellé = :libelle
+        WHERE libellé = :oldlibelle;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('libelle', $libelle);
+        $sth->bindParam('oldlibelle', $oldlibelle);
+
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
+    function getProfesseurs()
+    {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM professeur
+        INNER JOIN personne on professeur.idpersonne = personne.id
+        INNER JOIN prénom on personne.id = prénom.idpersonne
+        ORDER BY professeur.idpersonne DESC;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->execute();
+
+        return $sth->fetchAll();
+    }
+
+    function ajouterProfesseur($nom, $prenom, $dateNaissance, $souhaiteMacaron, $distanceDomicile, $trigramme) {
+    
+        $sql = <<<'SQL'
+        INSERT INTO personne (nom, datenaissance, souhaitemacaron, distancedomicilekm) 
+        VALUES (:nom, :dateNaissance, :souhaitemacaron, :distancedomicile);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('nom', $nom);
+        $sth->bindParam('dateNaissance', $dateNaissance);
+        $sth->bindParam('souhaitemacaron', $souhaiteMacaron);
+        $sth->bindParam('distancedomicile', $distanceDomicile);
+
+        $res = $sth->execute();
+
+        $id = $this->connexion->lastInsertId();
+
+        $sql = <<<'SQL'
+        INSERT INTO prénom (idpersonne, prénom) 
+        VALUES (:idpersonne, :prenom);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('prenom', $prenom);
+        $sth->bindParam('idpersonne', $id);
+        $sth->execute();
+
+        $sql = <<<'SQL'
+        INSERT INTO professeur (idpersonne, trigramme)
+        VALUES (:id, :trigramme);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('id', $id);
+        $sth->bindParam('trigramme', $trigramme);
+        $res = $sth->execute();
+
+        return $sth->errorInfo();
+    }
+
+    function supprimerProfesseur($id)
+    {
+        $sql = <<<'SQL'
+        DELETE FROM personne WHERE id = :id;
+        SQL;
+        
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('id', $id);
+     
+        $sth->execute();
+
+        return $sth->errorInfo();
+    }
+
+    function getProfesseur($id)
+    {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM professeur
+        INNER JOIN personne on professeur.idpersonne = personne.id
+        INNER JOIN prénom on personne.id = prénom.idpersonne
+        WHERE personne.id = :id;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('id', $id);
+     
+        $sth->execute();
+
+        return $sth->fetchAll();
+    }
+
+    function modifierProfesseur($id, $nom, $prenom, $dateNaissance, $trigramme, $souhaiteMacaron, $distanceDomicile) {
+        $sql = <<<'SQL'
+        UPDATE personne
+        SET nom = :nom, datenaissance = :dateNaissance, souhaitemacaron = :souhaitemacaron, distancedomicilekm = :distancedomicilekm
+        WHERE id = :id
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('nom', $nom);
+        $sth->bindParam('dateNaissance', $dateNaissance);
+        $sth->bindParam('souhaitemacaron', $souhaiteMacaron);
+        $sth->bindParam('distancedomicilekm', $distanceDomicile);
+        $sth->bindParam('id', $id);
+
+        $res = $sth->execute();
+        
+        if($sth->errorInfo()[0] != "00000") {
+            return $sth->errorInfo();
+        }
+
+        $sql = <<<'SQL'
+        UPDATE professeur
+        SET trigramme = :trigramme
+        WHERE idpersonne = :idpersonne
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('trigramme', $trigramme);
+        $sth->bindParam('idpersonne', $id);
+
+        $res = $sth->execute();
+
+        $sql = <<<'SQL'
+        UPDATE prénom
+        SET prénom = :prenom
+        WHERE idpersonne = :idpersonne
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('prenom', $prenom);
+        $sth->bindParam('idpersonne', $id);
+
+        $res = $sth->execute();
+
+        return $sth->errorInfo();
     }
 }
 
