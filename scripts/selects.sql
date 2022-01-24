@@ -43,6 +43,15 @@ GROUP BY notes.idcours, notes.idetudiant;
 
 -- STATS
 -- Horaires
+-- Taux d'occupation des salles
+SELECT (
+    SELECT COUNT(DISTINCT (leçon.nosalle, leçon.nomsalle))
+    FROM cours
+    INNER JOIN leçon ON cours.id = leçon.idcours
+    WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre AND leçon.nomsalle = :nombâtiment
+) / cast((COUNT(*)) AS DECIMAL) as "taux"
+FROM salle
+WHERE nombâtiment = :nombâtiment;
 
 -- Nombre moyen de cours suivis par étudiant
 SELECT (COUNT(DISTINCT (etudiant_leçon.idleçon, etudiant_leçon.idetudiant)) / COUNT(DISTINCT etudiant_leçon.idetudiant)) AS moyenne
@@ -50,9 +59,30 @@ FROM etudiant_leçon
 INNER JOIN cours ON etudiant_leçon.idleçon = cours.id
 WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre;
 
+-- Nombre moyen de leçon par professeur
+SELECT AVG(nbLeçons.nb)
+FROM (
+    SELECT COUNT(*) nb
+    FROM leçon
+    INNER JOIN cours ON leçon.idcours = cours.id
+    INNER JOIN etudiant_leçon on leçon.numéro = etudiant_leçon.noleçon and leçon.idcours = etudiant_leçon.idleçon
+    WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre
+    GROUP BY etudiant_leçon.idetudiant
+) as nbLeçons;
+
+-- Nombre moyen de leçon par professeur
+SELECT AVG(nbLeçons.nb)
+FROM (
+    SELECT COUNT(*) nb
+    FROM leçon
+    INNER JOIN cours ON leçon.idcours = cours.id
+    WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre
+    GROUP BY idprofessseur
+) as nbLeçons;
+
 -- Taux élèves async
 SELECT (
-    SELECT COUNT(*)
+    SELECT CAST((COUNT(*)) AS DECIMAL)
     FROM (
         SELECT DISTINCT etudiant_leçon.idetudiant
         FROM etudiant_leçon
@@ -79,7 +109,7 @@ SELECT (
     SELECT COUNT(*)
     FROM moyennes
     WHERE moyenne < 4.0
-) / COUNT(*)
+) / CAST((COUNT(*)) AS DECIMAL)
 FROM moyennes;
 
 -- Moyenne générale
@@ -99,6 +129,6 @@ SELECT (
     SELECT COUNT(*)
     FROM etudiant
     WHERE statut != 'En cours'
-) / COUNT(*)
+) / CAST((COUNT(*)) AS DECIMAL)
 FROM etudiant
 WHERE statut = :status;
