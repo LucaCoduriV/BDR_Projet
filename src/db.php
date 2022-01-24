@@ -769,7 +769,7 @@ class Database
         $sql = <<<'SQL'
         UPDATE personne
         SET nom = :nom, datenaissance = :dateNaissance, souhaitemacaron = :souhaitemacaron, distancedomicilekm = :distancedomicilekm
-        WHERE id = :id
+        WHERE id = :id;
         SQL;
 
         $sth = $this->connexion->prepare($sql);
@@ -788,7 +788,7 @@ class Database
         $sql = <<<'SQL'
         UPDATE professeur
         SET trigramme = :trigramme
-        WHERE idpersonne = :idpersonne
+        WHERE idpersonne = :idpersonne;
         SQL;
 
         $sth = $this->connexion->prepare($sql);
@@ -800,7 +800,7 @@ class Database
         $sql = <<<'SQL'
         UPDATE prénom
         SET prénom = :prenom
-        WHERE idpersonne = :idpersonne
+        WHERE idpersonne = :idpersonne;
         SQL;
 
         $sth = $this->connexion->prepare($sql);
@@ -808,6 +808,92 @@ class Database
         $sth->bindParam('idpersonne', $id);
 
         $res = $sth->execute();
+
+        return $sth->errorInfo();
+    }
+
+    function getAllCours()
+    {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM cours;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+     
+        $sth->execute();
+
+        return $sth->fetchAll();
+    }
+
+    function ajouterCours($nom, $semainedebut, $dureesemaine, $anneeetude, $noSemestre, $anneeSemestre)
+    {
+        $sql = <<<'SQL'
+        INSERT INTO cours (nom, semainedébut, duréesemaine, annéeetude, nosemestre, annéesemestre)
+        VALUES (:nom, :semainedebut, :dureesemaine, :anneeetude, :nosemestre, :anneesemestre);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('nom', $nom);
+        $sth->bindParam('semainedebut', $semainedebut);
+        $sth->bindParam('dureesemaine', $dureesemaine);
+        $sth->bindParam('anneeetude', $anneeetude);
+        $sth->bindParam('nosemestre', $noSemestre);
+        $sth->bindParam('anneesemestre', $anneeSemestre);
+
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
+    function supprimerCours($id)
+    {
+        $sql = <<<'SQL'
+        DELETE FROM cours WHERE id = :id;
+        SQL;
+        
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('id', $id);
+     
+        $sth->execute();
+
+        return $sth->errorInfo();
+    }
+
+    function getCours($id)
+    {
+        $sql = <<<'SQL'
+        SELECT *
+        FROM cours
+        WHERE id = :id;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('id', $id);
+
+        $sth->execute();
+
+        return $sth->fetchAll();
+    }
+
+    function modifierCours($id, $nom, $semainedebut, $dureesemaine, $anneeetude, $nosemestre, $anneesemestre)
+    {
+        $sql = <<<'SQL'
+        UPDATE cours
+        SET nom = :nom, semainedébut = :semainedebut, duréesemaine = :dureesemaine, 
+        annéeetude = :anneeetude, nosemestre = :nosemestre, annéesemestre = :anneesemestre
+        WHERE id = :id;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('id', $id);
+        $sth->bindParam('nom', $nom);
+        $sth->bindParam('semainedebut', $semainedebut);
+        $sth->bindParam('dureesemaine', $dureesemaine);
+        $sth->bindParam('anneeetude', $anneeetude);
+        $sth->bindParam('nosemestre', $nosemestre);
+        $sth->bindParam('anneesemestre', $anneesemestre);
+
+        $sth->execute();
 
         return $sth->errorInfo();
     }

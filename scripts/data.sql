@@ -2814,3 +2814,4 @@ INSERT INTO etudiant_test VALUES (66, 57, 5.3);
 
 -- SET PGSQL pointers
 SELECT setval('personne_id_seq', (SELECT MAX(id) FROM personne), true);
+SELECT setval('cours_id_seq', (SELECT MAX(id) FROM cours), true);
