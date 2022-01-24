@@ -2,30 +2,18 @@
 
 include_once("../db.php");
 
+$res = false;
 
-if(!isset($_GET['idCours'])) {
-    header("Location: classes-view.php");
+if(isset($_POST['newSalle'])) {
+
+    $error = $db->ajouterSalle(
+        $_POST['numero'],
+        $_POST['batiment']
+    );
 }
 
-$cours = $db->getCours($_GET['idCours']);
-
-if(isset($_POST['modifierCours'])) {
-    
-    $semestreAnnee = explode("-", $_POST['semestreAnnee']);
-
-    $error = $db->modifierCours(
-        $_GET['idCours'],
-        $_POST['nom'],
-        $_POST['semainedebut'],
-        $_POST['nbrsemaine'],
-        $_POST['annee'],
-        $semestreAnnee[0],
-        $semestreAnnee[1]
-    );
-
-    if(!$error || $error[0] == "00000") {
-        header("Location: classes-view.php");
-    }
+if(isset($_POST['supprimerSalle'])) {
+    $error = $db->supprimerSalle($_POST['numero'], $_POST['nombatiment']);
 }
 
 ?>
@@ -68,7 +56,6 @@ if(isset($_POST['modifierCours'])) {
 
             <!-- Main Content -->
             <div id="content">
-
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -119,47 +106,80 @@ if(isset($_POST['modifierCours'])) {
                         </div>
                     </div>
                     <?php
-                    
                 }
                 ?>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Modifier un cours</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Ajouter une salle</h6>
                     </div>
                     <div class="card-body">
-                    <form method="post" action="">
+                        <form method="post" action="">
                             <div id="dataTable_filter" class="dataTables_filter">
-                                <label>Nom
-                                    <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $cours[0]['nom']; ?>">
+                                <label>Numéro
+                                    <input name="numero" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
-                                <label>Semaine début
-                                    <input name="semainedebut" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $cours[0]['semainedébut']; ?>">
-                                </label>
-                                <label>Nbr de semaines
-                                    <input name="nbrsemaine" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $cours[0]['duréesemaine']; ?>">
-                                </label>
-                                <label>Année d'étude
-                                    <input name="annee" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $cours[0]['annéeetude']; ?>">
-                                </label>
-                                <label>Semestre / Année
-                                    <select name="semestreAnnee" class="form-control">
+                                <label>Bâtiment
+                                    <select name="batiment" class="form-control">
                                     <?php
-                                    
-                                    foreach($db->getSemestres() as $semestre) {
+                                    foreach($db->getBatiments() as $batiment) {
                                         ?>
-                                            <option value="<?= $semestre['numéro'] . "-" . $semestre['année'] ?>" <?= ($semestre['année'] == $cours[0]["annéesemestre"] && $semestre['numéro'] == $cours[0]["nosemestre"]) ? 'selected' : '' ?> ><?= $semestre['numéro'] . " / " . $semestre['année'] ?></option>
-                                            <?php
+                                        <option value="<?= $batiment['nom'] ?>"><?= $batiment['nom']?></option>
+                                        <?php
                                     }
                                     ?>
                                     </select>
                                 </label>
-                                 <label>
-                                    <input type="submit" name="modifierCours" class="form-control btn btn-primary" value="Modifier"/>
+                                <label>
+                                    <input type="submit" name="newSalle" class="form-control btn btn-primary" value="Ajouter"/>
                                 </label>
                                 </a>
                             </div>
-                        </form>                
+                        </form>
+                    </div>
+                </div>
+
+                   <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Liste des salles</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Numéro</th>
+                                        <th>Bâtiment</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    foreach($db->getSalles() as $salle) {
+                                        ?>
+                                        <tr>
+                                            <td><?= $salle['numéro'] ?></td>
+                                            <td><?= $salle['nombâtiment'] ?></td>
+                                            <td>
+                                                <form action="" method="post">
+                                                    <input type="hidden" name="numero" value="<?= $salle['numéro'] ?>">
+                                                    <input type="hidden" name="nombatiment" value="<?= $salle['nombâtiment'] ?>">
+                                                    <input type="submit" name="supprimerSalle" class="form-control btn btn-danger" value="Supprimer"/>
+                                                </form>
+                                                <form action="rooms-edit.php" method="GET">
+                                                    <input type="hidden" name="numero" value="<?= $salle['numéro'] ?>">
+                                                    <input type="hidden" name="nombatiment" value="<?= $salle['nombâtiment'] ?>">
+                                                    <input type="submit" class="form-control btn btn-warning" value="Modifier"/>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -132,7 +132,7 @@ if(isset($_POST['supprimerEtudiant'])) {
                                     <input name="dateNaissance" type="date" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
                                 <label>Statut
-                                    <select name="statut" class="form-control" name="pets" id="pet-select">
+                                    <select name="statut" class="form-control">
                                     <?php
                                     foreach($db->getStatut() as $statut) {
                                         ?>

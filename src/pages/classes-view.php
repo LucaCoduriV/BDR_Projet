@@ -135,7 +135,7 @@ if(isset($_POST['supprimerCours'])) {
                                     <input name="annee" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                 </label>
                                 <label>Semestre / Année
-                                    <select name="semestreAnnee" class="form-control" name="pets" id="pet-select">
+                                    <select name="semestreAnnee" class="form-control">
                                     <?php
                                     foreach($db->getSemestres() as $semestre) {
                                         ?>
