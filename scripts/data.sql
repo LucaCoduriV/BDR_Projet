@@ -1857,7 +1857,7 @@ INSERT INTO etudiant_leçon VALUES (162, 52, 61);
 INSERT INTO etudiant_leçon VALUES (163, 47, 61);
 
 -- Classe 2
-INSERT INTO etudiant_leçon VALUES (150, 47, 62);
+INSERT INTO etudiant_leçon VALUES (164, 47, 62);
 INSERT INTO etudiant_leçon VALUES (165, 55, 62);
 INSERT INTO etudiant_leçon VALUES (166, 56, 62);
 INSERT INTO etudiant_leçon VALUES (167, 56, 62);
@@ -1871,7 +1871,7 @@ INSERT INTO etudiant_leçon VALUES (173, 58, 62);
 INSERT INTO etudiant_leçon VALUES (174, 58, 62);
 INSERT INTO etudiant_leçon VALUES (175, 47, 62);
 
-INSERT INTO etudiant_leçon VALUES (150, 47, 63);
+INSERT INTO etudiant_leçon VALUES (164, 47, 63);
 INSERT INTO etudiant_leçon VALUES (165, 55, 63);
 INSERT INTO etudiant_leçon VALUES (166, 56, 63);
 INSERT INTO etudiant_leçon VALUES (167, 56, 63);
@@ -1885,7 +1885,7 @@ INSERT INTO etudiant_leçon VALUES (173, 58, 63);
 INSERT INTO etudiant_leçon VALUES (174, 58, 63);
 INSERT INTO etudiant_leçon VALUES (175, 47, 63);
 
-INSERT INTO etudiant_leçon VALUES (150, 47, 64);
+INSERT INTO etudiant_leçon VALUES (164, 47, 64);
 INSERT INTO etudiant_leçon VALUES (165, 55, 64);
 INSERT INTO etudiant_leçon VALUES (166, 56, 64);
 INSERT INTO etudiant_leçon VALUES (167, 56, 64);
@@ -1899,7 +1899,7 @@ INSERT INTO etudiant_leçon VALUES (173, 58, 64);
 INSERT INTO etudiant_leçon VALUES (174, 58, 64);
 INSERT INTO etudiant_leçon VALUES (175, 47, 64);
 
-INSERT INTO etudiant_leçon VALUES (150, 47, 65);
+INSERT INTO etudiant_leçon VALUES (164, 47, 65);
 INSERT INTO etudiant_leçon VALUES (165, 55, 65);
 INSERT INTO etudiant_leçon VALUES (166, 56, 65);
 INSERT INTO etudiant_leçon VALUES (167, 56, 65);
@@ -1913,7 +1913,7 @@ INSERT INTO etudiant_leçon VALUES (173, 58, 65);
 INSERT INTO etudiant_leçon VALUES (174, 58, 65);
 INSERT INTO etudiant_leçon VALUES (175, 47, 65);
 
-INSERT INTO etudiant_leçon VALUES (150, 47, 66);
+INSERT INTO etudiant_leçon VALUES (164, 47, 66);
 INSERT INTO etudiant_leçon VALUES (165, 55, 66);
 INSERT INTO etudiant_leçon VALUES (166, 56, 66);
 INSERT INTO etudiant_leçon VALUES (167, 56, 66);
