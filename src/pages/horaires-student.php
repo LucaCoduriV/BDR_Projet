@@ -190,11 +190,18 @@ function pPrint($value)
                                                 <tr>
                                                     <td><?= $plageHoraires[1] ?> <br /> <?= $plageHoraires[2] ?></td>
                                                     <?php
-                                                    $day = 1; // Pointeur sur le jour (la colonne du tableau html)
-                                                    foreach ($horaires as $horaire) {
-                                                        if ($horaire['noplagehoraire'] == $plageHoraires[0] && $horaire['joursemaine'] == $day) {
-                                                            echo "<td rowspan='" . $horaire['nbrpériodes'] . "'>" . $horaire['nom'] . "<br/>" . $horaire['trigramme'] . "<br/>" . $horaire['nosalle'] . "</td>";
-                                                            $day++;
+
+                                                    for ($i = 1; $i <= 5; $i++) {
+                                                        $used = false;
+                                                        foreach ($horaires as $horaire) {
+                                                            if ($horaire['noplagehoraire'] == $plageHoraires[0] && $horaire['joursemaine'] == $i) {
+                                                                echo "<td rowspan='" . $horaire['nbrpériodes'] . "'>" . $horaire['nom'] . "<br/>" . $horaire['trigramme'] . "<br/>" . $horaire['nosalle'] . "</td>";
+                                                                $used = true;
+                                                                break;
+                                                            }
+                                                        }
+                                                        if (!$used) {
+                                                            echo "<td></td>";
                                                         }
                                                     }
                                                     ?>
