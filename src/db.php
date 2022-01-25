@@ -280,6 +280,22 @@ class Database
         return $sth->fetchAll();
     }
 
+    function getMoyenneParTest(int $testId): array
+    {
+        $sql = <<<'SQL'
+        SELECT notes.idtest, SUM(notes.note * notes.coefficient) / SUM(notes.coefficient) as average
+        FROM notes
+        WHERE notes.idtest = :testid
+        GROUP BY notes.idtest;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('testid', $testId, PDO::PARAM_INT);
+        $sth->execute();
+
+        return $sth->fetchAll();
+    }
+
     function getNombreMoyenCoursSuivi(int $noSemestre, int $anneeSemestre): array
     {
         $sql = <<<'SQL'

@@ -195,10 +195,12 @@ if (isset($_POST['idEtudiant'])) {
                                                         <?php
                                                         foreach ($notes as $note) {
                                                             echo "<tr>";
+                                                            $moyenneClasse = $db->getMoyenneParTest($note['idtest']);
+                                                            $moyenneClasseRounded = round($moyenneClasse[0]['average'] ?? 0, 2);
                                                             if ($note['idcours'] == $cour['id']) {
                                                                 echo '<td>' . $note['nom'] . '</td>';
                                                                 echo '<td>' . $note['libellé'] . '</td>';
-                                                                echo '<td>' . $note['note'] . '</td>';
+                                                                echo '<td>' . $moyenneClasseRounded . '</td>';
                                                                 echo '<td>' . $note['coefficient'] . '</td>';
                                                                 echo '<td>' . $note['note'] . '</td>';
                                                             }
