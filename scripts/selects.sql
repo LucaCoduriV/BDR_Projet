@@ -8,24 +8,24 @@ INNER JOIN plagehoraire AS fin ON fin.numéro = (leçon.noplagehoraire + leçon.
 -- Horaire étudiants
 SELECT * FROM etudiant
 INNER JOIN etudiant_leçon ON etudiant.idpersonne = etudiant_leçon.idetudiant
-INNER JOIN horaire ON numéro = etudiant_leçon.noleçon AND idcours = etudiant_leçon.idleçon
+INNER JOIN horaire ON horaire.numéro = etudiant_leçon.noleçon AND horaire.idcours = etudiant_leçon.idleçon
 INNER JOIN professeur ON horaire.idprofessseur = professeur.idpersonne
 INNER JOIN personne ON etudiant.idpersonne = personne.id
 INNER JOIN cours ON horaire.idcours = cours.id
-WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre;
+WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre;
 
 -- Horaire prof
 SELECT * FROM professeur
 INNER JOIN horaire ON horaire.idprofessseur = professeur.idpersonne
 INNER JOIN personne ON professeur.idpersonne = personne.id
 INNER JOIN cours ON horaire.idcours = cours.id
-WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre;
+WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre AND professeur.idpersonne = :idprofessseur;
 
 -- Horaire cours
 SELECT * FROM cours
 INNER JOIN horaire ON cours.id = horaire.idcours
 INNER JOIN professeur ON horaire.idprofessseur = professeur.idpersonne
-WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre;
+WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre;
 
 -- Notes d'un élève
 CREATE VIEW notes AS
@@ -37,7 +37,7 @@ INNER JOIN typetest ON test.libellétypetest = typetest.libellé;
 SELECT notes.idetudiant, notes.idcours, SUM(notes.note) / COUNT(*) AS moyenne
 FROM notes
 INNER JOIN cours ON notes.idcours = cours.id
-WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre
+WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
 GROUP BY notes.idcours, notes.idetudiant;
 
 
@@ -48,7 +48,7 @@ SELECT (
     SELECT COUNT(DISTINCT (leçon.nosalle, leçon.nomsalle))
     FROM cours
     INNER JOIN leçon ON cours.id = leçon.idcours
-    WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre AND leçon.nomsalle = :nombâtiment
+    WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre AND leçon.nomsalle = :nombâtiment
 ) / cast((COUNT(*)) AS DECIMAL) as "taux"
 FROM salle
 WHERE nombâtiment = :nombâtiment;
@@ -57,7 +57,7 @@ WHERE nombâtiment = :nombâtiment;
 SELECT (COUNT(DISTINCT (etudiant_leçon.idleçon, etudiant_leçon.idetudiant)) / COUNT(DISTINCT etudiant_leçon.idetudiant)) AS moyenne
 FROM etudiant_leçon
 INNER JOIN cours ON etudiant_leçon.idleçon = cours.id
-WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre;
+WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre;
 
 -- Nombre moyen de leçon par professeur
 SELECT AVG(nbLeçons.nb)
@@ -66,7 +66,7 @@ FROM (
     FROM leçon
     INNER JOIN cours ON leçon.idcours = cours.id
     INNER JOIN etudiant_leçon on leçon.numéro = etudiant_leçon.noleçon and leçon.idcours = etudiant_leçon.idleçon
-    WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre
+    WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
     GROUP BY etudiant_leçon.idetudiant
 ) as nbLeçons;
 
@@ -76,7 +76,7 @@ FROM (
     SELECT COUNT(*) nb
     FROM leçon
     INNER JOIN cours ON leçon.idcours = cours.id
-    WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre
+    WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
     GROUP BY idprofessseur
 ) as nbLeçons;
 
@@ -87,14 +87,14 @@ SELECT (
         SELECT DISTINCT etudiant_leçon.idetudiant
         FROM etudiant_leçon
         INNER JOIN cours ON etudiant_leçon.idleçon = cours.id
-        --WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre
+        --WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
         GROUP BY etudiant_leçon.idetudiant, cours.annéeetude
         HAVING COUNT(cours.annéeetude) = 2
     ) AS async
 ) / COUNT(DISTINCT etudiant_leçon.idetudiant) AS "taux async"
 FROM etudiant_leçon
 INNER JOIN cours ON etudiant_leçon.idleçon = cours.id
-WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre;
+WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre;
 
 -- Notes
 -- Taux échec
@@ -118,7 +118,7 @@ FROM (
      SELECT notes.idetudiant, SUM(notes.note * notes.coefficient) / COUNT(*) AS moyenne
      FROM notes
      INNER JOIN cours ON notes.idcours = cours.id
-     WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre
+     WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
      GROUP BY notes.idcours, notes.idetudiant
 ) AS notes
 GROUP BY notes.idetudiant;
