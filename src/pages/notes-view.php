@@ -9,6 +9,7 @@ $cours = $db->getCoursEtudiant(7);
 
 
 
+
 ?>
 
 <!DOCTYPE html>
@@ -172,6 +173,7 @@ $cours = $db->getCoursEtudiant(7);
                         <div class="card-body">
                             <?php
                             foreach ($cours as $cour) {
+
                             ?>
 
                                 <div class="card shadow mb-4">

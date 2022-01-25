@@ -261,6 +261,22 @@ class Database
         return $sth->fetchAll();
     }
 
+    function getMoyenneCoursEtudiant2(int $etudiantId, int $idCours): array
+    {
+        $sql = <<<'SQL'
+        SELECT notes.idetudiant, notes.idcours, AVG(notes.note * notes.coefficient) as average
+        FROM notes
+        WHERE notes.idetudiant = :etudiantid AND notes.idcours = :idcours
+        GROUP BY notes.idcours, notes.idetudiant;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('etudiantid', $etudiantId, PDO::PARAM_INT);
+        $sth->bindParam('idcours', $idCours, PDO::PARAM_INT);
+
+        return $sth->fetchAll();
+    }
+
     function getNombreMoyenCoursSuivi(int $noSemestre, int $anneeSemestre): array
     {
         $sql = <<<'SQL'
