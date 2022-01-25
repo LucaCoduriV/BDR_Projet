@@ -195,7 +195,9 @@ function pPrint($value)
                                                         $used = false;
                                                         foreach ($horaires as $horaire) {
                                                             if ($horaire['noplagehoraire'] == $plageHoraires[0] && $horaire['joursemaine'] == $i) {
-                                                                echo "<td rowspan='" . $horaire['nbrpériodes'] . "'>" . $horaire['nom'] . "<br/>" . $horaire['trigramme'] . "<br/>" . $horaire['nosalle'] . "</td>";
+                                                                echo "<td rowspan='" . $horaire['nbrpériodes'] . "'>" . $horaire['nom'] . "<br/>"
+                                                                    . $horaire['trigramme'] . "<br/>"
+                                                                    . $horaire['nosalle'] . "</td>";
                                                                 $used = true;
                                                                 break;
                                                             }
