@@ -54,6 +54,13 @@
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
+        <a class="nav-link" href="/pages/lessons-view.php">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Leçon</span></a>
+    </li>
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item">
         <a class="nav-link" href="/pages/buildings-view.php">
             <i class="fas fa-fw fa-cog"></i>
             <span>Bâtiment</span></a>
