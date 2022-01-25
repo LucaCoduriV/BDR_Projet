@@ -3,15 +3,11 @@
 include_once("../db.php");
 
 $res = false;
-
 $semestres = $db->getSemestres();
+$notes = $db->getNotesEleve(7);
+$cours = $db->getCoursEtudiant(7);
 
-function pPrint($value)
-{
-    echo "<pre>";
-    print_r($value);
-    echo "</pre>";
-}
+
 
 ?>
 
@@ -140,72 +136,84 @@ function pPrint($value)
                             </form>
                         </div>
                     </div>
-                    <?php if (isset($_POST['idEtudiant']) && isset($_POST['idSemestre'])) { ?>
 
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Ajouter une note</h6>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="">
+                                <div id="dataTable_filter" class="dataTables_filter">
+                                    <label>Année
+                                        <input name="annee" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                    </label>
+                                    <label>Numéro
+                                        <input name="numero" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                    </label>
+                                    <label>Semaine début
+                                        <input name="semaineDebut" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                    </label>
+                                    <label>Semaine fin
+                                        <input name="semaineFin" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                    </label>
+                                    <label>
+                                        <input type="submit" name="newSemestre" class="form-control btn btn-primary" value="Ajouter" />
+                                    </label>
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
-                        <!-- DataTales Example -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Horaires</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>Lundi</th>
-                                                <th>Mardi</th>
-                                                <th>Mercredi</th>
-                                                <th>Jeudi</th>
-                                                <th>Vendredi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Notes</h6>
+                        </div>
+                        <div class="card-body">
+                            <?php
+                            foreach ($cours as $cour) {
+                            ?>
 
-                                            <?php
-                                            $ligne = array_fill(0, 6, false);
-                                            $horaires = $db->getHoraireEtudiant($semestres[$_POST['idSemestre']]['numéro'], $semestres[$_POST['idSemestre']]['année'], $_POST['idEtudiant']);
-
-                                            //print_r($horaires[0]);
-
-                                            foreach ($db->getPlagesHoraire() as $plageHoraires) {
-                                            ?>
-                                                <tr>
-                                                    <td><?= $plageHoraires[1] ?> <br /> <?= $plageHoraires[2] ?></td>
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary"><?= $cour['nom'] ?></h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nom</th>
+                                                        <th>Type</th>
+                                                        <th>Moyenne de classe</th>
+                                                        <th>coefficient</th>
+                                                        <th>Note</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
                                                     <?php
-
-                                                    for ($i = 1; $i <= 5; $i++) {
-                                                        $used = false;
-                                                        foreach ($horaires as $horaire) {
-                                                            if ($horaire['noplagehoraire'] == $plageHoraires[0] && $horaire['joursemaine'] == $i) {
-                                                                echo "<td class='bg-primary text-white' rowspan='" . $horaire['nbrpériodes'] . "'>" . $horaire['nom'] . "<br/>"
-                                                                    . $horaire['trigramme'] . "<br/>"
-                                                                    . $horaire['nosalle'] . "</td>";
-                                                                $used = true;
-
-                                                                break;
-                                                            }
+                                                    foreach ($notes as $note) {
+                                                        echo "<tr>";
+                                                        if ($note['idcours'] == $cour['id']) {
+                                                            echo '<td>' . $note['nom'] . '</td>';
+                                                            echo '<td>' . $note['libellé'] . '</td>';
+                                                            echo '<td>' . $note['note'] . '</td>';
+                                                            echo '<td>' . $note['coefficient'] . '</td>';
+                                                            echo '<td>' . $note['note'] . '</td>';
                                                         }
-                                                        if (!$used) {
-                                                            if (!$ligne[$i])
-                                                                echo "<td></td>";
-                                                            $ligne[$i] = false;
-                                                        } else {
-                                                            $ligne[$i] = true;
-                                                        }
+                                                        echo "</tr>";
                                                     }
                                                     ?>
-                                                </tr>
-                                            <?php
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
                                 </div>
-                            </div>
+                            <?php } ?>
                         </div>
-                    <?php } ?>
+                    </div>
+
                 </div>
                 <!-- End of Main Content -->
 
