@@ -180,7 +180,9 @@ function pPrint($value)
                                             </tr>
                                         </thead>
                                         <tbody>
+
                                             <?php
+                                            $ligne = array_fill(0, 5, false);
                                             $horaires = $db->getHoraireEtudiant($semestres[$_POST['idSemestre']]['numéro'], $semestres[$_POST['idSemestre']]['année'], $_POST['idEtudiant']);
 
                                             //print_r($horaires[0]);
@@ -199,11 +201,16 @@ function pPrint($value)
                                                                     . $horaire['trigramme'] . "<br/>"
                                                                     . $horaire['nosalle'] . "</td>";
                                                                 $used = true;
+
                                                                 break;
                                                             }
                                                         }
                                                         if (!$used) {
-                                                            echo "<td></td>";
+                                                            if (!$ligne[$i])
+                                                                echo "<td></td>";
+                                                            $ligne[$i] = false;
+                                                        } else {
+                                                            $ligne[$i] = true;
                                                         }
                                                     }
                                                     ?>
