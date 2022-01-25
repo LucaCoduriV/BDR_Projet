@@ -107,23 +107,31 @@ function pPrint($value)
                         <div class="card-body">
                             <form method="post" action="">
                                 <div id="dataTable_filter" class="dataTables_filter">
-                                    <select name="idSemestre" class="form-select" aria-label="Default select example">
-                                        <?php
-                                        foreach ($semestres as $key => $semestre) {
-                                            $selected = $key == $_POST['idSemestre'] ? " selected" : "";
-                                            echo "<option" . $selected . " value='" . $key . "'>" . $semestre['numéro'] . " " . $semestre['année'] . "</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                    <select name="idEtudiant" class="form-select" aria-label="Default select example">
-                                        <option selected>Choisissez un étudiant</option>
-                                        <?php
-                                        foreach ($db->getEtudiants() as $etudiant) {
-                                            $selected = $etudiant['id'] == $_POST['idEtudiant'] ? " selected" : "";
-                                            echo "<option" . $selected . " value='" . $etudiant['id'] . "'>" . $etudiant['nom'] . " " . $etudiant['prénom'] . "</option>";
-                                        }
-                                        ?>
-                                    </select>
+                                    <label>
+                                        Semestre :
+                                        <select name="idSemestre" class="form-control" aria-label="Default select example">
+                                            <?php
+                                            foreach ($semestres as $key => $semestre) {
+                                                $selected = $key == $_POST['idSemestre'] ? " selected" : "";
+                                                echo "<option" . $selected . " value='" . $key . "'>" . $semestre['numéro'] . " " . $semestre['année'] . "</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </label>
+
+                                    <label>
+                                        Etudiant :
+                                        <select name="idEtudiant" class="form-control" aria-label="Default select example">
+                                            <option selected>Choisissez un étudiant</option>
+                                            <?php
+                                            foreach ($db->getEtudiants() as $etudiant) {
+                                                $selected = $etudiant['id'] == $_POST['idEtudiant'] ? " selected" : "";
+                                                echo "<option" . $selected . " value='" . $etudiant['id'] . "'>" . $etudiant['nom'] . " " . $etudiant['prénom'] . "</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </label>
+
                                     <label>
                                         <input type="submit" class="form-control btn btn-primary" value="Valider" />
                                     </label>
@@ -133,33 +141,7 @@ function pPrint($value)
                         </div>
                     </div>
                     <?php if (isset($_POST['idEtudiant']) && isset($_POST['idSemestre'])) { ?>
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Ajouter un semestre</h6>
-                            </div>
-                            <div class="card-body">
-                                <form method="post" action="">
-                                    <div id="dataTable_filter" class="dataTables_filter">
-                                        <label>Année
-                                            <input name="annee" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
-                                        </label>
-                                        <label>Numéro
-                                            <input name="numero" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
-                                        </label>
-                                        <label>Semaine début
-                                            <input name="semaineDebut" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
-                                        </label>
-                                        <label>Semaine fin
-                                            <input name="semaineFin" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
-                                        </label>
-                                        <label>
-                                            <input type="submit" name="newSemestre" class="form-control btn btn-primary" value="Ajouter" />
-                                        </label>
-                                        </a>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+
 
                         <!-- DataTales Example -->
                         <div class="card shadow mb-4">
