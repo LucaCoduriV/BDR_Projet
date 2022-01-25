@@ -234,19 +234,16 @@ class Database
         return $sth->fetchAll();
     }
 
-    function getNoteEleve(int $noSemestre, int $anneeSemestre): array
+    function getNotesEleve(int $idEtudiant): array
     {
         $sql = <<<'SQL'
-        SELECT * FROM etudiant_test
-        INNER JOIN test on test.id = etudiant_test.idtest
-        INNER JOIN typetest on test.libellétypetest = typetest.libellé
-        INNER JOIN cours on test.idcours = cours.id
-        WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :anneesemestre;
+        SELECT * FROM notes
+        WHERE idetudiant = :idetudiant;
         SQL;
 
         $sth = $this->connexion->prepare($sql);
-        $sth->bindParam('nosemestre', $noSemestre, PDO::PARAM_INT);
-        $sth->bindParam('anneesemestre', $anneeSemestre, PDO::PARAM_INT);
+        $sth->bindParam('idetudiant', $idEtudiant, PDO::PARAM_INT);
+        $sth->execute();
 
 
         return $sth->fetchAll();
@@ -879,6 +876,25 @@ class Database
 
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('id', $id);
+
+        $sth->execute();
+
+        return $sth->fetchAll();
+    }
+
+    function getCoursEtudiant($idEtudiant)
+    {
+        $sql = <<<'SQL'
+        SELECT DISTINCT cours.id, cours.nom, cours.annéeetude, cours.annéesemestre
+        FROM cours
+        INNER JOIN leçon l on cours.id = l.idcours
+        INNER JOIN etudiant_leçon el on l.numéro = el.noleçon and l.idcours = el.idleçon
+        INNER JOIN etudiant e on el.idetudiant = e.idpersonne
+        WHERE e.idpersonne = :idetudiant;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('idetudiant', $idEtudiant);
 
         $sth->execute();
 
