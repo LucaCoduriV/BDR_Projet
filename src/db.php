@@ -177,7 +177,7 @@ class Database
         return $sth->fetchAll();
     }
 
-    function getHoraireEtudiant(int $noSemestre, int $anneeSemestre, int $etudiantId): array
+    function getHoraireEtudiant($noSemestre, $anneeSemestre, $etudiantId): array
     {
 
         $sql = <<<'SQL'

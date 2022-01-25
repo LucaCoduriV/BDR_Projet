@@ -125,7 +125,7 @@ function pPrint($value)
                                             <option selected>Choisissez un étudiant</option>
                                             <?php
                                             foreach ($db->getEtudiants() as $etudiant) {
-                                                $selected = $etudiant['id'] == $_POST['idEtudiant'] ? " selected" : "";
+                                                $selected = (isset($_POST['idEtudiant']) && $etudiant['idpersonne'] == $_POST['idEtudiant']) ? " selected" : "";
                                                 echo "<option" . $selected . " value='" . $etudiant['id'] . "'>" . $etudiant['nom'] . " " . $etudiant['prénom'] . "</option>";
                                             }
                                             ?>
