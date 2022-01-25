@@ -182,7 +182,7 @@ function pPrint($value)
                                         <tbody>
 
                                             <?php
-                                            $ligne = array_fill(0, 5, false);
+                                            $ligne = array_fill(0, 6, false);
                                             $horaires = $db->getHoraireEtudiant($semestres[$_POST['idSemestre']]['numéro'], $semestres[$_POST['idSemestre']]['année'], $_POST['idEtudiant']);
 
                                             //print_r($horaires[0]);
@@ -197,7 +197,7 @@ function pPrint($value)
                                                         $used = false;
                                                         foreach ($horaires as $horaire) {
                                                             if ($horaire['noplagehoraire'] == $plageHoraires[0] && $horaire['joursemaine'] == $i) {
-                                                                echo "<td rowspan='" . $horaire['nbrpériodes'] . "'>" . $horaire['nom'] . "<br/>"
+                                                                echo "<td class='bg-primary text-white' rowspan='" . $horaire['nbrpériodes'] . "'>" . $horaire['nom'] . "<br/>"
                                                                     . $horaire['trigramme'] . "<br/>"
                                                                     . $horaire['nosalle'] . "</td>";
                                                                 $used = true;
