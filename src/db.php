@@ -10,7 +10,7 @@ class Database
     function __construct()
     {
         $this->connexion = new PDO('pgsql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_NAME'), getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
-        $this->connexion->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT );
+        //$this->connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
     }
 
     function getStatut()
@@ -26,7 +26,8 @@ class Database
         return $sth->fetchAll();
     }
 
-    function modifierEtudiant($id, $nom, $prenom, $dateNaissance, $statut, $souhaiteMacaron, $distanceDomicile) {
+    function modifierEtudiant($id, $nom, $prenom, $dateNaissance, $statut, $souhaiteMacaron, $distanceDomicile)
+    {
         $sql = <<<'SQL'
         UPDATE personne
         SET nom = :nom, datenaissance = :dateNaissance, souhaitemacaron = :souhaitemacaron, distancedomicilekm = :distancedomicilekm
@@ -42,7 +43,7 @@ class Database
 
         $res = $sth->execute();
 
-        if($sth->errorInfo()[0] != "00000") {
+        if ($sth->errorInfo()[0] != "00000") {
             return $sth->errorInfo();
         }
 
@@ -73,8 +74,9 @@ class Database
         return $sth->errorInfo();
     }
 
-    function ajouterEtudiant($nom, $prenom, $dateNaissance, $souhaiteMacaron, $distanceDomicile, $statut) {
-    
+    function ajouterEtudiant($nom, $prenom, $dateNaissance, $souhaiteMacaron, $distanceDomicile, $statut)
+    {
+
         $sql = <<<'SQL'
         INSERT INTO personne (nom, datenaissance, souhaitemacaron, distancedomicilekm) 
         VALUES (:nom, :dateNaissance, :souhaitemacaron, :distancedomicile);
@@ -112,7 +114,8 @@ class Database
         return $sth->errorInfo();
     }
 
-    function getEtudiant($id) {
+    function getEtudiant($id)
+    {
         $sql = <<<'SQL'
         SELECT *
         FROM etudiant
@@ -123,13 +126,13 @@ class Database
 
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('id', $id);
-     
+
         $sth->execute();
 
         return $sth->fetchAll();
     }
 
-    function getEtudiants() 
+    function getEtudiants()
     {
         $sql = <<<'SQL'
         SELECT *
@@ -150,10 +153,10 @@ class Database
         $sql = <<<'SQL'
         DELETE FROM personne WHERE id = :id;
         SQL;
-        
+
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('id', $id);
-     
+
         $sth->execute();
 
         return $sth->errorInfo();
@@ -169,11 +172,12 @@ class Database
         SQL;
 
         $sth = $this->connexion->prepare($sql);
+        $sth->execute();
 
         return $sth->fetchAll();
     }
 
-    function getHoraireEtudiant(int $noSemestre, int $anneeSemestre): array
+    function getHoraireEtudiant(int $noSemestre, int $anneeSemestre, int $etudiantId): array
     {
         $sql = <<<'SQL'
         SELECT * FROM etudiant
@@ -182,13 +186,14 @@ class Database
         INNER JOIN professeur on horaire.idprofessseur = professeur.idpersonne
         INNER JOIN personne on etudiant.idpersonne = personne.id
         INNER JOIN cours on horaire.idcours = cours.id
-        WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéeesemestre;
+        WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :anneeesemestre AND etudiant.idpersonne = :etudiantid;
         SQL;
 
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('nosemestre', $noSemestre, PDO::PARAM_INT);
-        $sth->bindParam('annéeesemestre', $anneeSemestre, PDO::PARAM_INT);
-
+        $sth->bindParam('anneeesemestre', $anneeSemestre, PDO::PARAM_INT);
+        $sth->bindParam('etudiantid', $etudiantId, PDO::PARAM_INT);
+        $sth->execute();
 
         return $sth->fetchAll();
     }
@@ -361,15 +366,16 @@ class Database
         return $sth->errorInfo();
     }
 
-    function supprimerSemestre($annee, $numero) {
+    function supprimerSemestre($annee, $numero)
+    {
         $sql = <<<'SQL'
         DELETE FROM semestre WHERE année = :annee AND numéro = :numero;
         SQL;
-        
+
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('annee', $annee);
         $sth->bindParam('numero', $numero);
-     
+
         $sth->execute();
 
         return $sth->errorInfo();
@@ -438,14 +444,15 @@ class Database
         return $sth->errorInfo();
     }
 
-    function supprimerBatiment($nom) {
+    function supprimerBatiment($nom)
+    {
         $sql = <<<'SQL'
         DELETE FROM bâtiment WHERE nom = :nom;
         SQL;
-        
+
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('nom', $nom);
-     
+
         $sth->execute();
 
         return $sth->errorInfo();
@@ -497,14 +504,15 @@ class Database
         return $sth->errorInfo();
     }
 
-    function supprimerPlageHoraire($numero) {
+    function supprimerPlageHoraire($numero)
+    {
         $sql = <<<'SQL'
         DELETE FROM plagehoraire WHERE numéro = :numero;
         SQL;
-        
+
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('numero', $numero);
-     
+
         $sth->execute();
 
         return $sth->errorInfo();
@@ -576,10 +584,10 @@ class Database
         $sql = <<<'SQL'
         DELETE FROM typetest WHERE libellé = :libelle;
         SQL;
-        
+
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('libelle', $libelle);
-     
+
         $sth->execute();
 
         return $sth->errorInfo();
@@ -636,10 +644,10 @@ class Database
         $sql = <<<'SQL'
         DELETE FROM statut WHERE libellé = :libelle;
         SQL;
-        
+
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('libelle', $libelle);
-     
+
         $sth->execute();
 
         return $sth->errorInfo();
@@ -692,8 +700,9 @@ class Database
         return $sth->fetchAll();
     }
 
-    function ajouterProfesseur($nom, $prenom, $dateNaissance, $souhaiteMacaron, $distanceDomicile, $trigramme) {
-    
+    function ajouterProfesseur($nom, $prenom, $dateNaissance, $souhaiteMacaron, $distanceDomicile, $trigramme)
+    {
+
         $sql = <<<'SQL'
         INSERT INTO personne (nom, datenaissance, souhaitemacaron, distancedomicilekm) 
         VALUES (:nom, :dateNaissance, :souhaitemacaron, :distancedomicile);
@@ -737,10 +746,10 @@ class Database
         $sql = <<<'SQL'
         DELETE FROM personne WHERE id = :id;
         SQL;
-        
+
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('id', $id);
-     
+
         $sth->execute();
 
         return $sth->errorInfo();
@@ -758,13 +767,14 @@ class Database
 
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('id', $id);
-     
+
         $sth->execute();
 
         return $sth->fetchAll();
     }
 
-    function modifierProfesseur($id, $nom, $prenom, $dateNaissance, $trigramme, $souhaiteMacaron, $distanceDomicile) {
+    function modifierProfesseur($id, $nom, $prenom, $dateNaissance, $trigramme, $souhaiteMacaron, $distanceDomicile)
+    {
         $sql = <<<'SQL'
         UPDATE personne
         SET nom = :nom, datenaissance = :dateNaissance, souhaitemacaron = :souhaitemacaron, distancedomicilekm = :distancedomicilekm
@@ -779,8 +789,8 @@ class Database
         $sth->bindParam('id', $id);
 
         $res = $sth->execute();
-        
-        if($sth->errorInfo()[0] != "00000") {
+
+        if ($sth->errorInfo()[0] != "00000") {
             return $sth->errorInfo();
         }
 
@@ -819,7 +829,7 @@ class Database
         SQL;
 
         $sth = $this->connexion->prepare($sql);
-     
+
         $sth->execute();
 
         return $sth->fetchAll();
@@ -849,10 +859,10 @@ class Database
         $sql = <<<'SQL'
         DELETE FROM cours WHERE id = :id;
         SQL;
-        
+
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('id', $id);
-     
+
         $sth->execute();
 
         return $sth->errorInfo();
@@ -916,11 +926,11 @@ class Database
         $sql = <<<'SQL'
         DELETE FROM salle WHERE numéro = :numero AND nombâtiment = :nombatiment;
         SQL;
-        
+
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('numero', $numero);
         $sth->bindParam('nombatiment', $nombatiment);
-     
+
         $sth->execute();
 
         return $sth->errorInfo();
@@ -979,5 +989,3 @@ class Database
 }
 
 $db = new Database();
-
-?>
