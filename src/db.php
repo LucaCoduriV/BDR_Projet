@@ -179,7 +179,7 @@ class Database
 
     function getHoraireEtudiant(int $noSemestre, int $anneeSemestre, int $etudiantId): array
     {
-        
+
         $sql = <<<'SQL'
         SELECT * FROM etudiant
         INNER JOIN etudiant_leçon ON etudiant.idpersonne = etudiant_leçon.idetudiant
@@ -262,10 +262,11 @@ class Database
         return $sth->fetchAll();
     }
 
+    //permet de filtrer les moyennes par cours et par étudiant
     function getMoyenneCoursEtudiant2(int $etudiantId, int $idCours): array
     {
         $sql = <<<'SQL'
-        SELECT notes.idetudiant, notes.idcours, AVG(notes.note * notes.coefficient) as average
+        SELECT notes.idetudiant, notes.idcours, SUM(notes.note * notes.coefficient) / SUM(notes.coefficient) as average
         FROM notes
         WHERE notes.idetudiant = :etudiantid AND notes.idcours = :idcours
         GROUP BY notes.idcours, notes.idetudiant;
@@ -274,6 +275,7 @@ class Database
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('etudiantid', $etudiantId, PDO::PARAM_INT);
         $sth->bindParam('idcours', $idCours, PDO::PARAM_INT);
+        $sth->execute();
 
         return $sth->fetchAll();
     }
@@ -1117,9 +1119,17 @@ class Database
         return $sth->fetchAll();
     }
 
-    function modifierLecon($idprofesseur, $noplagehoraire, $libelletypelecon, $nosalle, 
-        $nombatiment, $nbrperiodes, $joursemaine, $numero, $idcours)
-    {
+    function modifierLecon(
+        $idprofesseur,
+        $noplagehoraire,
+        $libelletypelecon,
+        $nosalle,
+        $nombatiment,
+        $nbrperiodes,
+        $joursemaine,
+        $numero,
+        $idcours
+    ) {
         $sql = <<<'SQL'
         UPDATE leçon SET idprofessseur = :idprofessseur, noplagehoraire = :noplagehoraire, libellétypeleçon = :libelletypelecon, 
         nosalle = :nosalle, nomsalle = :nomsalle, nbrpériodes = :nbrperiodes, joursemaine = :joursemaine
@@ -1142,7 +1152,7 @@ class Database
         return $sth->errorInfo();
     }
 
-    
+
     function getAllTypeLecon()
     {
         $sql = <<<'SQL'
@@ -1152,7 +1162,7 @@ class Database
         $sth = $this->connexion->prepare($sql);
 
         $sth->execute();
-        
+
         return $sth->fetchAll();
     }
 }

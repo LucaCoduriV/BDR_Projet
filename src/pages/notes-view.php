@@ -3,9 +3,13 @@
 include_once("../db.php");
 
 $res = false;
-$semestres = $db->getSemestres();
-$notes = $db->getNotesEleve(7);
-$cours = $db->getCoursEtudiant(7);
+
+if (isset($_POST['idEtudiant'])) {
+    $notes = $db->getNotesEleve($_POST['idEtudiant']);
+    $cours = $db->getCoursEtudiant($_POST['idEtudiant']);
+}
+
+
 
 
 
@@ -104,17 +108,6 @@ $cours = $db->getCoursEtudiant(7);
                         <div class="card-body">
                             <form method="post" action="">
                                 <div id="dataTable_filter" class="dataTables_filter">
-                                    <label>
-                                        Semestre :
-                                        <select name="idSemestre" class="form-control" aria-label="Default select example">
-                                            <?php
-                                            foreach ($semestres as $key => $semestre) {
-                                                $selected = $key == $_POST['idSemestre'] ? " selected" : "";
-                                                echo "<option" . $selected . " value='" . $key . "'>" . $semestre['numéro'] . " " . $semestre['année'] . "</option>";
-                                            }
-                                            ?>
-                                        </select>
-                                    </label>
 
                                     <label>
                                         Etudiant :
@@ -137,85 +130,91 @@ $cours = $db->getCoursEtudiant(7);
                             </form>
                         </div>
                     </div>
+                    <?php if (isset($_POST['idEtudiant'])) { ?>
 
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Ajouter une note</h6>
-                        </div>
-                        <div class="card-body">
-                            <form method="post" action="">
-                                <div id="dataTable_filter" class="dataTables_filter">
-                                    <label>Année
-                                        <input name="annee" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
-                                    </label>
-                                    <label>Numéro
-                                        <input name="numero" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
-                                    </label>
-                                    <label>Semaine début
-                                        <input name="semaineDebut" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
-                                    </label>
-                                    <label>Semaine fin
-                                        <input name="semaineFin" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
-                                    </label>
-                                    <label>
-                                        <input type="submit" name="newSemestre" class="form-control btn btn-primary" value="Ajouter" />
-                                    </label>
-                                    </a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Notes</h6>
-                        </div>
-                        <div class="card-body">
-                            <?php
-                            foreach ($cours as $cour) {
-
-                            ?>
-
-                                <div class="card shadow mb-4">
-                                    <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary"><?= $cour['nom'] ?></h6>
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Ajouter une note</h6>
+                            </div>
+                            <div class="card-body">
+                                <form method="post" action="">
+                                    <div id="dataTable_filter" class="dataTables_filter">
+                                        <label>Année
+                                            <input name="annee" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                        </label>
+                                        <label>Numéro
+                                            <input name="numero" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                        </label>
+                                        <label>Semaine début
+                                            <input name="semaineDebut" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                        </label>
+                                        <label>Semaine fin
+                                            <input name="semaineFin" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                        </label>
+                                        <label>
+                                            <input type="submit" name="newSemestre" class="form-control btn btn-primary" value="Ajouter" />
+                                        </label>
+                                        </a>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Nom</th>
-                                                        <th>Type</th>
-                                                        <th>Moyenne de classe</th>
-                                                        <th>coefficient</th>
-                                                        <th>Note</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    foreach ($notes as $note) {
-                                                        echo "<tr>";
-                                                        if ($note['idcours'] == $cour['id']) {
-                                                            echo '<td>' . $note['nom'] . '</td>';
-                                                            echo '<td>' . $note['libellé'] . '</td>';
-                                                            echo '<td>' . $note['note'] . '</td>';
-                                                            echo '<td>' . $note['coefficient'] . '</td>';
-                                                            echo '<td>' . $note['note'] . '</td>';
-                                                        }
-                                                        echo "</tr>";
-                                                    }
-                                                    ?>
-                                                </tbody>
-                                            </table>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Notes</h6>
+                            </div>
+                            <div class="card-body">
+                                <?php
+                                foreach ($cours as $cour) {
+                                    $moyenne = $db->getMoyenneCoursEtudiant2($_POST['idEtudiant'], $cour['id']);
+                                    if ($moyenne != null) {
+                                        $roundedMoyenne = round($moyenne[0]['average'], 2);
+                                    } else {
+                                        $roundedMoyenne = 0;
+                                    }
+                                ?>
+
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header py-3">
+                                            <h6 class="m-0 font-weight-bold text-primary"><?= $cour['nom'] . " Moyenne: " . $roundedMoyenne ?></h6>
                                         </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nom</th>
+                                                            <th>Type</th>
+                                                            <th>Moyenne de classe</th>
+                                                            <th>coefficient</th>
+                                                            <th>Note</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php
+                                                        foreach ($notes as $note) {
+                                                            echo "<tr>";
+                                                            if ($note['idcours'] == $cour['id']) {
+                                                                echo '<td>' . $note['nom'] . '</td>';
+                                                                echo '<td>' . $note['libellé'] . '</td>';
+                                                                echo '<td>' . $note['note'] . '</td>';
+                                                                echo '<td>' . $note['coefficient'] . '</td>';
+                                                                echo '<td>' . $note['note'] . '</td>';
+                                                            }
+                                                            echo "</tr>";
+                                                        }
+                                                        ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
                                     </div>
-
-                                </div>
-                            <?php } ?>
+                                <?php } ?>
+                            </div>
                         </div>
-                    </div>
-
+                    <?php } ?>
                 </div>
                 <!-- End of Main Content -->
 
