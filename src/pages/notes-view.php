@@ -117,7 +117,7 @@ if (isset($_POST['idEtudiant'])) {
 
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Choisissez un élève</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Afficher les notes d'un étudiant</h6>
                         </div>
                         <div class="card-body">
                             <form method="post" action="">
