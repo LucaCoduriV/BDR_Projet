@@ -101,6 +101,12 @@
             <span>Statut</span></a>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link" href="/pages/test-view.php">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>Tests</span></a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider">
 
@@ -115,6 +121,8 @@
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Horaires</span></a>
     </li>
+
+
 
     <li class="nav-item">
         <a class="nav-link" href="/pages/notes-view.php">

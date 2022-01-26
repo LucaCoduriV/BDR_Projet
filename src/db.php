@@ -66,6 +66,36 @@ class Database
         return $sth->fetchAll();
     }
 
+    function insertNote($idEtudiant, $idTest, $note)
+    {
+        $sql = <<<'SQL'
+        INSERT INTO public.etudiant_test (idetudiant, idtest, note)
+        VALUES (:idetudiant, :idtest, :note);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('idetudiant', $idEtudiant);
+        $sth->bindParam('idtest', $idTest);
+        $sth->bindParam('note', $note);
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
+    function insertTest($idCours, $libelletypetest, $nom)
+    {
+        $sql = <<<'SQL'
+        INSERT INTO public.test (id, idcours, libellétypetest, nom)
+        VALUES (DEFAULT, :idcours, :libelleypetest, :nom);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('idcours', $idCours);
+        $sth->bindParam('libelletypetest', $libelletypetest);
+        $sth->bindParam('note', $nom);
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
     function getMoyenneCoursEtudiant(): array
     {
         $sql = <<<'SQL'
