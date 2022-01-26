@@ -2,9 +2,7 @@
 
 include_once("../db.php");
 
-$res = false;
-
-$semestres = $db->getSemestres();
+$semestres = $db->semestre->getSemestres();
 
 function pPrint($value)
 {
@@ -124,7 +122,7 @@ function pPrint($value)
                                         <select name="idEtudiant" class="form-control" aria-label="Default select example">
                                             <option selected>Choisissez un étudiant</option>
                                             <?php
-                                            foreach ($db->getEtudiants() as $etudiant) {
+                                            foreach ($db->etudiant->getEtudiants() as $etudiant) {
                                                 $selected = (isset($_POST['idEtudiant']) && $etudiant['idpersonne'] == $_POST['idEtudiant']) ? " selected" : "";
                                                 echo "<option" . $selected . " value='" . $etudiant['id'] . "'>" . mb_strtoupper($etudiant['nom']) . " " . $etudiant['prénom'] . "</option>";
                                             }
@@ -165,11 +163,11 @@ function pPrint($value)
 
                                             <?php
                                             $ligne = array_fill(0, 6, false);
-                                            $horaires = $db->getHoraireEtudiant($semestres[$_POST['idSemestre']]['numéro'], $semestres[$_POST['idSemestre']]['année'], $_POST['idEtudiant']);
+                                            $horaires = $db->horaire->getHoraireEtudiant($semestres[$_POST['idSemestre']]['numéro'], $semestres[$_POST['idSemestre']]['année'], $_POST['idEtudiant']);
 
                                             //print_r($horaires[0]);
 
-                                            foreach ($db->getPlagesHoraire() as $plageHoraires) {
+                                            foreach ($db->plagehoraire->getPlagesHoraire() as $plageHoraires) {
                                             ?>
                                                 <tr>
                                                     <td><?= $plageHoraires[1] ?> <br /> <?= $plageHoraires[2] ?></td>

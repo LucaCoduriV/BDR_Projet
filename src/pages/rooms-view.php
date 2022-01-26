@@ -2,18 +2,16 @@
 
 include_once("../db.php");
 
-$res = false;
-
 if(isset($_POST['newSalle'])) {
 
-    $error = $db->ajouterSalle(
+    $error = $db->salle->ajouterSalle(
         $_POST['numero'],
         $_POST['batiment']
     );
 }
 
 if(isset($_POST['supprimerSalle'])) {
-    $error = $db->supprimerSalle($_POST['numero'], $_POST['nombatiment']);
+    $error = $db->salle->supprimerSalle($_POST['numero'], $_POST['nombatiment']);
 }
 
 ?>
@@ -122,7 +120,7 @@ if(isset($_POST['supprimerSalle'])) {
                                 <label>Bâtiment
                                     <select name="batiment" class="form-control">
                                     <?php
-                                    foreach($db->getBatiments() as $batiment) {
+                                    foreach($db->batiment->getBatiments() as $batiment) {
                                         ?>
                                         <option value="<?= $batiment['nom'] ?>"><?= $batiment['nom']?></option>
                                         <?php
@@ -156,7 +154,7 @@ if(isset($_POST['supprimerSalle'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getSalles() as $salle) {
+                                    foreach($db->salle->getSalles() as $salle) {
                                         ?>
                                         <tr>
                                             <td><?= $salle['numéro'] ?></td>

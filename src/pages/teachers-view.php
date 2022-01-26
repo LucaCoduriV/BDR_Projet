@@ -2,13 +2,11 @@
 
 include_once("../db.php");
 
-$res = false;
-
 if(isset($_POST['ajouterProfesseur'])) {
 
     $souhaiteMacaron = !isset($_POST['souhaiteMacaron']) ? 'false' : 'true';
 
-    $error = $db->ajouterProfesseur(
+    $error = $db->professeur->ajouterProfesseur(
         $_POST['nom'],
         $_POST['prenom'],
         $_POST['dateNaissance'],
@@ -19,7 +17,7 @@ if(isset($_POST['ajouterProfesseur'])) {
 }
 
 if(isset($_POST['supprimerProfesseur'])) {
-    $error = $db->supprimerProfesseur($_POST['id']);
+    $error = $db->professeur->supprimerProfesseur($_POST['id']);
 }
 
 ?>
@@ -171,7 +169,7 @@ if(isset($_POST['supprimerProfesseur'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getProfesseurs() as $prof) {
+                                    foreach($db->professeur->getProfesseurs() as $prof) {
                                         $date = date_create($prof['datenaissance']);
                                         ?>
                                         <tr>

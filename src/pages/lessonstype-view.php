@@ -4,13 +4,13 @@ include_once("../db.php");
 
 if(isset($_POST['newTypeLecon'])) {
 
-    $error = $db->ajouterTypeLecon(
+    $error = $db->typelecon->ajouterTypeLecon(
         $_POST['libelle']
     );
 }
 
 if(isset($_POST['supprimerTypeLecon'])) {
-    $error = $db->supprimerTypeLecon($_POST['libelle']);
+    $error = $db->typelecon->supprimerTypeLecon($_POST['libelle']);
 }
 
 ?>
@@ -141,7 +141,7 @@ if(isset($_POST['supprimerTypeLecon'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getAllTypeLecon() as $type) {
+                                    foreach($db->typelecon->getAllTypeLecon() as $type) {
                                         ?>
                                         <tr>
                                             <td><?= $type['libellé'] ?></td>

@@ -6,7 +6,7 @@ $res = false;
 
 if(isset($_POST['newPlageHoraire'])) {
 
-    $error = $db->ajouterPlageHoraire(
+    $error = $db->plagehoraire->ajouterPlageHoraire(
         $_POST['numero'],
         $_POST['heuredebut'], 
         $_POST['heurefin'],
@@ -14,7 +14,7 @@ if(isset($_POST['newPlageHoraire'])) {
 }
 
 if(isset($_POST['supprimerPlageHoraire'])) {
-    $error = $db->supprimerPlageHoraire($_POST['numero']);
+    $error = $db->plagehoraire->supprimerPlageHoraire($_POST['numero']);
 }
 
 ?>
@@ -153,7 +153,7 @@ if(isset($_POST['supprimerPlageHoraire'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getPlagesHoraire() as $plage) {
+                                    foreach($db->plagehoraire->getPlagesHoraire() as $plage) {
                                         $dateDebut = date_create($plage['heuredébut']);
                                         $dateFin = date_create($plage['heurefin']);
                                         ?>

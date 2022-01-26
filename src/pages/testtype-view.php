@@ -2,18 +2,16 @@
 
 include_once("../db.php");
 
-$res = false;
-
 if(isset($_POST['newTypeTest'])) {
 
-    $error = $db->ajouterTypeTest(
+    $error = $db->typetest->ajouterTypeTest(
         $_POST['libelle'],
         $_POST['coefficient']
     );
 }
 
 if(isset($_POST['supprimerTypeTest'])) {
-    $error = $db->supprimerTypeTest($_POST['libelle']);
+    $error = $db->typetest->supprimerTypeTest($_POST['libelle']);
 }
 
 ?>
@@ -148,7 +146,7 @@ if(isset($_POST['supprimerTypeTest'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getTypesTest() as $type) {
+                                    foreach($db->typetest->getTypesTest() as $type) {
                                         ?>
                                         <tr>
                                             <td><?= $type['libellé'] ?></td>

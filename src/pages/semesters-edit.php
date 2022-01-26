@@ -7,10 +7,10 @@ if(!(isset($_GET['annee']) && isset($_GET['numero']))) {
     header("Location: students-view.php");
 }
 
-$semestre = $db->getSemestre($_GET['annee'], $_GET['numero']);
+$semestre = $db->semestre->getSemestre($_GET['annee'], $_GET['numero']);
 
 if(isset($_POST['modifierSemestre'])) {
-    $error = $db->modifierSemestre(
+    $error = $db->semestre->modifierSemestre(
         $_POST['oldannee'],
         $_POST['oldnumero'],
         $_GET['annee'],

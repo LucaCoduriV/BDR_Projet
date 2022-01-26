@@ -7,11 +7,11 @@ if(!isset($_GET['idlecon']) || !isset($_GET['idcours'])) {
     header("Location: lessons-view.php");
 }
 
-$lecon = $db->getLecon($_GET['idlecon'], $_GET['idcours']);
+$lecon = $db->lecon->getLecon($_GET['idlecon'], $_GET['idcours']);
 
 if(isset($_POST['ajouterEtudiantLecon'])) {
 
-    $error = $db->ajouterEtudiantsLecon(
+    $error = $db->lecon->ajouterEtudiantsLecon(
         $_POST['etudiantsLecon'],
         $_GET['idlecon'],
         $_GET['idcours']
@@ -144,7 +144,7 @@ $weekday = [
                                 <label>Choisir un étudiant</label>
                                 <select name="etudiantsLecon[]" class="form-control" multiple size="10">
                                 <?php
-                                foreach($db->getEtudiants() as $etudiant) {
+                                foreach($db->etudiant->getEtudiants() as $etudiant) {
                                     ?>
                                     <option value="<?=$etudiant['id']?>"><?= mb_strtoupper($etudiant['nom']) . " " . $etudiant["prénom"] ?></option>
                                     <?php

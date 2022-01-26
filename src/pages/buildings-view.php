@@ -2,18 +2,16 @@
 
 include_once("../db.php");
 
-$res = false;
-
 if(isset($_POST['newBatiment'])) {
 
-    $error = $db->ajouterBatiment(
+    $error = $db->batiment->ajouterBatiment(
         $_POST['nom'],
         $_POST['nbrplaceparking']
     );
 }
 
 if(isset($_POST['supprimerBatiment'])) {
-    $error = $db->supprimerBatiment($_POST['nom']);
+    $error = $db->batiment->supprimerBatiment($_POST['nom']);
 }
 
 ?>
@@ -148,7 +146,7 @@ if(isset($_POST['supprimerBatiment'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getBatiments() as $batiment) {
+                                    foreach($db->batiment->getBatiments() as $batiment) {
                                         ?>
                                         <tr>
                                             <td><?= $batiment['nom'] ?></td>

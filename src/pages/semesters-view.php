@@ -2,11 +2,9 @@
 
 include_once("../db.php");
 
-$res = false;
-
 if(isset($_POST['newSemestre'])) {
 
-    $error = $db->ajouterSemestre(
+    $error = $db->semestre->ajouterSemestre(
         $_POST['annee'],
         $_POST['numero'],
         $_POST['semaineDebut'],
@@ -15,7 +13,7 @@ if(isset($_POST['newSemestre'])) {
 }
 
 if(isset($_POST['supprimerSemestre'])) {
-    $error = $db->supprimerSemestre($_POST['annee'], $_POST['numero']);
+    $error = $db->semestre->supprimerSemestre($_POST['annee'], $_POST['numero']);
 }
 
 ?>
@@ -158,7 +156,7 @@ if(isset($_POST['supprimerSemestre'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getSemestres() as $semestre) {
+                                    foreach($db->semestre->getSemestres() as $semestre) {
                                         ?>
                                         <tr>
                                             <td><?= $semestre['année']; ?></td>

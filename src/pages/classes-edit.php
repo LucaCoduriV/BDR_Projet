@@ -7,13 +7,13 @@ if(!isset($_GET['idCours'])) {
     header("Location: classes-view.php");
 }
 
-$cours = $db->getCours($_GET['idCours']);
+$cours = $db->cours->getCours($_GET['idCours']);
 
 if(isset($_POST['modifierCours'])) {
     
     $semestreAnnee = explode("-", $_POST['semestreAnnee']);
 
-    $error = $db->modifierCours(
+    $error = $db->cours->modifierCours(
         $_GET['idCours'],
         $_POST['nom'],
         $_POST['semainedebut'],
@@ -146,7 +146,7 @@ if(isset($_POST['modifierCours'])) {
                                     <select name="semestreAnnee" class="form-control">
                                     <?php
                                     
-                                    foreach($db->getSemestres() as $semestre) {
+                                    foreach($db->semestre->getSemestres() as $semestre) {
                                         ?>
                                             <option value="<?= $semestre['numéro'] . "-" . $semestre['année'] ?>" <?= ($semestre['année'] == $cours[0]["annéesemestre"] && $semestre['numéro'] == $cours[0]["nosemestre"]) ? 'selected' : '' ?> ><?= $semestre['numéro'] . " / " . $semestre['année'] ?></option>
                                             <?php

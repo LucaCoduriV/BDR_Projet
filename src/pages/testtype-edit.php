@@ -7,10 +7,10 @@ if(!(isset($_GET['libelle']))) {
     header("Location: testtype-view.php");
 }
 
-$type = $db->getTypeTest($_GET['libelle']);
+$type = $db->typetest->getTypeTest($_GET['libelle']);
 
 if(isset($_POST['modifierTypeTest'])) {
-    $error = $db->modifierTypeTest(
+    $error = $db->typetest->modifierTypeTest(
         $_POST['oldlibelle'],
         $_POST['libelle'],
         $_POST['coefficient']

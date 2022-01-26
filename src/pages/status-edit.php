@@ -7,10 +7,10 @@ if(!(isset($_GET['libelle']))) {
     header("Location: status-view.php");
 }
 
-$status = $db->getStatus($_GET['libelle']);
+$status = $db->statut->getStatus($_GET['libelle']);
 
 if(isset($_POST['modifierStatut'])) {
-    $error = $db->modifierStatut(
+    $error = $db->statut->modifierStatut(
         $_POST['oldlibelle'],
         $_POST['libelle']
     );

@@ -2,11 +2,9 @@
 
 include_once("../db.php");
 
-$res = false;
-
 if (isset($_POST['idEtudiant'])) {
     $notes = $db->getNotesEleve($_POST['idEtudiant']);
-    $cours = $db->getCoursEtudiant($_POST['idEtudiant']);
+    $cours = $db->cours->getCoursEtudiant($_POST['idEtudiant']);
 }
 
 
@@ -114,7 +112,7 @@ if (isset($_POST['idEtudiant'])) {
                                         <select name="idEtudiant" class="form-control" aria-label="Default select example">
                                             <option selected>Choisissez un étudiant</option>
                                             <?php
-                                            foreach ($db->getEtudiants() as $etudiant) {
+                                            foreach ($db->etudiant->getEtudiants() as $etudiant) {
                                                 $selected = $etudiant['id'] == $_POST['idEtudiant'] ? " selected" : "";
                                                 echo "<option" . $selected . " value='" . $etudiant['id'] . "'>" . $etudiant['nom'] . " " . $etudiant['prénom'] . "</option>";
                                             }

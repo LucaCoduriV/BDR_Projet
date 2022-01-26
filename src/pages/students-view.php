@@ -2,13 +2,11 @@
 
 include_once("../db.php");
 
-$res = false;
-
 if(isset($_POST['newEtudiant'])) {
 
     $souhaiteMacaron = !isset($_POST['souhaiteMacaron']) ? 'false' : 'true';
 
-    $error = $db->ajouterEtudiant(
+    $error = $db->etudiant->ajouterEtudiant(
         $_POST['nom'],
         $_POST['prenom'],
         $_POST['dateNaissance'],
@@ -19,7 +17,7 @@ if(isset($_POST['newEtudiant'])) {
 }
 
 if(isset($_POST['supprimerEtudiant'])) {
-    $error = $db->supprimerEtudiant($_POST['id']);
+    $error = $db->etudiant->supprimerEtudiant($_POST['id']);
 }
 
 ?>
@@ -134,7 +132,7 @@ if(isset($_POST['supprimerEtudiant'])) {
                                 <label>Statut
                                     <select name="statut" class="form-control">
                                     <?php
-                                    foreach($db->getStatut() as $statut) {
+                                    foreach($db->statut->getAllStatut() as $statut) {
                                         ?>
                                             <option value="<?= $statut['libellé'] ?>"><?= $statut['libellé']?></option>
                                             <?php
@@ -179,7 +177,7 @@ if(isset($_POST['supprimerEtudiant'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getEtudiants() as $etudiant) {
+                                    foreach($db->etudiant->getEtudiants() as $etudiant) {
                                         $date = date_create($etudiant['datenaissance']);
                                         ?>
                                         <tr>
@@ -202,7 +200,6 @@ if(isset($_POST['supprimerEtudiant'])) {
                                             </td>
                                         </tr>
                                         <?php
-
                                     }
                                     ?>
                                 </tbody>

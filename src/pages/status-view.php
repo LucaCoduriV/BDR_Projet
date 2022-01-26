@@ -6,13 +6,13 @@ $res = false;
 
 if(isset($_POST['newStatut'])) {
 
-    $error = $db->ajouterStatut(
+    $error = $db->statut->ajouterStatut(
         $_POST['libelle']
     );
 }
 
 if(isset($_POST['supprimerStatut'])) {
-    $error = $db->supprimerStatut($_POST['libelle']);
+    $error =  $db->statut->supprimerStatut($_POST['libelle']);
 }
 
 ?>
@@ -143,7 +143,7 @@ if(isset($_POST['supprimerStatut'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getStatut() as $status) {
+                                    foreach($db->statut->getAllStatut() as $status) {
                                         ?>
                                         <tr>
                                             <td><?= $status['libellé']; ?></td>

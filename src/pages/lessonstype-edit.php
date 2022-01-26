@@ -7,10 +7,10 @@ if(!(isset($_GET['libelle']))) {
     header("Location: lessonstype-view.php");
 }
 
-$type = $db->getTypeLecon($_GET['libelle']);
+$type = $db->typelecon->getTypeLecon($_GET['libelle']);
 
 if(isset($_POST['modifierTypeLecon'])) {
-    $error = $db->modifierTypeLecon(
+    $error = $db->typelecon->modifierTypeLecon(
         $_POST['oldlibelle'],
         $_POST['libelle']
     );

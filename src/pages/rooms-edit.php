@@ -7,10 +7,10 @@ if(!(isset($_GET['numero']))) {
     header("Location: rooms-view.php");
 }
 
-$salle = $db->getSalle($_GET['numero'], $_GET['nombatiment']);
+$salle = $db->salle->getSalle($_GET['numero'], $_GET['nombatiment']);
 
 if(isset($_POST['modifierSalle'])) {
-    $error = $db->modifierSalle(
+    $error = $db->salle->modifierSalle(
         $_POST['numero'],
         $_POST['batiment'],
         $_POST['oldnumero'],
@@ -129,7 +129,7 @@ if(isset($_POST['modifierSalle'])) {
                                 <label>Bâtiment
                                     <select name="batiment" class="form-control">
                                     <?php
-                                    foreach($db->getBatiments() as $batiment) {
+                                    foreach($db->batiment->getBatiments() as $batiment) {
                                         ?>
                                         <option value="<?= $batiment['nom'] ?>" <?= $batiment['nom'] == $salle[0]['nombâtiment'] ? 'selected' : '' ?>><?= $batiment['nom']?></option>
                                         <?php

@@ -7,7 +7,7 @@ if(isset($_POST['ajouterLecon'])) {
     $salle = trim(explode("-", $_POST['nomSalle'])[0]);
     $batiment = trim(explode("-", $_POST['nomSalle'])[1]);
 
-    $error = $db->ajouterLecon(
+    $error = $db->lecon->ajouterLecon(
         $_POST['idCours'],
         $_POST['idProfesseur'],
         $_POST['noPlageHoraire'],
@@ -20,7 +20,7 @@ if(isset($_POST['ajouterLecon'])) {
 }
 
 if(isset($_POST['supprimerLecon'])) {
-    $error = $db->supprimerLecon($_POST['numero'], $_POST['idcours']);
+    $error = $db->lecon->supprimerLecon($_POST['numero'], $_POST['idcours']);
 }
 
 $weekday = [
@@ -134,8 +134,7 @@ $weekday = [
                                 <label>Cours
                                     <select name="idCours" class="form-control">
                                     <?php
-                                    foreach($db->getAllCours() as $cours) {
-                                        var_dump($cours);
+                                    foreach($db->cours->getAllCours() as $cours) {
                                         ?>
                                             <option value="<?= $cours['id']?>"><?= $cours['nom'] . " - " . $cours['nosemestre'] . "/" . $cours['annéesemestre'] ?></option>
                                             <?php
@@ -146,7 +145,7 @@ $weekday = [
                                 <label>Professeur
                                     <select name="idProfesseur" class="form-control">
                                     <?php
-                                    foreach($db->getProfesseurs() as $prof) {
+                                    foreach($db->professeur->getProfesseurs() as $prof) {
                                         ?>
                                         <option value="<?= $prof['id']?>"><?= mb_strtoupper($prof['nom']) . " " . $prof['prénom'] ?></option>
                                         <?php
@@ -157,7 +156,7 @@ $weekday = [
                                 <label>Heure de début
                                     <select name="noPlageHoraire" class="form-control">
                                     <?php
-                                    foreach($db->getPlagesHoraire() as $plage) {
+                                    foreach($db->plagehoraire->getPlagesHoraire() as $plage) {
                                         $heure = date_create($plage['heuredébut']);
                                         ?>
                                         <option value="<?= $plage['numéro']?> "><?= date_format($heure, "H:i") ?></option>
@@ -169,7 +168,7 @@ $weekday = [
                                 <label>Type leçon
                                     <select name="typeLecon" class="form-control">
                                     <?php
-                                    foreach($db->getAllTypeLecon() as $type) {
+                                    foreach($db->typelecon->getAllTypeLecon() as $type) {
                                         ?>
                                         <option value="<?=$type['libellé']?>"><?= $type['libellé'] ?></option>
                                         <?php
@@ -180,7 +179,7 @@ $weekday = [
                                 <label>Salle
                                     <select name="nomSalle" class="form-control">
                                     <?php
-                                    foreach($db->getSalles() as $salle) {
+                                    foreach($db->salle->getSalles() as $salle) {
                                         ?>
                                         <option value="<?= $salle['numéro'] . " - " . $salle["nombâtiment"] ?> ">Salle <?= $salle['numéro'] . " - " . $salle["nombâtiment"] ?></option>
                                         <?php
@@ -191,7 +190,7 @@ $weekday = [
                                 <label>Nombre de périodes
                                     <select name="nbrperiodes" class="form-control">
                                     <?php
-                                    for($i = 1; $i < count($db->getPlagesHoraire()); ++$i) {
+                                    for($i = 1; $i < count($db->plagehoraire->getPlagesHoraire()); ++$i) {
                                         ?>
                                         <option value="<?= $i?>"><?= $i ?></option>
                                         <?php
@@ -241,7 +240,7 @@ $weekday = [
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getLecons() as $lecon) {
+                                    foreach($db->lecon->getLecons() as $lecon) {
                                         $heuredebut = date_create($lecon['heuredébut']);
                                         $heurefin = date_create($lecon['heurefin']);
                                         ?>

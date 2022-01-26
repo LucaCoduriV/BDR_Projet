@@ -7,10 +7,10 @@ if(!(isset($_GET['numero']))) {
     header("Location: timerange-view.php");
 }
 
-$plage = $db->getPlageHoraire($_GET['numero']);
+$plage = $db->plagehoraire->getPlageHoraire($_GET['numero']);
 
 if(isset($_POST['modifierPlageHoraire'])) {
-    $error = $db->modifierPlageHoraire(
+    $error = $db->plagehoraire->modifierPlageHoraire(
         $_POST['oldnumero'],
         $_POST['numero'],
         $_POST['heuredebut'],

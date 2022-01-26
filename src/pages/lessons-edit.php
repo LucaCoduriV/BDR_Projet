@@ -7,14 +7,14 @@ if(!isset($_GET['idlecon']) || !isset($_GET['idcours'])) {
     header("Location: lessons-view.php");
 }
 
-$lecon = $db->getLecon($_GET['idlecon'], $_GET['idcours']);
+$lecon = $db->lecon->getLecon($_GET['idlecon'], $_GET['idcours']);
 
 if(isset($_POST['modifierLecon'])) {
 
     $nosalle = explode(" - ", $_POST['nomSalle'])[0];
     $nombatiment = explode(" - ", $_POST['nomSalle'])[1];
 
-    $error = $db->modifierLecon(
+    $error = $db->lecon->modifierLecon(
         $_POST['idProfesseur'],
         $_POST['noPlageHoraire'],
         $_POST['typeLecon'],
@@ -143,7 +143,7 @@ $weekday = [
                                 <label>Cours
                                     <select name="idCours" class="form-control">
                                     <?php
-                                    foreach($db->getAllCours() as $cours) {
+                                    foreach($db->cours->getAllCours() as $cours) {
                                         ?>
                                             <option value="<?= $cours['id']?>" <?= $cours['id'] == $lecon[0]['idcours'] ? 'selected' : '' ?>><?= $cours['nom'] ?></option>
                                             <?php
@@ -154,7 +154,7 @@ $weekday = [
                                 <label>Professeur
                                     <select name="idProfesseur" class="form-control">
                                     <?php
-                                    foreach($db->getProfesseurs() as $prof) {
+                                    foreach($db->professeur->getProfesseurs() as $prof) {
                                         ?>
                                         <option value="<?= $prof['id']?>" <?= $prof['id'] == $lecon[0]['idprof'] ? 'selected' : '' ?>><?= mb_strtoupper($prof['nom']) . " " . $prof['prénom'] ?></option>
                                         <?php
@@ -165,7 +165,7 @@ $weekday = [
                                 <label>Heure de début
                                     <select name="noPlageHoraire" class="form-control">
                                     <?php
-                                    foreach($db->getPlagesHoraire() as $plage) {
+                                    foreach($db->plagehoraire->getPlagesHoraire() as $plage) {
                                         $heure = date_create($plage['heuredébut']);
                                         ?>
                                         <option value="<?= $plage['numéro']?>" <?= $plage['numéro'] == $lecon[0]['numeroplagehoraire'] ? 'selected' : '' ?>><?= date_format($heure, "H:i") ?></option>
@@ -177,7 +177,7 @@ $weekday = [
                                 <label>Type leçon
                                     <select name="typeLecon" class="form-control">
                                     <?php
-                                    foreach($db->getAllTypeLecon() as $type) {
+                                    foreach($db->typelecon->getAllTypeLecon() as $type) {
                                         ?>
                                         <option value="<?=$type['libellé']?>" <?= $type['libellé'] == $lecon[0]['typelecon'] ? 'selected' : ''?>><?= $type['libellé'] ?></option>
                                         <?php
@@ -188,7 +188,7 @@ $weekday = [
                                 <label>Salle
                                     <select name="nomSalle" class="form-control">
                                     <?php
-                                    foreach($db->getSalles() as $salle) {
+                                    foreach($db->salle->getSalles() as $salle) {
                                         $salle_formatted = $salle['numéro'] . " - " . $salle["nombâtiment"];
                                         ?>
                                         <option value="<?= $salle_formatted ?> " <?= $salle_formatted == $lecon[0]['nosalle'] . " - " . $lecon[0]['nomsalle'] ? 'selected' : '' ?>>Salle <?= $salle['numéro'] . " - " . $salle["nombâtiment"] ?></option>
@@ -200,8 +200,7 @@ $weekday = [
                                 <label>Nombre de périodes
                                     <select name="nbrperiodes" class="form-control">
                                     <?php
-                                    var_dump($lecon);
-                                    for($i = 1; $i < count($db->getPlagesHoraire()); ++$i) {
+                                    for($i = 1; $i < count($db->plagehoraire->getPlagesHoraire()); ++$i) {
                                         ?>
                                         <option value="<?= $i?>" <?= $i == $lecon[0]['nbrpériodes'] ? 'selected' : '' ?>><?= $i ?></option>
                                         <?php

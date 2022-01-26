@@ -7,10 +7,10 @@ if(!(isset($_GET['nom']))) {
     header("Location: buildings-view.php");
 }
 
-$batiment = $db->getBatiment($_GET['nom']);
+$batiment = $db->batiment->getBatiment($_GET['nom']);
 
 if(isset($_POST['modifierBatiment'])) {
-    $error = $db->modifierBatiment(
+    $error = $db->batiment->modifierBatiment(
         $_POST['oldnom'],
         $_POST['nom'],
         $_POST['nbrplaceparking']

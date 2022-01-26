@@ -7,13 +7,13 @@ if(!isset($_GET['idProfesseur'])) {
     header("Location: teachers-view.php");
 }
 
-$etudiant = $db->getProfesseur($_GET['idProfesseur']);
+$professeur = $db->professeur->getProfesseur($_GET['idProfesseur']);
 
 if(isset($_POST['modifierProfesseur'])) {
 
     $souhaiteMacaron = !isset($_POST['souhaiteMacaron']) ? 'false' : 'true';
 
-    $error = $db->modifierProfesseur(
+    $error = $db->professeur->modifierProfesseur(
         $_GET['idProfesseur'],
         $_POST['nom'],
         $_POST['prenom'],
@@ -130,22 +130,22 @@ if(isset($_POST['modifierProfesseur'])) {
                         <form method="post" action="">
                             <div id="dataTable_filter" class="dataTables_filter">
                                 <label>Nom
-                                    <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['nom']; ?>">
+                                    <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $professeur[0]['nom']; ?>">
                                 </label>
                                 <label>Prénom
-                                    <input name="prenom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['prénom'] ?>">
+                                    <input name="prenom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $professeur[0]['prénom'] ?>">
                                 </label>
                                 <label>Date naissance
-                                    <input name="dateNaissance" type="date" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['datenaissance'] ?>">
+                                    <input name="dateNaissance" type="date" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $professeur[0]['datenaissance'] ?>">
                                 </label>
                                 <label>Trigramme
-                                    <input name="trigramme" type="text" size="3" maxlength="3" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['trigramme'] ?>">
+                                    <input name="trigramme" type="text" size="3" maxlength="3" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $professeur[0]['trigramme'] ?>">
                                 </label>
                                 <label>Souhaite macaron
-                                    <input name="souhaiteMacaron" type="checkbox" class="" placeholder="" aria-controls="dataTable" <? $etudiant[0]['souhaitemacaron'] ? 'checked' : '' ?>>
+                                    <input name="souhaiteMacaron" type="checkbox" placeholder="" aria-controls="dataTable" <?= $professeur[0]['souhaitemacaron'] ? 'checked' : '' ?>>
                                 </label>
                                 <label>Distance domicile
-                                    <input name="distanceDomicile" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['distancedomicilekm'] ?>">
+                                    <input name="distanceDomicile" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $professeur[0]['distancedomicilekm'] ?>">
                                 </label>
                                 <label>
                                     <input type="submit" name="modifierProfesseur" class="form-control btn btn-primary" value="Modifier"/>

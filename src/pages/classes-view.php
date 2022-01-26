@@ -2,13 +2,11 @@
 
 include_once("../db.php");
 
-$res = false;
-
 if(isset($_POST['newClass'])) {
 
     $semestreAnnee = explode("-", $_POST['semestreAnnee']);
 
-    $error = $db->ajouterCours(
+    $error = $db->cours->ajouterCours(
         $_POST['nom'],
         $_POST['semainedebut'],
         $_POST['nbrsemaine'],
@@ -19,7 +17,7 @@ if(isset($_POST['newClass'])) {
 }
 
 if(isset($_POST['supprimerCours'])) {
-    $error = $db->supprimerCours($_POST['id']);
+    $error = $db->cours->supprimerCours($_POST['id']);
 }
 
 ?>
@@ -137,7 +135,7 @@ if(isset($_POST['supprimerCours'])) {
                                 <label>Semestre / Année
                                     <select name="semestreAnnee" class="form-control">
                                     <?php
-                                    foreach($db->getSemestres() as $semestre) {
+                                    foreach($db->semestre->getSemestres() as $semestre) {
                                         ?>
                                             <option value="<?= $semestre['numéro'] . "-" . $semestre['année'] ?>"><?= $semestre['numéro'] . " / " . $semestre['année'] ?></option>
                                             <?php
@@ -174,7 +172,7 @@ if(isset($_POST['supprimerCours'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach($db->getAllCours() as $class) {
+                                    foreach($db->cours->getAllCours() as $class) {
                                         ?>
                                         <tr>
                                             <td><?= $class['nom']; ?></td>

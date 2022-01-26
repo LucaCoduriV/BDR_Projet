@@ -7,16 +7,19 @@ if(!isset($_GET['idEtudiant'])) {
     header("Location: students-view.php");
 }
 
-$etudiant = $db->getEtudiant($_GET['idEtudiant']);
+$etudiant = $db->etudiant->getEtudiant($_GET['idEtudiant']);
 
 if(isset($_POST['modifierEtudiant'])) {
-    $error = $db->modifierEtudiant(
+
+    $souhaiteMacaron = !isset($_POST['souhaiteMacaron']) || !$_POST['souhaiteMacaron'] ? 'false' : 'true';
+
+    $error = $db->etudiant->modifierEtudiant(
         $_GET['idEtudiant'],
         $_POST['nom'],
         $_POST['prenom'],
         $_POST['dateNaissance'],
         $_POST['statut'],
-        $_POST['souhaiteMacaron'] ? 'true' : 'false',
+        $souhaiteMacaron,
         $_POST['distanceDomicile'],
     );
 
@@ -139,7 +142,7 @@ if(isset($_POST['modifierEtudiant'])) {
                                     <select name="statut" class="form-control">
                                     <?php
                                     
-                                    foreach($db->getStatut() as $statut) {
+                                    foreach($db->statut->getAllStatut() as $statut) {
                                         ?>
                                             <option value="<?= $statut['libellé'] ?>" <?= $etudiant[0]['statut'] == $statut['libellé'] ? 'selected' : '' ?>><?= $statut['libellé']?></option>
                                             <?php
@@ -148,7 +151,7 @@ if(isset($_POST['modifierEtudiant'])) {
                                     </select>
                                 </label>
                                 <label>Souhaite macaron
-                                    <input name="souhaiteMacaron" type="checkbox" class="" placeholder="" aria-controls="dataTable" checked="<? $etudiant[0]['souhaitemacaron'] ? 'checked' : '' ?>">
+                                    <input name="souhaiteMacaron" type="checkbox" class="" placeholder="" aria-controls="dataTable" <? $etudiant[0]['souhaitemacaron'] ? 'checked' : '' ?>>
                                 </label>
                                 <label>Distance domicile
                                     <input name="distanceDomicile" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['distancedomicilekm'] ?>">
