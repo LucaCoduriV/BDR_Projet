@@ -135,8 +135,9 @@ $weekday = [
                                     <select name="idCours" class="form-control">
                                     <?php
                                     foreach($db->getAllCours() as $cours) {
+                                        var_dump($cours);
                                         ?>
-                                            <option value="<?= $cours['id']?>"><?= $cours['nom'] ?></option>
+                                            <option value="<?= $cours['id']?>"><?= $cours['nom'] . " - " . $cours['nosemestre'] . "/" . $cours['annéesemestre'] ?></option>
                                             <?php
                                     }
                                     ?>
@@ -262,6 +263,11 @@ $weekday = [
                                                     <input type="hidden" name="idlecon" value="<?= $lecon['numéro'] ?>">
                                                     <input type="hidden" name="idcours" value="<?= $lecon['idcours'] ?>">
                                                     <input type="submit" class="form-control btn btn-warning" value="Modifier"/>
+                                                </form>
+                                                <form action="lessons-add-students.php" method="GET">
+                                                    <input type="hidden" name="idlecon" value="<?= $lecon['numéro'] ?>">
+                                                    <input type="hidden" name="idcours" value="<?= $lecon['idcours'] ?>">
+                                                    <input type="submit" class="form-control btn btn-info" value="Ajouter étudiants"/>
                                                 </form>
                                             </td>
                                         </tr>

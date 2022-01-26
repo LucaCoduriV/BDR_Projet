@@ -1242,6 +1242,24 @@ class Database
         return $sth->errorInfo();
     }
 
+    function ajouterEtudiantsLecon($etudiants, $nolecon, $idcours) {
+        $sql = <<<'SQL'
+        INSERT INTO etudiant_leçon (noleçon, idleçon, idetudiant)  
+        VALUES (:nolecon, :idlecon, :idetudiant)
+        SQL;
+
+        foreach($etudiants as $etudiant) {
+            $sth = $this->connexion->prepare($sql);
+            $sth->bindParam('nolecon', $nolecon);
+            $sth->bindParam('idlecon', $idcours);
+            $sth->bindParam('idetudiant', $etudiant);
+
+            $sth->execute();
+        }        
+
+        return $sth->errorInfo();
+    }
+
 }
 
 $db = new Database();
