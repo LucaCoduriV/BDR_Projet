@@ -265,6 +265,21 @@ class Database
         return $sth->errorInfo();
     }
 
+    function insertTest($idCours, $libelletypetest, $nom)
+    {
+        $sql = <<<'SQL'
+        INSERT INTO public.test (id, idcours, libellétypetest, nom)
+        VALUES (DEFAULT, :idcours, :libelleypetest, :nom);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('idcours', $idCours);
+        $sth->bindParam('libelletypetest', $libelletypetest);
+        $sth->bindParam('note', $nom);
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
     function getMoyenneCoursEtudiant(): array
     {
         $sql = <<<'SQL'
@@ -1291,24 +1306,24 @@ class Database
         return $sth->errorInfo();
     }
 
-    function ajouterEtudiantsLecon($etudiants, $nolecon, $idcours) {
+    function ajouterEtudiantsLecon($etudiants, $nolecon, $idcours)
+    {
         $sql = <<<'SQL'
         INSERT INTO etudiant_leçon (noleçon, idleçon, idetudiant)  
         VALUES (:nolecon, :idlecon, :idetudiant)
         SQL;
 
-        foreach($etudiants as $etudiant) {
+        foreach ($etudiants as $etudiant) {
             $sth = $this->connexion->prepare($sql);
             $sth->bindParam('nolecon', $nolecon);
             $sth->bindParam('idlecon', $idcours);
             $sth->bindParam('idetudiant', $etudiant);
 
             $sth->execute();
-        }        
+        }
 
         return $sth->errorInfo();
     }
-
 }
 
 $db = new Database();
