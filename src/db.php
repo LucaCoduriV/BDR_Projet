@@ -196,7 +196,7 @@ class Database
         $sth->bindParam('etudiantid', $etudiantId, PDO::PARAM_INT);
         $sth->execute();
 
-        return $sth->fetchAll();
+        return $sth->fetchAll(PDO::FETCH_ASSOC);
     }
 
     function getHoraireProf(int $noSemestre, int $anneeSemestre, int $idProfessseur)
@@ -248,6 +248,21 @@ class Database
 
 
         return $sth->fetchAll();
+    }
+
+    function insertNote($idEtudiant, $idTest, $note)
+    {
+        $sql = <<<'SQL'
+        INSERT INTO public.etudiant_test (idetudiant, idtest, note)
+        VALUES (:idetudiant, :idtest, :note);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('idetudiant', $idEtudiant);
+        $sth->bindParam('idtest', $idTest);
+        $sth->bindParam('note', $note);
+        $sth->execute();
+        return $sth->errorInfo();
     }
 
     function getMoyenneCoursEtudiant(): array
@@ -596,6 +611,40 @@ class Database
         $sth->execute();
         return $sth->fetchAll();
     }
+
+    function getAllTests()
+    {
+        $sql = <<<'SQL'
+        SELECT t.id, t.nom as nomtest, t.libellétypetest, c.nom as nomcours FROM test t
+        INNER JOIN cours c on c.id = t.idcours
+        ORDER BY nomcours;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+
+        $sth->execute();
+        return $sth->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    function getAllTestsEtudianCanHave($idEtudiant)
+    {
+        $sql = <<<'SQL'
+        SELECT t.id, t.nom as nomtest, t.libellétypetest, c.nom as nomcours FROM test t
+        INNER JOIN cours c on c.id = t.idcours
+        WHERE t.idcours IN (SELECT l.idcours FROM etudiant_leçon e
+            INNER JOIN leçon l on l.numéro = e.noleçon and l.idcours = e.idleçon
+            WHERE e.idetudiant = :idetudiant)
+        ORDER BY nomcours;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('idetudiant', $idEtudiant);
+
+        $sth->execute();
+        return $sth->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
 
     function ajouterTypeTest($libelle, $coefficient)
     {

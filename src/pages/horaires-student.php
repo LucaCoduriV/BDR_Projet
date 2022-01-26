@@ -164,13 +164,17 @@ function pPrint($value)
                                         <tbody>
 
                                             <?php
-                                            $ligne = array_fill(0, 6, false);
+                                            $lignes = array_fill(0, 6, 0);
                                             $horaires = $db->getHoraireEtudiant($semestres[$_POST['idSemestre']]['numéro'], $semestres[$_POST['idSemestre']]['année'], $_POST['idEtudiant']);
 
-                                            //print_r($horaires[0]);
+                                            //pPrint($horaires);
 
                                             foreach ($db->getPlagesHoraire() as $plageHoraires) {
+                                                foreach ($lignes as $key => $ligne) {
+                                                    $lignes[$key]--;
+                                                }
                                             ?>
+
                                                 <tr>
                                                     <td><?= $plageHoraires[1] ?> <br /> <?= $plageHoraires[2] ?></td>
                                                     <?php
@@ -178,21 +182,20 @@ function pPrint($value)
                                                     for ($i = 1; $i <= 5; $i++) {
                                                         $used = false;
                                                         foreach ($horaires as $horaire) {
+
                                                             if ($horaire['noplagehoraire'] == $plageHoraires[0] && $horaire['joursemaine'] == $i) {
                                                                 echo "<td class='bg-primary text-white' rowspan='" . $horaire['nbrpériodes'] . "'>" . $horaire['nom'] . "<br/>"
                                                                     . $horaire['trigramme'] . "<br/>"
                                                                     . $horaire['nosalle'] . "</td>";
                                                                 $used = true;
+                                                                $lignes[$i] = $horaire['nbrpériodes'];
 
                                                                 break;
                                                             }
                                                         }
-                                                        if (!$used) {
-                                                            if (!$ligne[$i])
-                                                                echo "<td></td>";
-                                                            $ligne[$i] = false;
-                                                        } else {
-                                                            $ligne[$i] = true;
+
+                                                        if ($lignes[$i] < 1) {
+                                                            echo "<td></td>";
                                                         }
                                                     }
                                                     ?>

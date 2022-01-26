@@ -4,10 +4,26 @@ include_once("../db.php");
 
 $res = false;
 
+function pPrint($value)
+{
+    echo "<pre>";
+    print_r($value);
+    echo "</pre>";
+}
+
+if (isset($_POST['idtest']) && isset($_POST['note'])) {
+    $db->insertNote($_POST['idEtudiant'], $_POST['idtest'], $_POST['note']);
+}
+
 if (isset($_POST['idEtudiant'])) {
     $notes = $db->getNotesEleve($_POST['idEtudiant']);
+    //pPrint($notes);
     $cours = $db->getCoursEtudiant($_POST['idEtudiant']);
+    $tests = $db->getAllTestsEtudianCanHave($_POST['idEtudiant']);
 }
+
+
+
 
 
 
@@ -139,22 +155,26 @@ if (isset($_POST['idEtudiant'])) {
                             <div class="card-body">
                                 <form method="post" action="">
                                     <div id="dataTable_filter" class="dataTables_filter">
-                                        <label>Année
-                                            <input name="annee" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                        <label>Test
+                                            <select name="idtest" class="form-control" aria-label="Default select example">
+                                                <?php
+                                                foreach ($tests as $key => $test) {
+                                                    echo "<option value='" . $test['id'] . "'>" .
+                                                        $test['id'] . ' - ' .
+                                                        $test['libellétypetest'] . ' - ' .
+                                                        $test['nomcours'] . ' - ' .
+                                                        $test['nomtest'] . "</option>";
+                                                }
+                                                ?>
+                                            </select>
                                         </label>
-                                        <label>Numéro
-                                            <input name="numero" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                        <label>Note
+                                            <input name="note" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                         </label>
-                                        <label>Semaine début
-                                            <input name="semaineDebut" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
-                                        </label>
-                                        <label>Semaine fin
-                                            <input name="semaineFin" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
-                                        </label>
+                                        <input type="hidden" name="idEtudiant" value="<?= $_POST['idEtudiant'] ?>">
                                         <label>
-                                            <input type="submit" name="newSemestre" class="form-control btn btn-primary" value="Ajouter" />
+                                            <input type="submit" class="form-control btn btn-primary" value="Valider" />
                                         </label>
-                                        </a>
                                     </div>
                                 </form>
                             </div>
