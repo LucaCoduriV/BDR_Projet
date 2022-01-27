@@ -78,6 +78,23 @@ class Database
         return $sth->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    function getTest(int $idTest)
+    {
+        $sql = <<<'SQL'
+        SELECT test.id, test.nom as nomTest, test.libellétypetest, cours.nom as nomcours FROM test
+        INNER JOIN cours on test.idCours = cours.id
+        WHERE test.id = :testid
+        ORDER BY nomcours;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('idtest', $idTest, PDO::PARAM_INT);
+        $sth->execute();
+
+
+        return $sth->fetch(PDO::FETCH_ASSOC);
+    }
+
     function insertTest(int $idCours, string $libelletypetest, string $nom)
     {
         $sql = <<<'SQL'
@@ -89,6 +106,18 @@ class Database
         $sth->bindParam('idcours', $idCours, PDO::PARAM_INT);
         $sth->bindParam('libelletypetest', $libelletypetest, PDO::PARAM_STR);
         $sth->bindParam('nom', $nom, PDO::PARAM_STR);
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
+    function deleteTest(int $idTest)
+    {
+        $sql = <<<'SQL'
+        DELETE FROM test WHERE test.id = :idtest;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('idtest', $idTest, PDO::PARAM_INT);
         $sth->execute();
         return $sth->errorInfo();
     }

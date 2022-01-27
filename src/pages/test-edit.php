@@ -1,40 +1,34 @@
 <?php
 /*
 -----------------------------------------------------------------------------------
-Nom du fichier : test-view.php
+Nom du fichier : testtype-edit.php
 Auteur(s)      : Coduri Luca, Praz Tobie, Louis Hadrien
 Date creation  : 20.01.2022
-Description    : Ce fichier définit la page de visualisation et de création d'un test
+Description    : Ce fichier définit la page de modification d'un type de test
 Remarque(s)    : -
 -----------------------------------------------------------------------------------
 */
 
 include_once("../db.php");
 
-function pPrint($value)
-{
-    echo "<pre>";
-    print_r($value);
-    echo "</pre>";
+
+if (!(isset($_GET['idtest']))) {
+    header("Location: testtype-view.php");
 }
 
-if (isset($_POST['supprimer'])) {
-    $error = $db->deleteTest($_POST['idtest']);
+$type = $db->typetest->getTypeTest($_GET['libelle']);
+
+if (isset($_POST['modifierTypeTest'])) {
+    $error = $db->typetest->modifierTypeTest(
+        $_POST['oldlibelle'],
+        $_POST['libelle'],
+        $_POST['coefficient']
+    );
+
+    if (!$error || $error[0] == "00000") {
+        header("Location: testtype-view.php");
+    }
 }
-
-if (isset($_POST['nom']) && isset($_POST['idcours']) && isset($_POST['type'])) {
-    echo $_POST['nom'] . "<br/>";
-    echo $_POST['type'] . "<br/>";
-    echo $_POST['idcours'] . "<br/>";
-    $db->insertTest($_POST['idcours'], $_POST['type'], $_POST['nom']);
-}
-
-
-
-$tests = $db->getTests();
-$cours = $db->cours->getAllCours();
-$types = $db->typetest->getTypesTest();
-
 
 ?>
 
@@ -74,6 +68,7 @@ $types = $db->typetest->getTypesTest();
 
             <!-- Main Content -->
             <div id="content">
+
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -125,86 +120,23 @@ $types = $db->typetest->getTypesTest();
 
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Ajouter un test</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Modifier un type de test</h6>
                         </div>
                         <div class="card-body">
                             <form method="post" action="">
                                 <div id="dataTable_filter" class="dataTables_filter">
-                                    <label>Nom
-                                        <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                    <label>Libellé
+                                        <input name="libelle" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $type[0]['libellé']; ?>">
                                     </label>
-                                    <label>Cours
-                                        <select name="idcours" class="form-control">
-                                            <?php
-                                            foreach ($cours as $cour) {
-                                            ?>
-                                                <option value="<?= $cour['id'] ?>"><?= $cour['annéesemestre'] . " - " . $cour['nosemestre'] . " - " . $cour['nom'] ?></option>
-                                            <?php
-                                            }
-                                            ?>
-                                        </select>
-                                    </label>
-                                    <label>Type
-                                        <select name="type" class="form-control">
-                                            <?php
-                                            foreach ($types as $type) {
-                                            ?>
-                                                <option value="<?= $type['libellé'] ?>"><?= $type['libellé'] ?></option>
-                                            <?php
-                                            }
-                                            ?>
-                                        </select>
+                                    <label>Coefficient
+                                        <input name="coefficient" type="number" step="0.1" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $type[0]['coefficient']; ?>">
                                     </label>
                                     <label>
-                                        <input type="submit" name="newSemestre" class="form-control btn btn-primary" value="Ajouter" />
+                                        <input name="oldlibelle" type="hidden" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $type[0]['libellé']; ?>">
+                                        <input type="submit" name="modifierTypeTest" class="form-control btn btn-primary" />
                                     </label>
-                                    </a>
                                 </div>
                             </form>
-                        </div>
-                    </div>
-
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Liste des Tests</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Id</th>
-                                            <th>Cours</th>
-                                            <th>Nom</th>
-                                            <th>Type</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        foreach ($tests as $test) { ?>
-                                            <tr>
-                                                <td><?= $test['id'] ?></td>
-                                                <td><?= $test['nomcours'] ?></td>
-                                                <td><?= $test['nomtest'] ?></td>
-                                                <td><?= $test['libellétypetest'] ?></td>
-                                                <td>
-                                                    <form action="" method="post">
-                                                        <input type="hidden" name="idtest" value="<?= $test['id'] ?>">
-                                                        <input type="submit" name="supprimer" class="form-control btn btn-danger" value="Supprimer" />
-                                                    </form>
-                                                    <form action="test-edit.php" method="GET">
-                                                        <input type="hidden" name="idtest" value="<?= $test['id'] ?>">
-                                                        <input type="submit" class="form-control btn btn-warning" value="Modifier" />
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        <?php   }
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                     </div>
                 </div>
