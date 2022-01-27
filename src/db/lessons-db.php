@@ -151,6 +151,8 @@ class Lecon
     }
     
     function ajouterEtudiantsLecon($etudiants, $nolecon, $idcours) {
+        $this->connexion->beginTransaction();
+
         $sql = <<<'SQL'
         INSERT INTO etudiant_leçon (noleçon, idleçon, idetudiant)  
         VALUES (:nolecon, :idlecon, :idetudiant)
@@ -163,8 +165,13 @@ class Lecon
             $sth->bindParam('idetudiant', $etudiant);
 
             $sth->execute();
-        }        
+            if ($sth->errorInfo()[0] != "00000") {
+                $this->connexion->rollBack();
+                return $sth->errorInfo();
+            }
+        }
 
+        $this->connexion->commit();
         return $sth->errorInfo();
     }
 
@@ -187,6 +194,8 @@ class Lecon
 
     function supprimerEtudiantsLecon($etudiants, $nolecon, $idcours)
     {
+        $this->connexion->beginTransaction();
+
         $sql = <<<'SQL'
         DELETE FROM etudiant_leçon
         WHERE idetudiant = :idetudiant AND idleçon = :idlecon AND noleçon = :nolecon
@@ -199,8 +208,13 @@ class Lecon
             $sth->bindParam('idetudiant', $etudiant);
 
             $sth->execute();
+            if ($sth->errorInfo()[0] != "00000") {
+                $this->connexion->rollBack();
+                return $sth->errorInfo();
+            }
         }
 
+        $this->connexion->commit();
         return $sth->errorInfo();
     }
 }

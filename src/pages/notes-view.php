@@ -19,7 +19,7 @@ function pPrint($value)
 }
 
 if (isset($_POST['idtest']) && isset($_POST['note'])) {
-    $db->insertNote($_POST['idEtudiant'], $_POST['idtest'], $_POST['note']);
+    $error = $db->insertNote($_POST['idEtudiant'], $_POST['idtest'], $_POST['note']);
 }
 
 if (isset($_POST['idEtudiant'])) {

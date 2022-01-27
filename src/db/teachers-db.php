@@ -38,6 +38,7 @@ class Professeur
 
     function ajouterProfesseur($nom, $prenom, $dateNaissance, $souhaiteMacaron, $distanceDomicile, $trigramme)
     {
+        $this->connexion->beginTransaction();
 
         $sql = <<<'SQL'
         INSERT INTO personne (nom, datenaissance, souhaitemacaron, distancedomicilekm) 
@@ -50,7 +51,11 @@ class Professeur
         $sth->bindParam('souhaitemacaron', $souhaiteMacaron);
         $sth->bindParam('distancedomicile', $distanceDomicile);
 
-        $res = $sth->execute();
+        $sth->execute();
+        if ($sth->errorInfo()[0] != "00000") {
+            $this->connexion->rollBack();
+            return $sth->errorInfo();
+        }
 
         $id = $this->connexion->lastInsertId();
 
@@ -63,6 +68,10 @@ class Professeur
         $sth->bindParam('prenom', $prenom);
         $sth->bindParam('idpersonne', $id);
         $sth->execute();
+        if ($sth->errorInfo()[0] != "00000") {
+            $this->connexion->rollBack();
+            return $sth->errorInfo();
+        }
 
         $sql = <<<'SQL'
         INSERT INTO professeur (idpersonne, trigramme)
@@ -72,8 +81,13 @@ class Professeur
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('id', $id);
         $sth->bindParam('trigramme', $trigramme);
-        $res = $sth->execute();
+        $sth->execute();
+        if ($sth->errorInfo()[0] != "00000") {
+            $this->connexion->rollBack();
+            return $sth->errorInfo();
+        }
 
+        $this->connexion->commit();
         return $sth->errorInfo();
     }
 
@@ -111,6 +125,7 @@ class Professeur
 
     function modifierProfesseur($id, $nom, $prenom, $dateNaissance, $trigramme, $souhaiteMacaron, $distanceDomicile)
     {
+        $this->connexion->beginTransaction();
         $sql = <<<'SQL'
         UPDATE personne
         SET nom = :nom, datenaissance = :dateNaissance, souhaitemacaron = :souhaitemacaron, distancedomicilekm = :distancedomicilekm
@@ -124,7 +139,11 @@ class Professeur
         $sth->bindParam('distancedomicilekm', $distanceDomicile);
         $sth->bindParam('id', $id);
 
-        $res = $sth->execute();
+        $sth->execute();
+        if ($sth->errorInfo()[0] != "00000") {
+            $this->connexion->rollBack();
+            return $sth->errorInfo();
+        }
 
         if ($sth->errorInfo()[0] != "00000") {
             return $sth->errorInfo();
@@ -140,7 +159,11 @@ class Professeur
         $sth->bindParam('trigramme', $trigramme);
         $sth->bindParam('idpersonne', $id);
 
-        $res = $sth->execute();
+        $sth->execute();
+        if ($sth->errorInfo()[0] != "00000") {
+            $this->connexion->rollBack();
+            return $sth->errorInfo();
+        }
 
         $sql = <<<'SQL'
         UPDATE prénom
@@ -152,8 +175,13 @@ class Professeur
         $sth->bindParam('prenom', $prenom);
         $sth->bindParam('idpersonne', $id);
 
-        $res = $sth->execute();
+        $sth->execute();
+        if ($sth->errorInfo()[0] != "00000") {
+            $this->connexion->rollBack();
+            return $sth->errorInfo();
+        }
 
+        $this->connexion->commit();
         return $sth->errorInfo();
     }
 
