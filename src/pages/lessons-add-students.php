@@ -19,17 +19,36 @@ if(!isset($_GET['idlecon']) || !isset($_GET['idcours'])) {
 
 $lecon = $db->lecon->getLecon($_GET['idlecon'], $_GET['idcours']);
 
+$etudiants = $db->lecon->getEtudiantsLecon($_GET['idlecon']);
+$etudiants_id = array_column($etudiants, 'idpersonne');
+
 if(isset($_POST['ajouterEtudiantLecon'])) {
 
-    $error = $db->lecon->ajouterEtudiantsLecon(
-        $_POST['etudiantsLecon'],
-        $_GET['idlecon'],
-        $_GET['idcours']
-    );
+    $user_to_add = array_diff($_POST['etudiantsLecon'], $etudiants_id);
+    $user_to_delete = array_diff($etudiants_id, $_POST['etudiantsLecon']);
+    $error = false;
+
+    if(!empty($user_to_add)) {
+        $error = $db->lecon->ajouterEtudiantsLecon(
+            $user_to_add,
+            $_GET['idlecon'],
+            $_GET['idcours']
+        );
+    }
+
+    if(!empty($user_to_delete)) {
+        $error = $db->lecon->supprimerEtudiantsLecon(
+            $user_to_delete,
+            $_GET['idlecon'],
+            $_GET['idcours']
+        );
+    }
 
     if(!$error || $error[0] == "00000") {
         header("Location: lessons-view.php");
     }
+
+
 }
 
 $weekday = [
@@ -156,7 +175,9 @@ $weekday = [
                                 <?php
                                 foreach($db->etudiant->getEtudiants() as $etudiant) {
                                     ?>
-                                    <option value="<?=$etudiant['id']?>"><?= mb_strtoupper($etudiant['nom']) . " " . $etudiant["prénom"] ?></option>
+                                    <option value="<?=$etudiant['id']?>" <?= in_array($etudiant['id'], $etudiants_id) ? 'selected' : '' ?>>
+                                        <?= mb_strtoupper($etudiant['nom']) . " " . $etudiant["prénom"] ?>
+                                    </option>
                                     <?php
                                 }
                                 ?>
