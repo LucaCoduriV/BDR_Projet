@@ -182,7 +182,50 @@ class Database
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('nosemestre', $noSemestre, PDO::PARAM_INT);
         $sth->bindParam('anneesemestre', $anneeSemestre, PDO::PARAM_INT);
+        $sth->execute();
 
+        return $sth->fetchAll();
+    }
+
+    function getNombreLeconMoyenPourEtudiants(int $noSemestre, int $anneeSemestre): array
+    {
+        $sql = <<<'SQL'
+        SELECT AVG(nbLeçons.nb)
+        FROM (
+            SELECT COUNT(*) nb
+            FROM leçon
+            INNER JOIN cours ON leçon.idcours = cours.id
+            INNER JOIN etudiant_leçon on leçon.numéro = etudiant_leçon.noleçon AND leçon.idcours = etudiant_leçon.idleçon
+            WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
+            GROUP BY etudiant_leçon.idetudiant
+        ) as nbLeçons;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('nosemestre', $noSemestre, PDO::PARAM_INT);
+        $sth->bindParam('anneesemestre', $anneeSemestre, PDO::PARAM_INT);
+        $sth->execute();
+
+        return $sth->fetchAll();
+    }
+
+    function getNombreLeconMoyenPourProfesseurs(int $noSemestre, int $anneeSemestre): array
+    {
+        $sql = <<<'SQL'
+        SELECT AVG(nbLeçons.nb)
+        FROM (
+            SELECT COUNT(*) nb
+            FROM leçon
+            INNER JOIN cours ON leçon.idcours = cours.id
+            WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
+            GROUP BY idprofessseur
+        ) AS nbLeçons;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('nosemestre', $noSemestre, PDO::PARAM_INT);
+        $sth->bindParam('anneesemestre', $anneeSemestre, PDO::PARAM_INT);
+        $sth->execute();
 
         return $sth->fetchAll();
     }
@@ -206,24 +249,71 @@ class Database
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('nosemestre', $noSemestre, PDO::PARAM_INT);
         $sth->bindParam('anneesemestre', $anneeSemestre, PDO::PARAM_INT);
-
+        $sth->execute();
 
         return $sth->fetchAll();
     }
 
-    function getMoyenneGeneral(): array
+    function getTauxEchec(int $idCours): int {
+        $sql = <<<'SQL'
+        WITH moyennes AS (
+            SELECT (SUM(notes.note * notes.coefficient) / SUM(notes.coefficient)) AS moyenne
+            FROM notes
+            WHERE notes.idcours = :idcours
+            GROUP BY notes.idetudiant
+        )
+        SELECT (
+            SELECT COUNT(*)
+            FROM moyennes
+            WHERE moyenne < 4.0
+        ) / CAST((COUNT(*)) AS DECIMAL)
+        FROM moyennes;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('idcours', $idCours, PDO::PARAM_INT);
+        $sth->execute();
+
+        return $sth->fetchAll();
+    }
+
+    function getMoyenneGenerale(int $noSemestre, int $anneeSemestre): array
     {
         $sql = <<<'SQL'
-        SELECT AVG(notes.average)
+        SELECT AVG(notes.moyenne)
         FROM (
-            SELECT notes.idetudiant, SUM(notes.note * notes.coefficient) / COUNT(*) as average
-            FROM notes
-            GROUP BY notes.idcours, notes.idetudiant
-        ) as notes
+             SELECT notes.idetudiant, (SUM(notes.note * notes.coefficient) / SUM(notes.coefficient)) AS moyenne
+             FROM notes
+             INNER JOIN cours ON notes.idcours = cours.id
+             WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
+             GROUP BY notes.idcours, notes.idetudiant
+        ) AS notes
         GROUP BY notes.idetudiant;
         SQL;
 
         $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('nosemestre', $noSemestre, PDO::PARAM_INT);
+        $sth->bindParam('anneesemestre', $anneeSemestre, PDO::PARAM_INT);
+        $sth->execute();
+
+        return $sth->fetchAll();
+    }
+
+    function getTauxElèvesParStatus(string $status): int {
+        $sql = <<<'SQL'
+        SELECT (
+            SELECT COUNT(*)
+            FROM etudiant
+            WHERE statut != 'En cours'
+        ) / CAST((COUNT(*)) AS DECIMAL)
+        FROM etudiant
+        WHERE statut = :status;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('statut', $statut, PDO::PARAM_INT);
+        $sth->execute();
+
         return $sth->fetchAll();
     }
 

@@ -34,7 +34,7 @@ INNER JOIN test ON test.id = etudiant_test.idtest
 INNER JOIN typetest ON test.libellétypetest = typetest.libellé;
 
 -- Moyenne par cours par étudiant
-SELECT notes.idetudiant, notes.idcours, SUM(notes.note) / COUNT(*) AS moyenne
+SELECT notes.idetudiant, notes.idcours, SUM(notes.note * notes.coefficient) / SUM(notes.coefficient) AS moyenne
 FROM notes
 INNER JOIN cours ON notes.idcours = cours.id
 WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
@@ -49,7 +49,7 @@ SELECT (
     FROM cours
     INNER JOIN leçon ON cours.id = leçon.idcours
     WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre AND leçon.nomsalle = :nombâtiment
-) / cast((COUNT(*)) AS DECIMAL) as "taux"
+) / CAST((COUNT(*)) AS DECIMAL) AS "taux"
 FROM salle
 WHERE nombâtiment = :nombâtiment;
 
@@ -65,10 +65,10 @@ FROM (
     SELECT COUNT(*) nb
     FROM leçon
     INNER JOIN cours ON leçon.idcours = cours.id
-    INNER JOIN etudiant_leçon on leçon.numéro = etudiant_leçon.noleçon AND leçon.idcours = etudiant_leçon.idleçon
+    INNER JOIN etudiant_leçon ON leçon.numéro = etudiant_leçon.noleçon AND leçon.idcours = etudiant_leçon.idleçon
     WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
     GROUP BY etudiant_leçon.idetudiant
-) as nbLeçons;
+) AS nbLeçons;
 
 -- Nombre moyen de leçon par professeur
 SELECT AVG(nbLeçons.nb)
@@ -111,6 +111,7 @@ SELECT (
 ) / CAST((COUNT(*)) AS DECIMAL)
 FROM moyennes;
 
+-- Taux échec par prof
 WITH moyennes AS (
     SELECT notes.idetudiant, (SUM(notes.note * notes.coefficient) / SUM(notes.coefficient)) AS moyenne
     FROM notes
