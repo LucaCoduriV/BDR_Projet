@@ -1,20 +1,25 @@
 -- Un étudiant ne peut pas avoir un test d'un cours qu'il ne suit pas
 
 CREATE OR REPLACE FUNCTION check_if_user_has_cours()
-    RETURNS TRIGGER LANGUAGE plpgsql as
+    RETURNS TRIGGER LANGUAGE plpgsql AS
 $BODY$
-begin
-    if EXISTS(select * FROM etudiant_leçon el INNER JOIN leçon l on l.numéro = el.noleçon and l.idcours = el.idleçon
-WHERE el.idetudiant = NEW.idetudiant AND EXISTS(select * FROM test t WHERE t.id = NEW.idtest AND l.idcours = t.idcours)) then
+BEGIN
+    IF EXISTS(
+        SELECT * FROM etudiant_leçon
+        INNER JOIN leçon ON leçon.numéro = etudiant_leçon.noleçon AND leçon.idcours = etudiant_leçon.idleçon
+        WHERE etudiant_leçon.idetudiant = NEW.idetudiant AND EXISTS(
+            SELECT *
+            FROM test
+            WHERE test.id = NEW.idtest AND leçon.idcours = test.idcours)) THEN
         RETURN NEW;
-    else
+    ELSE
         IF(TG_OP = 'UPDATE') THEN
             RETURN OLD;
         ELSE
             RETURN NULL;
         END IF;
-    end if;
-end;
+    END IF;
+END;
 $BODY$;
 
 CREATE OR REPLACE TRIGGER before_insert_or_update_etudiant_test
