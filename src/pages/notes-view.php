@@ -19,23 +19,15 @@ function pPrint($value)
 }
 
 if (isset($_POST['idtest']) && isset($_POST['note'])) {
-    $db->insertNote($_POST['idEtudiant'], $_POST['idtest'], $_POST['note']);
+    $error = $db->insertNote($_POST['idEtudiant'], $_POST['idtest'], $_POST['note']);
 }
 
 if (isset($_POST['idEtudiant'])) {
     $notes = $db->getNotesEleve($_POST['idEtudiant']);
     //pPrint($notes);
     $cours = $db->cours->getCoursEtudiant($_POST['idEtudiant']);
-    $tests = $db->getAllTestsEtudianCanHave($_POST['idEtudiant']);
+    $tests = $db->getAllTestsEtudiantCanHave($_POST['idEtudiant']);
 }
-
-
-
-
-
-
-
-
 
 ?>
 
@@ -167,9 +159,8 @@ if (isset($_POST['idEtudiant'])) {
                                                 <?php
                                                 foreach ($tests as $key => $test) {
                                                     echo "<option value='" . $test['id'] . "'>" .
-                                                        $test['id'] . ' - ' .
-                                                        $test['libellétypetest'] . ' - ' .
                                                         $test['nomcours'] . ' - ' .
+                                                        $test['libellétypetest'] . ' - ' .
                                                         $test['nomtest'] . "</option>";
                                                 }
                                                 ?>

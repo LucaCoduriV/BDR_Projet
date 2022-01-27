@@ -22,6 +22,8 @@ class Etudiant
     
     public function modifierEtudiant($id, $nom, $prenom, $dateNaissance, $statut, $souhaiteMacaron, $distanceDomicile)
     {
+        $this->connexion->beginTransaction();
+
         $sql = <<<'SQL'
         UPDATE personne
         SET nom = :nom, datenaissance = :dateNaissance, souhaitemacaron = :souhaitemacaron, distancedomicilekm = :distancedomicilekm
@@ -35,9 +37,10 @@ class Etudiant
         $sth->bindParam('distancedomicilekm', $distanceDomicile);
         $sth->bindParam('id', $id);
 
-        $res = $sth->execute();
+        $sth->execute();
 
         if ($sth->errorInfo()[0] != "00000") {
+            $this->connexion->rollBack();
             return $sth->errorInfo();
         }
 
@@ -51,7 +54,12 @@ class Etudiant
         $sth->bindParam('statut', $statut);
         $sth->bindParam('idpersonne', $id);
 
-        $res = $sth->execute();
+        $sth->execute();
+
+        if ($sth->errorInfo()[0] != "00000") {
+            $this->connexion->rollBack();
+            return $sth->errorInfo();
+        }
 
         $sql = <<<'SQL'
         UPDATE prénom
@@ -63,13 +71,19 @@ class Etudiant
         $sth->bindParam('prenom', $prenom);
         $sth->bindParam('idpersonne', $id);
 
-        $res = $sth->execute();
+        $sth->execute();
+        if ($sth->errorInfo()[0] != "00000") {
+            $this->connexion->rollBack();
+            return $sth->errorInfo();
+        }
 
+        $this->connexion->commit();
         return $sth->errorInfo();
     }
 
     public function ajouterEtudiant($nom, $prenom, $dateNaissance, $souhaiteMacaron, $distanceDomicile, $statut)
     {
+        $this->connexion->beginTransaction();
 
         $sql = <<<'SQL'
         INSERT INTO personne (nom, datenaissance, souhaitemacaron, distancedomicilekm) 
@@ -82,7 +96,13 @@ class Etudiant
         $sth->bindParam('souhaitemacaron', $souhaiteMacaron);
         $sth->bindParam('distancedomicile', $distanceDomicile);
 
-        $res = $sth->execute();
+        $sth->execute();
+
+        if ($sth->errorInfo()[0] != "00000") {
+            $this->connexion->rollBack();
+            return $sth->errorInfo();
+        }
+
         $id = $this->connexion->lastInsertId();
 
         $sql = <<<'SQL'
@@ -95,6 +115,11 @@ class Etudiant
         $sth->bindParam('idpersonne', $id);
         $sth->execute();
 
+        if ($sth->errorInfo()[0] != "00000") {
+            $this->connexion->rollBack();
+            return $sth->errorInfo();
+        }
+
         $sql = <<<'SQL'
         INSERT INTO etudiant (idpersonne, statut)
         VALUES (:id, :statut);
@@ -103,8 +128,14 @@ class Etudiant
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('id', $id);
         $sth->bindParam('statut', $statut);
-        $res = $sth->execute();
+        $sth->execute();
 
+        if ($sth->errorInfo()[0] != "00000") {
+            $this->connexion->rollBack();
+            return $sth->errorInfo();
+        }
+
+        $this->connexion->commit();
         return $sth->errorInfo();
     }
 

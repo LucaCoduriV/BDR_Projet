@@ -31,6 +31,42 @@ Remarque(s)    : -
 
     <!-- Heading -->
     <div class="sidebar-heading">
+        Général
+    </div>
+
+    <!-- Nav Item - Charts -->
+    <li class="nav-item">
+        <a class="nav-link" href="/pages/schedule-student.php">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>Horaires</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="/pages/notes-view.php">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>Notes</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Statistiques
+    </div>
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link" href="/pages/stats.php">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>Statistiques</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
         Gestion
     </div>
 
@@ -113,37 +149,8 @@ Remarque(s)    : -
 
     <li class="nav-item">
         <a class="nav-link" href="/pages/test-view.php">
-            <i class="fas fa-fw fa-chart-area"></i>
+            <i class="fas fa-fw fa-cog"></i>
             <span>Tests</span></a>
-    </li>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        Statistiques
-    </div>
-
-    <!-- Nav Item - Charts -->
-    <li class="nav-item">
-        <a class="nav-link" href="/pages/schedule-student.php">
-            <i class="fas fa-fw fa-chart-area"></i>
-            <span>Horaires</span></a>
-    </li>
-
-
-
-    <li class="nav-item">
-        <a class="nav-link" href="/pages/notes-view.php">
-            <i class="fas fa-fw fa-chart-area"></i>
-            <span>Notes</span></a>
-    </li>
-
-    <li class="nav-item">
-        <a class="nav-link" href="charts.html">
-            <i class="fas fa-fw fa-chart-area"></i>
-            <span>Etudiants</span></a>
     </li>
 
     <!-- Divider -->

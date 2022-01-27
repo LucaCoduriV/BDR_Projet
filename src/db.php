@@ -255,6 +255,26 @@ class Database
         $sth = $this->connexion->prepare($sql);
         return $sth->fetchAll();
     }
+
+    function getAllTestsEtudiantCanHave($idEtudiant)
+    {
+        $sql = <<<'SQL'
+        SELECT test.id, test.nom as nomtest, test.libellétypetest, cours.nom as nomcours 
+        FROM test
+        INNER JOIN cours on cours.id = test.idcours
+        WHERE test.idcours IN (SELECT leçon.idcours FROM etudiant_leçon
+            INNER JOIN leçon on leçon.numéro = etudiant_leçon.noleçon and leçon.idcours = etudiant_leçon.idleçon
+            WHERE etudiant_leçon.idetudiant = :idetudiant)
+        ORDER BY nomcours;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('idetudiant', $idEtudiant);
+
+        $sth->execute();
+        return $sth->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 
 $db = new Database();

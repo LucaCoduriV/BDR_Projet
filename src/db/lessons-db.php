@@ -151,6 +151,8 @@ class Lecon
     }
     
     function ajouterEtudiantsLecon($etudiants, $nolecon, $idcours) {
+        $this->connexion->beginTransaction();
+
         $sql = <<<'SQL'
         INSERT INTO etudiant_leçon (noleçon, idleçon, idetudiant)  
         VALUES (:nolecon, :idlecon, :idetudiant)
@@ -163,8 +165,56 @@ class Lecon
             $sth->bindParam('idetudiant', $etudiant);
 
             $sth->execute();
-        }        
+            if ($sth->errorInfo()[0] != "00000") {
+                $this->connexion->rollBack();
+                return $sth->errorInfo();
+            }
+        }
 
+        $this->connexion->commit();
+        return $sth->errorInfo();
+    }
+
+    function getEtudiantsLecon($idlecon) {
+        $sql = <<<'SQL'
+        SELECT etudiant.idpersonne
+        FROM etudiant
+        INNER JOIN personne ON etudiant.idpersonne = personne.id
+        INNER JOIN etudiant_leçon ON etudiant.idpersonne = etudiant_leçon.idetudiant
+        INNER JOIN leçon ON etudiant_leçon.noleçon = leçon.numéro AND etudiant_leçon.idleçon = leçon.idcours
+        WHERE leçon.numéro = :idlecon;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('idlecon', $idlecon);
+
+        $sth->execute();
+        return $sth->fetchAll();
+    }
+
+    function supprimerEtudiantsLecon($etudiants, $nolecon, $idcours)
+    {
+        $this->connexion->beginTransaction();
+
+        $sql = <<<'SQL'
+        DELETE FROM etudiant_leçon
+        WHERE idetudiant = :idetudiant AND idleçon = :idlecon AND noleçon = :nolecon
+        SQL;
+
+        foreach ($etudiants as $etudiant) {
+            $sth = $this->connexion->prepare($sql);
+            $sth->bindParam('nolecon', $nolecon);
+            $sth->bindParam('idlecon', $idcours);
+            $sth->bindParam('idetudiant', $etudiant);
+
+            $sth->execute();
+            if ($sth->errorInfo()[0] != "00000") {
+                $this->connexion->rollBack();
+                return $sth->errorInfo();
+            }
+        }
+
+        $this->connexion->commit();
         return $sth->errorInfo();
     }
 }

@@ -1,63 +1,29 @@
 <?php
 /*
 -----------------------------------------------------------------------------------
-Nom du fichier : lessons-add-students.php
+Nom du fichier : semestre-view.php
 Auteur(s)      : Coduri Luca, Praz Tobie, Louis Hadrien
 Date creation  : 20.01.2022
-Description    : Ce fichier définit la page permettant d'ajouter des étudiants
-                 à une leçon
+Description    : Ce fichier définit la page permettant de créer et de visualiser des semestres
 Remarque(s)    : -
 -----------------------------------------------------------------------------------
 */
 
 include_once("../db.php");
 
+if(isset($_POST['newSemestre'])) {
 
-if(!isset($_GET['idlecon']) || !isset($_GET['idcours'])) {
-    header("Location: lessons-view.php");
+    $error = $db->semestre->ajouterSemestre(
+        $_POST['annee'],
+        $_POST['numero'],
+        $_POST['semaineDebut'],
+        $_POST['semaineFin']
+    );
 }
 
-$lecon = $db->lecon->getLecon($_GET['idlecon'], $_GET['idcours']);
-
-$etudiants = $db->lecon->getEtudiantsLecon($_GET['idlecon']);
-$etudiants_id = array_column($etudiants, 'idpersonne');
-
-if(isset($_POST['ajouterEtudiantLecon'])) {
-
-    $user_to_add = array_diff($_POST['etudiantsLecon'], $etudiants_id);
-    $user_to_delete = array_diff($etudiants_id, $_POST['etudiantsLecon']);
-    $error = false;
-
-    if(!empty($user_to_add)) {
-        $error = $db->lecon->ajouterEtudiantsLecon(
-            $user_to_add,
-            $_GET['idlecon'],
-            $_GET['idcours']
-        );
-    }
-
-    if(!empty($user_to_delete)) {
-        $error = $db->lecon->supprimerEtudiantsLecon(
-            $user_to_delete,
-            $_GET['idlecon'],
-            $_GET['idcours']
-        );
-    }
-
-    if(!$error || $error[0] == "00000") {
-        header("Location: lessons-view.php");
-    }
-
-
+if(isset($_POST['supprimerSemestre'])) {
+    $error = $db->semestre->supprimerSemestre($_POST['annee'], $_POST['numero']);
 }
-
-$weekday = [
-    1 => 'Lundi',
-    2 => 'Mardi',
-    3 => 'Mercredi',
-    4 => 'Jeudi',
-    5 => 'Vendredi'
-];
 
 ?>
 
@@ -99,7 +65,6 @@ $weekday = [
 
             <!-- Main Content -->
             <div id="content">
-
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -141,60 +106,14 @@ $weekday = [
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                <?php
-                if(isset($error) && $error[0] != "00000") {
-                    ?>
-                    <div class="card mb-4 py-3 border-left-danger">
-                        <div class="card-body">
-                            <?= empty($error[2]) ? "Une erreur est survenue" : $error[2] ?>
-                        </div>
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Statistiques</h1>
                     </div>
-                    <?php
-                }
-                ?>
 
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Ajouter un étudiant à une leçon</h6>
-                    </div>
-                    <div class="card-body">
-                        <form method="post" action="">
-                            <div id="dataTable_filter" class="dataTables_filter">
-                                <?php
-                                $heuredebut = date_create($lecon[0]['heuredébut']);
-                                $heurefin = date_create($lecon[0]['heurefin']);
-                                ?>
-                                <h6><?= 
-                                $lecon[0]["nomcours"] . " - " . mb_strtoupper($lecon[0]["prenomprof"]) . " " . $lecon[0]["nomprof"]
-                                . " - " . $weekday[$lecon[0]["joursemaine"]] . " - " . date_format($heuredebut, "H:i") . "/" . date_format($heurefin, "H:i")
-                                ?></h6>
-                                <br>
-                            
-                                <label>Choisir un étudiant</label>
-                                <select name="etudiantsLecon[]" class="form-control" multiple size="10">
-                                <?php
-                                foreach($db->etudiant->getEtudiants() as $etudiant) {
-                                    ?>
-                                    <option value="<?=$etudiant['id']?>" <?= in_array($etudiant['id'], $etudiants_id) ? 'selected' : '' ?>>
-                                        <?= mb_strtoupper($etudiant['nom']) . " " . $etudiant["prénom"] ?>
-                                    </option>
-                                    <?php
-                                }
-                                ?>
-                                </select>
-                                <small class="form-text text-muted">Laissez appuyé CTRL pour sélectionner plusieurs étudiants</small>
-                                
-                                <label>
-                                    <input type="submit" name="ajouterEtudiantLecon" class="form-control btn btn-primary" value="Ajouter"/>
-                                </label>
-                                </a>
-                            </div>
-                        </form>
-                    </div>
                 </div>
+                <!-- /.container-fluid -->
             </div>
-            <!-- End of Main Content -->
-
         </div>
         <!-- End of Content Wrapper -->
 
