@@ -11,19 +11,7 @@ Remarque(s)    : -
 
 include_once("../db.php");
 
-if(isset($_POST['newSemestre'])) {
-
-    $error = $db->semestre->ajouterSemestre(
-        $_POST['annee'],
-        $_POST['numero'],
-        $_POST['semaineDebut'],
-        $_POST['semaineFin']
-    );
-}
-
-if(isset($_POST['supprimerSemestre'])) {
-    $error = $db->semestre->supprimerSemestre($_POST['annee'], $_POST['numero']);
-}
+$semestres = $db->semestre->getSemestres();
 
 ?>
 
@@ -109,6 +97,71 @@ if(isset($_POST['supprimerSemestre'])) {
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Statistiques</h1>
+                    </div>
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Statistiques semestrielles</h6>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="">
+                                <div id="dataTable_filter" class="dataTables_filter">
+                                    <label>
+                                        Semestre :
+                                        <select name="idSemestre" class="form-control" aria-label="Default select example">
+                                            <?php
+                                            foreach ($semestres as $key => $semestre) {
+                                                $selected = $key == $_POST['idSemestre'] ? " selected" : "";
+                                                echo "<option" . $selected . " value='" . $key . "'>" . $semestre['numéro'] . " " . $semestre['année'] . "</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </label>
+
+                                    <label>
+                                        <input type="submit" class="form-control btn btn-primary" value="Valider" />
+                                    </label>
+                                    </a>
+                                </div>
+                            </form>
+
+                            <?php
+                            if(isset($_POST['idSemestre'])) {
+                                $noSemestre = $semestres[$_POST['idSemestre']]['numéro'];
+                                $anneeSemestre = $semestres[$_POST['idSemestre']]['année'];
+                                ?>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div>Nombres moyen de cours suivis par élèves: <?= round($db->getNombreMoyenCoursSuivi($noSemestre, $anneeSemestre),2) ?></div>
+                                        <div>Nombres moyen de leçon suivies par les élèves par semaine: <?= round($db->getNombreLeconMoyenPourEtudiants($noSemestre, $anneeSemestre), 2) ?></div>
+                                        <div>Nombres moyen de leçon données par les professeurs par semaine: <?= round($db->getNombreLeconMoyenPourProfesseurs($noSemestre, $anneeSemestre), 2) ?></div>
+                                        <div>Taux d'élèves asynchrones: <?= round($db->getTauxEleveAsync($noSemestre, $anneeSemestre) * 100, 2) ?></div>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Statistiques des départs</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="card">
+                                <div class="card-body">
+                                    <?php
+                                    foreach ($db->statut->getAllStatut() as $key => $status) {
+                                        if($status["libellé"] != "En cours") {
+                                            ?>
+                                            <div>Taux "<?= $status["libellé"] ?>": <?= round($db->getTauxElevesParStatus($status["libellé"]) * 100, 2) ?></div>
+                                            <?php
+                                        }
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

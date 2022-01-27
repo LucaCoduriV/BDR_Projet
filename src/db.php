@@ -170,12 +170,12 @@ class Database
         return $sth->fetchAll();
     }
 
-    function getNombreMoyenCoursSuivi(int $noSemestre, int $anneeSemestre): array
+    function getNombreMoyenCoursSuivi(int $noSemestre, int $anneeSemestre): float
     {
         $sql = <<<'SQL'
-        SELECT COUNT(DISTINCT (etudiant_leçon.idleçon, etudiant_leçon.idetudiant)) / COUNT(DISTINCT etudiant_leçon.idetudiant)
+        SELECT COUNT(DISTINCT (etudiant_leçon.idleçon, etudiant_leçon.idetudiant)) / COUNT(DISTINCT etudiant_leçon.idetudiant) AS moyenne
         FROM etudiant_leçon
-        INNER JOIN cours on etudiant_leçon.idleçon = cours.id
+        INNER JOIN cours ON etudiant_leçon.idleçon = cours.id
         WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :anneesemestre;
         SQL;
 
@@ -184,21 +184,21 @@ class Database
         $sth->bindParam('anneesemestre', $anneeSemestre, PDO::PARAM_INT);
         $sth->execute();
 
-        return $sth->fetchAll();
+        return $sth->fetchAll()[0]["moyenne"];
     }
 
-    function getNombreLeconMoyenPourEtudiants(int $noSemestre, int $anneeSemestre): array
+    function getNombreLeconMoyenPourEtudiants(int $noSemestre, int $anneeSemestre): float
     {
         $sql = <<<'SQL'
-        SELECT AVG(nbLeçons.nb)
+        SELECT AVG(nbLeçons.nb) AS moyenne
         FROM (
             SELECT COUNT(*) nb
             FROM leçon
             INNER JOIN cours ON leçon.idcours = cours.id
-            INNER JOIN etudiant_leçon on leçon.numéro = etudiant_leçon.noleçon AND leçon.idcours = etudiant_leçon.idleçon
-            WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
+            INNER JOIN etudiant_leçon ON leçon.numéro = etudiant_leçon.noleçon AND leçon.idcours = etudiant_leçon.idleçon
+            WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :anneesemestre
             GROUP BY etudiant_leçon.idetudiant
-        ) as nbLeçons;
+        ) AS nbLeçons;
         SQL;
 
         $sth = $this->connexion->prepare($sql);
@@ -206,18 +206,18 @@ class Database
         $sth->bindParam('anneesemestre', $anneeSemestre, PDO::PARAM_INT);
         $sth->execute();
 
-        return $sth->fetchAll();
+        return $sth->fetchAll()[0]["moyenne"];
     }
 
-    function getNombreLeconMoyenPourProfesseurs(int $noSemestre, int $anneeSemestre): array
+    function getNombreLeconMoyenPourProfesseurs(int $noSemestre, int $anneeSemestre): float
     {
         $sql = <<<'SQL'
-        SELECT AVG(nbLeçons.nb)
+        SELECT AVG(nbLeçons.nb) AS moyenne
         FROM (
             SELECT COUNT(*) nb
             FROM leçon
             INNER JOIN cours ON leçon.idcours = cours.id
-            WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
+            WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :anneesemestre
             GROUP BY idprofessseur
         ) AS nbLeçons;
         SQL;
@@ -227,22 +227,25 @@ class Database
         $sth->bindParam('anneesemestre', $anneeSemestre, PDO::PARAM_INT);
         $sth->execute();
 
-        return $sth->fetchAll();
+        return $sth->fetchAll()[0]["moyenne"];
     }
 
-    function getTauxEleveAsync(int $noSemestre, int $anneeSemestre): array
+    function getTauxEleveAsync(int $noSemestre, int $anneeSemestre): float
     {
         $sql = <<<'SQL'
-        SELECT COUNT((
-            SELECT DISTINCT etudiant_leçon.idetudiant
-            FROM etudiant_leçon
-            INNER JOIN cours on etudiant_leçon.idleçon = cours.id
-            WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :anneesemestre
-            GROUP BY etudiant_leçon.idetudiant, cours.annéeetude
-            HAVING COUNT(cours.annéeetude) = 2
-        )) / COUNT(DISTINCT etudiant_leçon.idetudiant)
+        SELECT (
+            SELECT CAST((COUNT(*)) AS DECIMAL)
+            FROM (
+                SELECT DISTINCT etudiant_leçon.idetudiant
+                FROM etudiant_leçon
+                INNER JOIN cours ON etudiant_leçon.idleçon = cours.id
+                --WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
+                GROUP BY etudiant_leçon.idetudiant, cours.annéeetude
+                HAVING COUNT(cours.annéeetude) = 2
+            ) AS async
+        ) / COUNT(DISTINCT etudiant_leçon.idetudiant) AS "taux"
         FROM etudiant_leçon
-        INNER JOIN cours on etudiant_leçon.idleçon = cours.id
+        INNER JOIN cours ON etudiant_leçon.idleçon = cours.id
         WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :anneesemestre;
         SQL;
 
@@ -251,10 +254,10 @@ class Database
         $sth->bindParam('anneesemestre', $anneeSemestre, PDO::PARAM_INT);
         $sth->execute();
 
-        return $sth->fetchAll();
+        return $sth->fetchAll()[0]["taux"];
     }
 
-    function getTauxEchec(int $idCours): int {
+    function getTauxEchec(int $idCours): float {
         $sql = <<<'SQL'
         WITH moyennes AS (
             SELECT (SUM(notes.note * notes.coefficient) / SUM(notes.coefficient)) AS moyenne
@@ -266,7 +269,7 @@ class Database
             SELECT COUNT(*)
             FROM moyennes
             WHERE moyenne < 4.0
-        ) / CAST((COUNT(*)) AS DECIMAL)
+        ) / CAST((COUNT(*)) AS DECIMAL) AS "taux"
         FROM moyennes;
         SQL;
 
@@ -274,18 +277,18 @@ class Database
         $sth->bindParam('idcours', $idCours, PDO::PARAM_INT);
         $sth->execute();
 
-        return $sth->fetchAll();
+        return $sth->fetchAll()[0]["taux"];
     }
 
     function getMoyenneGenerale(int $noSemestre, int $anneeSemestre): array
     {
         $sql = <<<'SQL'
-        SELECT AVG(notes.moyenne)
+        SELECT AVG(notes.moyenne) AS "moyenne"
         FROM (
              SELECT notes.idetudiant, (SUM(notes.note * notes.coefficient) / SUM(notes.coefficient)) AS moyenne
              FROM notes
              INNER JOIN cours ON notes.idcours = cours.id
-             WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
+             WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :anneesemestre
              GROUP BY notes.idcours, notes.idetudiant
         ) AS notes
         GROUP BY notes.idetudiant;
@@ -299,22 +302,22 @@ class Database
         return $sth->fetchAll();
     }
 
-    function getTauxElèvesParStatus(string $status): int {
+    function getTauxElevesParStatus(string $statut): float {
         $sql = <<<'SQL'
         SELECT (
             SELECT COUNT(*)
             FROM etudiant
             WHERE statut != 'En cours'
-        ) / CAST((COUNT(*)) AS DECIMAL)
+        ) / CAST((COUNT(*)) AS DECIMAL) AS "taux"
         FROM etudiant
-        WHERE statut = :status;
+        WHERE statut = :statut;
         SQL;
 
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('statut', $statut, PDO::PARAM_INT);
         $sth->execute();
 
-        return $sth->fetchAll();
+        return $sth->fetchAll()[0]["taux"];
     }
 
     function getAllTestsEtudiantCanHave($idEtudiant)
