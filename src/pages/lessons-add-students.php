@@ -1,4 +1,14 @@
 <?php
+/*
+-----------------------------------------------------------------------------------
+Nom du fichier : lessons-add-students.php
+Auteur(s)      : Coduri Luca, Praz Tobie, Louis Hadrien
+Date creation  : 20.01.2022
+Description    : Ce fichier définit la page permettant d'ajouter des étudiants
+                 à une leçon
+Remarque(s)    : -
+-----------------------------------------------------------------------------------
+*/
 
 include_once("../db.php");
 

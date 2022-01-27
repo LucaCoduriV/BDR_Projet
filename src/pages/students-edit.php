@@ -1,4 +1,13 @@
 <?php
+/*
+-----------------------------------------------------------------------------------
+Nom du fichier : students-edit.php
+Auteur(s)      : Coduri Luca, Praz Tobie, Louis Hadrien
+Date creation  : 20.01.2022
+Description    : Ce fichier définit la page permettant de modifier un étudiant
+Remarque(s)    : -
+-----------------------------------------------------------------------------------
+*/
 
 include_once("../db.php");
 

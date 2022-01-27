@@ -1,4 +1,14 @@
 <?php
+/*
+-----------------------------------------------------------------------------------
+Nom du fichier : testtype-view.php
+Auteur(s)      : Coduri Luca, Praz Tobie, Louis Hadrien
+Date creation  : 20.01.2022
+Description    : Ce fichier définit la page permettant de créer et visualiser des
+                 type de test
+Remarque(s)    : -
+-----------------------------------------------------------------------------------
+*/
 
 include_once("../db.php");
 

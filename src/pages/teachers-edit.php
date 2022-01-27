@@ -1,4 +1,13 @@
 <?php
+/*
+-----------------------------------------------------------------------------------
+Nom du fichier : teachers-edit.php
+Auteur(s)      : Coduri Luca, Praz Tobie, Louis Hadrien
+Date creation  : 20.01.2022
+Description    : Ce fichier définit la page de modification d'un professeur.
+Remarque(s)    : -
+-----------------------------------------------------------------------------------
+*/
 
 include_once("../db.php");
 

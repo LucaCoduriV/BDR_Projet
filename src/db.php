@@ -1,4 +1,15 @@
 <?php
+/*
+-----------------------------------------------------------------------------------
+Nom du fichier : db.php
+Auteur(s)      : Coduri Luca, Praz Tobie, Louis Hadrien
+Date creation  : 20.01.2022
+Description    : Ce fichier initialise la connexion à la base de données
+Remarque(s)    : Chaque table de la base de données possède sa propre classe contenant
+                 les diverses méthodes permettant de gérer ses données. Tous les liens
+                 sont effectués dans ce fichier
+-----------------------------------------------------------------------------------
+*/
 
 require_once('../DotEnv.php');
 include_once("db/etudiants-db.php");
@@ -69,7 +80,7 @@ class Database
     function insertNote($idEtudiant, $idTest, $note)
     {
         $sql = <<<'SQL'
-        INSERT INTO public.etudiant_test (idetudiant, idtest, note)
+        INSERT INTO etudiant_test (idetudiant, idtest, note)
         VALUES (:idetudiant, :idtest, :note);
         SQL;
 
@@ -84,7 +95,7 @@ class Database
     function insertTest($idCours, $libelletypetest, $nom)
     {
         $sql = <<<'SQL'
-        INSERT INTO public.test (id, idcours, libellétypetest, nom)
+        INSERT INTO test (id, idcours, libellétypetest, nom)
         VALUES (DEFAULT, :idcours, :libelleypetest, :nom);
         SQL;
 

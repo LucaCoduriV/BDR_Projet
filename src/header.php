@@ -1,3 +1,13 @@
+<!--
+-----------------------------------------------------------------------------------
+Nom du fichier : header.php
+Auteur(s)      : Coduri Luca, Praz Tobie, Louis Hadrien
+Date creation  : 20.01.2022
+Description    : Ce fichier définit l'en-tête du site et le menu de navigation droite
+Remarque(s)    : -
+-----------------------------------------------------------------------------------
+-->
+
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
