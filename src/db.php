@@ -81,9 +81,9 @@ class Database
     function getTest(int $idTest)
     {
         $sql = <<<'SQL'
-        SELECT test.id, test.nom as nomTest, test.libellétypetest, cours.nom as nomcours FROM test
+        SELECT test.id, test.nom as nomTest, test.libellétypetest, test.idcours, cours.nom as nomcours FROM test
         INNER JOIN cours on test.idCours = cours.id
-        WHERE test.id = :testid
+        WHERE test.id = :idtest
         ORDER BY nomcours;
         SQL;
 
@@ -121,6 +121,25 @@ class Database
         $sth->execute();
         return $sth->errorInfo();
     }
+
+    function updateTest(int $id, int $idCours, string $nom, string $type)
+    {
+        $sql = <<<'SQL'
+        UPDATE test
+        SET idcours = :idcours, nom = :nom, libellétypetest = :type
+        WHERE id = :id;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('idcours', $idCours);
+        $sth->bindParam('nom', $nom);
+        $sth->bindParam('type', $type);
+        $sth->bindParam('id', $id);
+
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
     /** Fin */
 
     function getNotesEleve(int $idEtudiant): array
@@ -274,7 +293,6 @@ class Database
         $sth->execute();
         return $sth->fetchAll(PDO::FETCH_ASSOC);
     }
-
 }
 
 $db = new Database();

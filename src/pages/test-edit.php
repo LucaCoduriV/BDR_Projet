@@ -4,7 +4,7 @@
 Nom du fichier : testtype-edit.php
 Auteur(s)      : Coduri Luca, Praz Tobie, Louis Hadrien
 Date creation  : 20.01.2022
-Description    : Ce fichier définit la page de modification d'un type de test
+Description    : Ce fichier définit la page de modification d'un test
 Remarque(s)    : -
 -----------------------------------------------------------------------------------
 */
@@ -16,17 +16,21 @@ if (!(isset($_GET['idtest']))) {
     header("Location: testtype-view.php");
 }
 
-$type = $db->typetest->getTypeTest($_GET['libelle']);
+$test = $db->getTest($_GET['idtest']);
+$types = $db->typetest->getTypesTest();
+$cours = $db->cours->getAllCours();
 
-if (isset($_POST['modifierTypeTest'])) {
-    $error = $db->typetest->modifierTypeTest(
-        $_POST['oldlibelle'],
-        $_POST['libelle'],
-        $_POST['coefficient']
+
+if (isset($_POST['modifierTest'])) {
+    $error = $db->updateTest(
+        $_POST['idtest'],
+        $_POST['idcours'],
+        $_POST['nomtest'],
+        $_POST['libelletypetest'],
     );
 
     if (!$error || $error[0] == "00000") {
-        header("Location: testtype-view.php");
+        header("Location: test-view.php");
     }
 }
 
@@ -125,15 +129,37 @@ if (isset($_POST['modifierTypeTest'])) {
                         <div class="card-body">
                             <form method="post" action="">
                                 <div id="dataTable_filter" class="dataTables_filter">
-                                    <label>Libellé
-                                        <input name="libelle" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $type[0]['libellé']; ?>">
+                                    <label>id
+                                        <input type="hidden" name="idtest" value="<?= $test['id'] ?>">
+                                        <input disabled type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $test['id'] ?>">
                                     </label>
-                                    <label>Coefficient
-                                        <input name="coefficient" type="number" step="0.1" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $type[0]['coefficient']; ?>">
+                                    <label>Cours
+                                        <select name="idcours" class="form-control">
+                                            <?php
+                                            foreach ($cours as $cour) {
+                                            ?>
+                                                <option <?= $cour['id'] == $test['idcours'] ? 'selected' : '' ?> value="<?= $cour['id'] ?>"><?= $cour['annéesemestre'] . " - " . $cour['nosemestre'] . " - " . $cour['nom'] ?></option>
+                                            <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </label>
+                                    <label>Type
+                                        <select name="libelletypetest" class="form-control">
+                                            <?php
+                                            foreach ($types as $type) {
+                                            ?>
+                                                <option <?= $type['libellé'] == $test['libellétypetest'] ? 'selected' : '' ?> value="<?= $type['libellé'] ?>"><?= $type['libellé'] ?></option>
+                                            <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </label>
+                                    <label>nom
+                                        <input name="nomtest" type="text" step="0.1" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $test['nomtest']; ?>">
                                     </label>
                                     <label>
-                                        <input name="oldlibelle" type="hidden" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $type[0]['libellé']; ?>">
-                                        <input type="submit" name="modifierTypeTest" class="form-control btn btn-primary" />
+                                        <input type="submit" name="modifierTest" class="form-control btn btn-primary" value="Modifier" />
                                     </label>
                                 </div>
                             </form>
