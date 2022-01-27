@@ -1,4 +1,13 @@
 <?php
+/*
+-----------------------------------------------------------------------------------
+Nom du fichier : class-view.php
+Auteur(s)      : Coduri Luca, Praz Tobie, Louis Hadrien
+Date creation  : 20.01.2022
+Description    : Ce fichier définit la page de création et de visualisation des cours
+Remarque(s)    : -
+-----------------------------------------------------------------------------------
+*/
 
 include_once("../db.php");
 

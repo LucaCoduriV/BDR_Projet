@@ -1,4 +1,13 @@
 <?php
+/*
+-----------------------------------------------------------------------------------
+Nom du fichier : lessonstype-edit.php
+Auteur(s)      : Coduri Luca, Praz Tobie, Louis Hadrien
+Date creation  : 20.01.2022
+Description    : Ce fichier définit la page d'édition des types de lecons
+Remarque(s)    : -
+-----------------------------------------------------------------------------------
+*/
 
 include_once("../db.php");
 

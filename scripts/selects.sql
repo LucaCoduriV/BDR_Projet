@@ -65,7 +65,7 @@ FROM (
     SELECT COUNT(*) nb
     FROM leçon
     INNER JOIN cours ON leçon.idcours = cours.id
-    INNER JOIN etudiant_leçon on leçon.numéro = etudiant_leçon.noleçon and leçon.idcours = etudiant_leçon.idleçon
+    INNER JOIN etudiant_leçon on leçon.numéro = etudiant_leçon.noleçon AND leçon.idcours = etudiant_leçon.idleçon
     WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
     GROUP BY etudiant_leçon.idetudiant
 ) as nbLeçons;
@@ -78,7 +78,7 @@ FROM (
     INNER JOIN cours ON leçon.idcours = cours.id
     WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
     GROUP BY idprofessseur
-) as nbLeçons;
+) AS nbLeçons;
 
 -- Taux élèves async
 SELECT (

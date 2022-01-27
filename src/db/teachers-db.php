@@ -1,4 +1,14 @@
 <?php
+/*
+-----------------------------------------------------------------------------------
+Nom du fichier : teachers-db.php
+Auteur(s)      : Coduri Luca, Praz Tobie, Louis Hadrien
+Date creation  : 20.01.2022
+Description    : Ce fichier définit les methodes permettant de gérer les professeurs
+                 dans la base de données
+Remarque(s)    : -
+-----------------------------------------------------------------------------------
+*/
 
 class Professeur
 {

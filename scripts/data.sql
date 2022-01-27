@@ -258,10 +258,6 @@ INSERT INTO statut VALUES('Echec');
 INSERT INTO statut VALUES('Abandon');
 INSERT INTO statut VALUES('En cours');
 
--- Il faut désactiver temporairement la contrainte pour pouvoir créer des semestres dans le passé
--- Il faut modifier la contrainte CK_Semestre_semaineFin afin de vérifier que si la sem de début + durée > 52 alors
--- la semaine de fin est inférieure
-
 -- 2021
 
 -- Semestre 1
@@ -280,27 +276,6 @@ INSERT INTO cours VALUES(44, 'EXP', 38, 21, 1, 1, 2020);
 INSERT INTO cours VALUES(45, 'RXI', 38, 21, 1, 1, 2020);
 INSERT INTO cours VALUES(46, 'SYL', 38, 21, 1, 1, 2020);
 
-
--- 2eme année
-INSERT INTO cours VALUES(6, 'API', 38, 21, 2, 1, 2021);
-INSERT INTO cours VALUES(7, 'SYE', 38, 21, 2, 1, 2021);
-INSERT INTO cours VALUES(8, 'MAT3', 38, 21, 2, 1, 2021);
-INSERT INTO cours VALUES(9, 'PCO', 38, 21, 2, 1, 2021);
-INSERT INTO cours VALUES(10, 'BDR', 38, 21, 2, 1, 2021);
-INSERT INTO cours VALUES(11, 'PST', 38, 21, 2, 1, 2021);
-INSERT INTO cours VALUES(12, 'POO', 38, 21, 2, 1, 2021);
-
--- 3eme année
-/*
-INSERT INTO cours VALUES(13, 'IHM', 38, 21, 3, 1, 2021);
-INSERT INTO cours VALUES(14, 'GET', 38, 21, 3, 1, 2021);
-INSERT INTO cours VALUES(15, 'AMT', 38, 21, 3, 1, 2021);
-INSERT INTO cours VALUES(16, 'WEB', 38, 21, 3, 1, 2021);
-INSERT INTO cours VALUES(17, 'MAC', 38, 21, 3, 1, 2021);
-INSERT INTO cours VALUES(18, 'PRR', 38, 21, 3, 1, 2021);
-INSERT INTO cours VALUES(19, 'SYM', 38, 21, 3, 1, 2021);
- */
-
 -- Semestre 2
 -- 1ere année
 INSERT INTO cours VALUES(20, 'ARO', 8, 20, 1, 2, 2021);
@@ -311,14 +286,16 @@ INSERT INTO cours VALUES(24, 'ISD', 8, 20, 1, 2, 2021);
 INSERT INTO cours VALUES(25, 'ANG', 8, 20, 1, 2, 2021);
 INSERT INTO cours VALUES(26, 'PRG2', 8, 20, 1, 2, 2021);
 
+-- 2eme année
+INSERT INTO cours VALUES(6, 'API', 38, 21, 2, 1, 2021);
+INSERT INTO cours VALUES(7, 'SYE', 38, 21, 2, 1, 2021);
+INSERT INTO cours VALUES(8, 'MAT3', 38, 21, 2, 1, 2021);
+INSERT INTO cours VALUES(9, 'PCO', 38, 21, 2, 1, 2021);
+INSERT INTO cours VALUES(10, 'BDR', 38, 21, 2, 1, 2021);
+INSERT INTO cours VALUES(11, 'PST', 38, 21, 2, 1, 2021);
+INSERT INTO cours VALUES(12, 'POO', 38, 21, 2, 1, 2021);
+
 --3ème année
--- Voir si possible d'enlever
---INSERT INTO cours VALUES(35, 'SEC', 8, 20, 3, 2, 2021);
---INSERT INTO cours VALUES(36, 'SCALA', 8, 20, 3, 2, 2021);
---INSERT INTO cours VALUES(37, 'MLG', 8, 20, 3, 2, 2021);
---INSERT INTO cours VALUES(38, 'VTK', 8, 20, 3, 2, 2021);
---INSERT INTO cours VALUES(39, 'CLD', 8, 20, 3, 2, 2021);
---INSERT INTO cours VALUES(40, 'PDG', 8, 20, 3, 2, 2021);
 
 INSERT INTO cours VALUES(47, 'AMT', 8, 20, 3, 1, 2021);
 INSERT INTO cours VALUES(48, 'AIT', 8, 20, 3, 1, 2021);
@@ -339,7 +316,7 @@ INSERT INTO cours VALUES(58, 'PRR', 8, 20, 3, 1, 2021);
 -- 3 Classes de 1ère année 2021 - S1
 -------------------------------------
 
--- Classe 1 (Hugo Ducommun)
+-- Classe 1
 -- Lundi
 INSERT INTO leçon VALUES(0, 1, 2, 2, 'Cours', 903, 'Cheseaux', 2, 1);
 INSERT INTO leçon VALUES(1, 2, 3, 5, 'Cours', 105, 'Cheseaux', 2, 1);
@@ -366,7 +343,7 @@ INSERT INTO leçon VALUES(13, 2, 3, 0, 'Cours', 704, 'Cheseaux', 2, 5);
 INSERT INTO leçon VALUES(14, 1, 2, 2, 'Cours', 704, 'Cheseaux', 2, 5);
 INSERT INTO leçon VALUES(15, 1, 2, 5, 'Cours', 223, 'Cheseaux', 2, 5);
 
--- Classe 2 (Delay Benoît)
+-- Classe 2
 -- Lundi
 INSERT INTO leçon VALUES(16, 5, 107, 0, 'Cours', 223, 'Cheseaux', 2, 1);
 INSERT INTO leçon VALUES(17, 1, 108, 2, 'Cours', 223, 'Cheseaux', 2, 1);
@@ -387,15 +364,13 @@ INSERT INTO leçon VALUES(25, 2, 109, 7, 'Cours', 1004, 'Cheseaux', 2, 3);
 INSERT INTO leçon VALUES(26, 5, 107, 2, 'Cours', 107, 'Cheseaux', 2, 4);
 INSERT INTO leçon VALUES(27, 2, 109, 5, 'Cours', 704, 'Cheseaux', 2, 4);
 INSERT INTO leçon VALUES(28, 0, 110, 7, 'Cours', 704, 'Cheseaux', 2, 4);
--- meme que (hugo ducommun) INSERT INTO leçon VALUES(29, 4, 5, 9, 'Cours', 323, 'Cheseaux', 2, 4);
 
 -- Vendredi
 INSERT INTO leçon VALUES(30, 1, 108, 0, 'Cours', 906, 'Cheseaux', 2, 5);
 INSERT INTO leçon VALUES(31, 1, 108, 2, 'Cours', 906, 'Cheseaux', 2, 5);
 
--- Classe 3 (Bouattit Nikola)
+-- Classe 3
 -- Lundi
--- meme que (Delay Benoit) INSERT INTO leçon VALUES(32, 5, 107, 0, 'Cours', 223, 'Cheseaux', 2, 1);
 INSERT INTO leçon VALUES(33, 2, 109, 2, 'Cours', 701, 'Cheseaux', 2, 1);
 INSERT INTO leçon VALUES(34, 5, 107, 5, 'Cours', 109, 'Cheseaux', 2, 1);
 INSERT INTO leçon VALUES(35, 1, 111, 7, 'Cours', 106, 'Cheseaux', 2, 1);
@@ -424,7 +399,6 @@ INSERT INTO leçon VALUES(164, 1, 111, 5, 'Cours', 323, 'Cheseaux', 2, 5);
 -- 3 Classes de 1ère année 2020 - S1
 -------------------------------------
 
--- Classe 1 (Louis Hadrien)
 -- Lundi
 INSERT INTO leçon VALUES(46, 42, 2, 1, 'Cours', 701, 'Cheseaux', 2, 1);
 INSERT INTO leçon VALUES(47, 44, 4, 3, 'Cours', 701, 'Cheseaux', 2, 1);
@@ -451,7 +425,6 @@ INSERT INTO leçon VALUES(59, 45, 113, 0, 'Cours', 223, 'Cheseaux', 2, 5);
 INSERT INTO leçon VALUES(60, 45, 113, 2, 'Cours', 205, 'Cheseaux', 2, 5);
 INSERT INTO leçon VALUES(61, 42, 2, 5, 'Cours', 223, 'Cheseaux', 2, 5);
 
--- Classe 2 (Tobie Praz)
 -- Lundi
 INSERT INTO leçon VALUES(62, 42, 111, 0, 'Cours', 901, 'Cheseaux', 2, 1);
 INSERT INTO leçon VALUES(63, 43, 6, 2, 'Cours', 901, 'Cheseaux', 2, 1);
@@ -459,7 +432,6 @@ INSERT INTO leçon VALUES(63, 43, 6, 2, 'Cours', 901, 'Cheseaux', 2, 1);
 -- Mardi
 INSERT INTO leçon VALUES(64, 42, 111, 0, 'Cours', 901, 'Cheseaux', 2, 2);
 INSERT INTO leçon VALUES(65, 43, 112, 2, 'Cours', 901, 'Cheseaux', 2, 2);
--- (voir cours 51) INSERT INTO leçon VALUES(66, 46, 107, 5, 'Cours', 601, 'Cheseaux', 2, 2);
 
 -- Mercredi
 INSERT INTO leçon VALUES(67, 46, 107, 0, 'Cours', 107, 'Cheseaux', 2, 3);
@@ -474,11 +446,10 @@ INSERT INTO leçon VALUES(73, 43, 6, 5, 'Cours', 337, 'Cheseaux', 2, 4);
 INSERT INTO leçon VALUES(74, 42, 111, 7, 'Cours', 337, 'Cheseaux', 2, 4);
 
 -- Vendredi
--- (voir cours 59) INSERT INTO leçon VALUES(75, 45, 113, 0, 'Cours', 223, 'Cheseaux', 2, 5);
 INSERT INTO leçon VALUES(76, 43, 6, 2, 'Cours', 801, 'Cheseaux', 2, 5);
 INSERT INTO leçon VALUES(77, 45, 113, 5, 'Cours', 205, 'Cheseaux', 2, 5);
 
--- Classe 3 (Olivier D'Ancona)
+-- Classe 3
 -- Lundi
 INSERT INTO leçon VALUES(78, 43, 109, 2, 'Cours', 906, 'Cheseaux', 2, 1);
 INSERT INTO leçon VALUES(79, 46, 114, 5, 'Cours', 109, 'Cheseaux', 2, 1);
@@ -509,7 +480,7 @@ INSERT INTO leçon VALUES(93, 42, 115, 2, 'Cours', 803, 'Cheseaux', 2, 5);
 -- 3 Classes de 1ère année 2020 - S2
 -------------------------------------
 
--- Classe 1 (Louis Hadrien)
+-- Classe 1
 
 -- Lundi
 INSERT INTO leçon VALUES(94, 20, 119, 0, 'Cours', 223, 'Cheseaux', 2, 1);
@@ -537,43 +508,27 @@ INSERT INTO leçon VALUES(107, 23, 6, 7, 'Cours', 801, 'Cheseaux', 2, 4);
 INSERT INTO leçon VALUES(108, 22, 115, 5, 'Cours', 601, 'Cheseaux', 2, 5);
 INSERT INTO leçon VALUES(109, 21, 116, 7, 'Cours', 801, 'Cheseaux', 2, 5);
 
--- Classe 2 (Tobie Praz)
--- (meme cours que hadrien)
-
-
--- Classe 3 (Olivier D'ancona)
+-- Classe 3
 -- Lundi
 INSERT INTO leçon VALUES(110, 23, 109, 0, 'Cours', 223, 'Cheseaux', 2, 1);
--- (ISI - meme cours que Hadrien)
--- (ASD - meme cours que hadrien)
-
--- Mardi
--- (PRG2 - meme cours que hadrien)
--- (ASD - meme cours que hadrien)
--- (ASD - meme cours que hadrien)
 
 -- Mercredi
 INSERT INTO leçon VALUES(111, 24, 117, 2, 'Cours', 341, 'Cheseaux', 2, 3);
 INSERT INTO leçon VALUES(112, 20, 114, 5, 'Cours', 323, 'Cheseaux', 2, 3);
--- (ISD - meme cours que hadrien)
 INSERT INTO leçon VALUES(113, 23, 109, 7, 'Cours', 701, 'Cheseaux', 2, 3);
 
 -- Jeudi
--- (PRG2 - meme cours que hadrien)
 INSERT INTO leçon VALUES(114, 25, 120, 4, 'Cours', 802, 'Cheseaux', 3, 4);
 INSERT INTO leçon VALUES(115, 23, 109, 7, 'Cours', 801, 'Cheseaux', 2, 4);
 
 -- Vendredi
 INSERT INTO leçon VALUES(116, 21, 116, 5, 'Cours', 601, 'Cheseaux', 2, 5);
 INSERT INTO leçon VALUES(117, 20, 114, 7, 'Cours', 801, 'Cheseaux', 2, 5);
--- (ASD - meme cours que hadrien)
-
 
 -------------------------------------
 -- 3 Classes de 1ère année 2021 - S1
 -------------------------------------
 
--- Hadrien Louis
 -- Lundi
 INSERT INTO leçon VALUES(118, 7, 121, 0, 'Cours', 701, 'Cheseaux', 2, 1);
 INSERT INTO leçon VALUES(119, 8, 110, 2, 'Cours', 901, 'Cheseaux', 2, 1);
@@ -600,14 +555,10 @@ INSERT INTO leçon VALUES(131, 12, 124, 7, 'Cours', 802, 'Cheseaux', 2, 4);
 INSERT INTO leçon VALUES(132, 8, 110, 1, 'Cours', 1004, 'Cheseaux', 2, 5);
 INSERT INTO leçon VALUES(133, 11, 123, 5, 'Cours', 801, 'Cheseaux', 2, 5);
 
--- Classe 2 (Tobie praz)
--- meme cours que Hadrien
-
--- Classe 3 (Olivier D'ancona)
+-- Classe 3
 -- Lundi
 INSERT INTO leçon VALUES(134, 7, 1, 0, 'Cours', 901, 'Cheseaux', 2, 1);
 INSERT INTO leçon VALUES(135, 8, 6, 2, 'Cours', 702, 'Cheseaux', 2, 1);
--- PCO (meme cours que hadrien) INSERT INTO leçon VALUES(136, 9, 122, 5, 'Cours', 323, 'Cheseaux', 2, 1);
 
 -- Mardi
 INSERT INTO leçon VALUES(136, 12, 122, 0, 'Cours', 1004, 'Cheseaux', 2, 2);
@@ -617,7 +568,6 @@ INSERT INTO leçon VALUES(140, 10, 2, 7, 'Cours', 337, 'Cheseaux', 2, 2);
 INSERT INTO leçon VALUES(141, 7, 2, 9, 'Cours', 105, 'Cheseaux', 2, 2);
 
 -- Mercredi
--- API ( meme cours que hadrien) INSERT INTO leçon VALUES(142, 6, 113, 0, 'Cours', 323, 'Cheseaux', 2, 3);
 INSERT INTO leçon VALUES(143, 10, 2, 2, 'Cours', 323, 'Cheseaux', 2, 3);
 INSERT INTO leçon VALUES(144, 8, 6, 5, 'Cours', 704, 'Cheseaux', 2, 3);
 
@@ -636,7 +586,6 @@ INSERT INTO leçon VALUES(149, 11, 126, 5, 'Cours', 701, 'Cheseaux', 2, 5);
 
 -- Classe 1
 
--- Leonard Besseau
 -- Lundi
 INSERT INTO leçon VALUES(150, 47, 127, 5, 'Cours', 705, 'Cheseaux', 3, 1);
 INSERT INTO leçon VALUES(151, 48, 128, 9, 'Cours', 901, 'Cheseaux', 2, 1);
@@ -663,7 +612,6 @@ INSERT INTO leçon VALUES(163, 47, 127, 7, 'Cours', 601, 'Cheseaux', 3, 5);
 
 -- Classe 2
 
--- Alec Berney
 -- Lundi
 INSERT INTO leçon VALUES(164, 47, 127, 1, 'Cours', 601, 'Cheseaux', 3, 1);
 INSERT INTO leçon VALUES(165, 55, 117, 5, 'Cours', 337, 'Cheseaux', 2, 1);
@@ -688,8 +636,6 @@ INSERT INTO leçon VALUES(175, 47, 127, 7, 'Cours', 601, 'Cheseaux', 3, 5);
 
 
 -- Etudiant
-
--- Elèves
 INSERT INTO personne VALUES (7, 'Kingsworth', '1991-10-28', false, 92);
 INSERT INTO personne VALUES (8, 'Hixson', '1995-01-30', true, 64);
 INSERT INTO personne VALUES (9, 'Baudrey', '1999-10-06', false, 81);
@@ -811,49 +757,6 @@ INSERT INTO prénom VALUES (63, 'Judas');
 INSERT INTO prénom VALUES (64, 'Haven');
 INSERT INTO prénom VALUES (65, 'Roosevelt');
 INSERT INTO prénom VALUES (66, 'Cello');
-
-/*
-INSERT INTO prénom VALUES (67, 'Keefer');
-INSERT INTO prénom VALUES (68, 'Sam');
-INSERT INTO prénom VALUES (69, 'Baron');
-INSERT INTO prénom VALUES (70, 'Thaddeus');
-INSERT INTO prénom VALUES (71, 'Basilio');
-INSERT INTO prénom VALUES (72, 'Consalve');
-INSERT INTO prénom VALUES (73, 'Jefferey');
-INSERT INTO prénom VALUES (74, 'Adrian');
-INSERT INTO prénom VALUES (75, 'Quintin');
-INSERT INTO prénom VALUES (76, 'Alwyn');
-INSERT INTO prénom VALUES (77, 'Morie');
-INSERT INTO prénom VALUES (78, 'Pierce');
-INSERT INTO prénom VALUES (79, 'Rodrick');
-INSERT INTO prénom VALUES (80, 'Aron');
-INSERT INTO prénom VALUES (81, 'Yancey');
-INSERT INTO prénom VALUES (82, 'Eamon');
-INSERT INTO prénom VALUES (83, 'Perry');
-INSERT INTO prénom VALUES (84, 'Morlee');
-INSERT INTO prénom VALUES (85, 'Keelby');
-INSERT INTO prénom VALUES (86, 'Benton');
-INSERT INTO prénom VALUES (87, 'Brig');
-INSERT INTO prénom VALUES (88, 'Adelbert');
-INSERT INTO prénom VALUES (89, 'Marc');
-INSERT INTO prénom VALUES (90, 'Gay');
-INSERT INTO prénom VALUES (91, 'Den');
-INSERT INTO prénom VALUES (92, 'Riordan');
-INSERT INTO prénom VALUES (93, 'Liam');
-INSERT INTO prénom VALUES (94, 'Lennie');
-INSERT INTO prénom VALUES (95, 'Donovan');
-INSERT INTO prénom VALUES (96, 'Gay');
-INSERT INTO prénom VALUES (97, 'Marvin');
-INSERT INTO prénom VALUES (98, 'Rick');
-INSERT INTO prénom VALUES (99, 'Winnie');
-INSERT INTO prénom VALUES (100, 'Lannie');
-INSERT INTO prénom VALUES (101, 'Silas');
-INSERT INTO prénom VALUES (102, 'Demetre');
-INSERT INTO prénom VALUES (103, 'Arty');
-INSERT INTO prénom VALUES (104, 'Brock');
-INSERT INTO prénom VALUES (105, 'Robinson');
-INSERT INTO prénom VALUES (106, 'Bernard');
- */
 
 INSERT INTO etudiant VALUES (7, 'En cours');
 INSERT INTO etudiant VALUES (8, 'En cours');
@@ -1436,7 +1339,7 @@ INSERT INTO etudiant_leçon VALUES (91, 42, 36);
 INSERT INTO etudiant_leçon VALUES (92, 42, 36);
 INSERT INTO etudiant_leçon VALUES (93, 42, 36);
 
--- - 1ere - 2020 / S2
+-- 1ere - 2020 / S2
 
 -- Classe 1
 INSERT INTO etudiant_leçon VALUES (94, 20, 22);
@@ -2123,93 +2026,6 @@ INSERT INTO test VALUES (286, 54, 'TP', 'TP 2');
 INSERT INTO test VALUES (287, 55, 'TP', 'TP 2');
 INSERT INTO test VALUES (288, 56, 'TP', 'TP 2');
 INSERT INTO test VALUES (289, 57, 'TP', 'TP 2');
-
-/*
-INSERT INTO personne VALUES (67, 'Benedetti', '1995-08-25', true, 79);
-INSERT INTO personne VALUES (68, 'Gravener', '1997-10-28', false, 94);
-INSERT INTO personne VALUES (69, 'Nancekivell', '1993-04-10', true, 26);
-INSERT INTO personne VALUES (70, 'Babb', '1992-02-21', false, 24);
-INSERT INTO personne VALUES (71, 'Pistol', '1990-07-26', true, 93);
-INSERT INTO personne VALUES (72, 'Teather', '1992-08-26', false, 43);
-INSERT INTO personne VALUES (73, 'Gouthier', '1999-08-17', false, 19);
-INSERT INTO personne VALUES (74, 'Ashburner', '1999-04-27', false, 48);
-INSERT INTO personne VALUES (75, 'Baudts', '1990-10-19', false, 17);
-INSERT INTO personne VALUES (76, 'Moresby', '1993-04-17', true, 56);
-INSERT INTO personne VALUES (77, 'Lyddiard', '1999-05-03', false, 95);
-INSERT INTO personne VALUES (78, 'Macy', '1998-06-06', true, 54);
-INSERT INTO personne VALUES (79, 'Ilewicz', '1997-02-06', true, 88);
-INSERT INTO personne VALUES (80, 'Gilchrist', '1999-04-01', false, 84);
-INSERT INTO personne VALUES (81, 'Hansill', '1991-01-01', false, 62);
-INSERT INTO personne VALUES (82, 'Bettridge', '1999-06-05', true, 17);
-INSERT INTO personne VALUES (83, 'Swindlehurst', '1999-03-28', false, 52);
-INSERT INTO personne VALUES (84, 'Alfonsetto', '1995-02-19', true, 82);
-INSERT INTO personne VALUES (85, 'Derdes', '1997-05-30', false, 99);
-INSERT INTO personne VALUES (86, 'Toppas', '1994-07-17', true, 61);
-INSERT INTO personne VALUES (87, 'Jemison', '1995-05-13', false, 38);
-INSERT INTO personne VALUES (88, 'Itzkovitch', '1994-10-06', false, 28);
-INSERT INTO personne VALUES (89, 'MacKimmie', '1999-02-27', false, 46);
-INSERT INTO personne VALUES (90, 'Wilmott', '1994-05-04', false, 73);
-INSERT INTO personne VALUES (91, 'Underdown', '1991-08-14', true, 83);
-INSERT INTO personne VALUES (92, 'Terrazzo', '1995-12-24', true, 63);
-INSERT INTO personne VALUES (93, 'Ripper', '1997-07-15', true, 51);
-INSERT INTO personne VALUES (94, 'Wedon', '1997-09-07', false, 56);
-INSERT INTO personne VALUES (95, 'Slograve', '1998-05-08', false, 82);
-INSERT INTO personne VALUES (96, 'Pendlenton', '1995-09-23', true, 84);
-INSERT INTO personne VALUES (97, 'Claypole', '1997-10-24', true, 42);
-INSERT INTO personne VALUES (98, 'Ehlerding', '1996-08-26', true, 84);
-INSERT INTO personne VALUES (99, 'Huortic', '1993-02-10', false, 82);
-INSERT INTO personne VALUES (100, 'Mallabon', '1992-09-09', true, 63);
-INSERT INTO personne VALUES (101, 'Bourdon', '1994-10-24', true, 73);
-INSERT INTO personne VALUES (102, 'Drewry', '1990-06-11', false, 30);
-INSERT INTO personne VALUES (103, 'Crockford', '1998-05-21', true, 56);
-INSERT INTO personne VALUES (104, 'Padden', '1995-07-07', true, 35);
-INSERT INTO personne VALUES (105, 'Layland', '1993-04-02', true, 71);
-INSERT INTO personne VALUES (106, 'Willshire', '1994-11-14', false, 86);
-*/
-
-
-/*
-INSERT INTO etudiant VALUES (67, 'En cours');
-INSERT INTO etudiant VALUES (68, 'En cours');
-INSERT INTO etudiant VALUES (69, 'En cours');
-INSERT INTO etudiant VALUES (70, 'En cours');
-INSERT INTO etudiant VALUES (71, 'En cours');
-INSERT INTO etudiant VALUES (72, 'En cours');
-INSERT INTO etudiant VALUES (73, 'En cours');
-INSERT INTO etudiant VALUES (74, 'En cours');
-INSERT INTO etudiant VALUES (75, 'En cours');
-INSERT INTO etudiant VALUES (76, 'En cours');
-INSERT INTO etudiant VALUES (77, 'En cours');
-INSERT INTO etudiant VALUES (78, 'En cours');
-INSERT INTO etudiant VALUES (79, 'En cours');
-INSERT INTO etudiant VALUES (80, 'En cours');
-INSERT INTO etudiant VALUES (81, 'En cours');
-INSERT INTO etudiant VALUES (82, 'En cours');
-INSERT INTO etudiant VALUES (83, 'En cours');
-INSERT INTO etudiant VALUES (84, 'En cours');
-INSERT INTO etudiant VALUES (85, 'En cours');
-INSERT INTO etudiant VALUES (86, 'En cours');
-INSERT INTO etudiant VALUES (87, 'En cours');
-INSERT INTO etudiant VALUES (88, 'En cours');
-INSERT INTO etudiant VALUES (89, 'En cours');
-INSERT INTO etudiant VALUES (90, 'En cours');
-INSERT INTO etudiant VALUES (91, 'En cours');
-INSERT INTO etudiant VALUES (92, 'En cours');
-INSERT INTO etudiant VALUES (93, 'En cours');
-INSERT INTO etudiant VALUES (94, 'En cours');
-INSERT INTO etudiant VALUES (95, 'En cours');
-INSERT INTO etudiant VALUES (96, 'En cours');
-INSERT INTO etudiant VALUES (97, 'En cours');
-INSERT INTO etudiant VALUES (98, 'En cours');
-INSERT INTO etudiant VALUES (99, 'En cours');
-INSERT INTO etudiant VALUES (100, 'En cours');
-INSERT INTO etudiant VALUES (101, 'En cours');
-INSERT INTO etudiant VALUES (102, 'En cours');
-INSERT INTO etudiant VALUES (103, 'En cours');
-INSERT INTO etudiant VALUES (104, 'En cours');
-INSERT INTO etudiant VALUES (105, 'En cours');
-INSERT INTO etudiant VALUES (106, 'En cours');
-*/
 
 -- Notes
 INSERT INTO etudiant_test VALUES (8, 1, 4.9);
