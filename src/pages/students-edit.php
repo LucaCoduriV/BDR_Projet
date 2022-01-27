@@ -160,7 +160,7 @@ if(isset($_POST['modifierEtudiant'])) {
                                     </select>
                                 </label>
                                 <label>Souhaite macaron
-                                    <input name="souhaiteMacaron" type="checkbox" class="" placeholder="" aria-controls="dataTable" <? $etudiant[0]['souhaitemacaron'] ? 'checked' : '' ?>>
+                                    <input name="souhaiteMacaron" type="checkbox" class="" placeholder="" aria-controls="dataTable" <?= $etudiant[0]['souhaitemacaron'] ? 'checked' : '' ?>>
                                 </label>
                                 <label>Distance domicile
                                     <input name="distanceDomicile" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="<?= $etudiant[0]['distancedomicilekm'] ?>">
