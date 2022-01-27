@@ -98,9 +98,8 @@ WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre;
 
 -- Notes
 -- Taux échec
-
 WITH moyennes AS (
-    SELECT (SUM(notes.note * notes.coefficient) / COUNT(*)) AS moyenne
+    SELECT (SUM(notes.note * notes.coefficient) / SUM(notes.coefficient)) AS moyenne
     FROM notes
     WHERE notes.idcours = :idcours
     GROUP BY notes.idetudiant
@@ -112,10 +111,34 @@ SELECT (
 ) / CAST((COUNT(*)) AS DECIMAL)
 FROM moyennes;
 
+WITH moyennes AS (
+    SELECT notes.idetudiant, (SUM(notes.note * notes.coefficient) / SUM(notes.coefficient)) AS moyenne
+    FROM notes
+    WHERE notes.idcours = :idcours
+    GROUP BY notes.idetudiant
+)
+SELECT élèves.idprofessseur, (échecs.nbEchecs / élèves.nbElèves) AS tauxEchec
+FROM (
+    SELECT leçon.idprofessseur, COUNT(DISTINCT (moyennes.idetudiant)) AS nbEchecs
+    FROM moyennes
+    INNER JOIN etudiant_leçon ON moyennes.idetudiant = etudiant_leçon.idetudiant
+    INNER JOIN leçon ON etudiant_leçon.noleçon = leçon.numéro and etudiant_leçon.idleçon = leçon.idcours
+    WHERE etudiant_leçon.idleçon = :idcours AND moyenne < 4.0
+    GROUP BY leçon.idprofessseur
+) AS échecs
+INNER JOIN (
+    SELECT leçon.idprofessseur, CAST((COUNT(DISTINCT (moyennes.idetudiant))) AS DECIMAL) AS nbElèves
+    FROM moyennes
+    INNER JOIN etudiant_leçon ON moyennes.idetudiant = etudiant_leçon.idetudiant
+    INNER JOIN leçon ON etudiant_leçon.noleçon = leçon.numéro and etudiant_leçon.idleçon = leçon.idcours
+    WHERE leçon.idcours = :idcours
+    GROUP BY leçon.idprofessseur
+) AS élèves ON échecs.idprofessseur = élèves.idprofessseur;
+
 -- Moyenne générale
 SELECT AVG(notes.moyenne)
 FROM (
-     SELECT notes.idetudiant, SUM(notes.note * notes.coefficient) / COUNT(*) AS moyenne
+     SELECT notes.idetudiant, (SUM(notes.note * notes.coefficient) / SUM(notes.coefficient)) AS moyenne
      FROM notes
      INNER JOIN cours ON notes.idcours = cours.id
      WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
