@@ -35,7 +35,7 @@ class Database
     function __construct()
     {
         $this->connexion = new PDO('pgsql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_NAME'), getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
-        $this->connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
+        //$this->connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
         $this->etudiant = new Etudiant($this->connexion);
         $this->statut = new Statut($this->connexion);
         $this->professeur = new Professeur($this->connexion);
@@ -50,6 +50,38 @@ class Database
         $this->horaire = new Horaire($this->connexion);
         $this->horaire = new Horaire($this->connexion);
     }
+
+    /** Faudra en faire une classe je pense */
+    function getTests()
+    {
+        $sql = <<<'SQL'
+        SELECT test.id, test.nom as nomTest, test.libellétypetest, cours.nom as nomcours FROM test
+        INNER JOIN cours on test.idCours = cours.id
+        ORDER BY nomcours;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->execute();
+
+
+        return $sth->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    function insertTest(int $idCours, string $libelletypetest, string $nom)
+    {
+        $sql = <<<'SQL'
+        INSERT INTO test (id, idcours, libellétypetest, nom)
+        VALUES (DEFAULT, :idcours, :libelletypetest, :nom);
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('idcours', $idCours, PDO::PARAM_INT);
+        $sth->bindParam('libelletypetest', $libelletypetest, PDO::PARAM_STR);
+        $sth->bindParam('nom', $nom, PDO::PARAM_STR);
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+    /** Fin */
 
     function getNotesEleve(int $idEtudiant): array
     {
@@ -81,20 +113,7 @@ class Database
         return $sth->errorInfo();
     }
 
-    function insertTest($idCours, $libelletypetest, $nom)
-    {
-        $sql = <<<'SQL'
-        INSERT INTO public.test (id, idcours, libellétypetest, nom)
-        VALUES (DEFAULT, :idcours, :libelleypetest, :nom);
-        SQL;
 
-        $sth = $this->connexion->prepare($sql);
-        $sth->bindParam('idcours', $idCours);
-        $sth->bindParam('libelletypetest', $libelletypetest);
-        $sth->bindParam('note', $nom);
-        $sth->execute();
-        return $sth->errorInfo();
-    }
 
     function getMoyenneCoursEtudiant(): array
     {
@@ -198,7 +217,6 @@ class Database
         $sth = $this->connexion->prepare($sql);
         return $sth->fetchAll();
     }
-
 }
 
 $db = new Database();

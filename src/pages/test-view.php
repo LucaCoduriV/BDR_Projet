@@ -2,19 +2,24 @@
 
 include_once("../db.php");
 
-if (isset($_POST['newSemestre'])) {
-
-    $error = $db->semestre->ajouterSemestre(
-        $_POST['annee'],
-        $_POST['numero'],
-        $_POST['semaineDebut'],
-        $_POST['semaineFin']
-    );
+function pPrint($value)
+{
+    echo "<pre>";
+    print_r($value);
+    echo "</pre>";
 }
 
-if (isset($_POST['supprimerSemestre'])) {
-    $error = $db->semestre->supprimerSemestre($_POST['annee'], $_POST['numero']);
+if (isset($_POST['nom']) && isset($_POST['idcours']) && isset($_POST['type'])) {
+    echo $_POST['nom'] . "<br/>";
+    echo $_POST['type'] . "<br/>";
+    echo $_POST['idcours'] . "<br/>";
+    $db->insertTest($_POST['idcours'], $_POST['type'], $_POST['nom']);
 }
+
+$tests = $db->getTests();
+$cours = $db->cours->getAllCours();
+$types = $db->typetest->getTypesTest();
+
 
 ?>
 
@@ -114,10 +119,26 @@ if (isset($_POST['supprimerSemestre'])) {
                                         <input name="nom" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
                                     </label>
                                     <label>Cours
-                                        <input name="idcours" type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                        <select name="idcours" class="form-control">
+                                            <?php
+                                            foreach ($cours as $cour) {
+                                            ?>
+                                                <option value="<?= $cour['id'] ?>"><?= $cour['annéesemestre'] . " - " . $cour['nosemestre'] . " - " . $cour['nom'] ?></option>
+                                            <?php
+                                            }
+                                            ?>
+                                        </select>
                                     </label>
                                     <label>Type
-                                        <input name="typetest" type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
+                                        <select name="type" class="form-control">
+                                            <?php
+                                            foreach ($types as $type) {
+                                            ?>
+                                                <option value="<?= $type['libellé'] ?>"><?= $type['libellé'] ?></option>
+                                            <?php
+                                            }
+                                            ?>
+                                        </select>
                                     </label>
                                     <label>
                                         <input type="submit" name="newSemestre" class="form-control btn btn-primary" value="Ajouter" />
@@ -138,12 +159,23 @@ if (isset($_POST['supprimerSemestre'])) {
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th>Id</th>
+                                            <th>Cours</th>
                                             <th>Nom</th>
                                             <th>Type</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        <?php
+                                        foreach ($tests as $test) { ?>
+                                            <tr>
+                                                <td><?= $test['id'] ?></td>
+                                                <td><?= $test['nomcours'] ?></td>
+                                                <td><?= $test['nomtest'] ?></td>
+                                                <td><?= $test['libellétypetest'] ?></td>
+                                            </tr>
+                                        <?php   }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
