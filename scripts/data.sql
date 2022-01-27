@@ -526,7 +526,7 @@ INSERT INTO leçon VALUES(116, 21, 116, 5, 'Cours', 601, 'Cheseaux', 2, 5);
 INSERT INTO leçon VALUES(117, 20, 114, 7, 'Cours', 801, 'Cheseaux', 2, 5);
 
 -------------------------------------
--- 3 Classes de 1ère année 2021 - S1
+-- 3 Classes de 2ème année 2021 - S1
 -------------------------------------
 
 -- Lundi
@@ -561,11 +561,11 @@ INSERT INTO leçon VALUES(134, 7, 1, 0, 'Cours', 901, 'Cheseaux', 2, 1);
 INSERT INTO leçon VALUES(135, 8, 6, 2, 'Cours', 702, 'Cheseaux', 2, 1);
 
 -- Mardi
-INSERT INTO leçon VALUES(136, 12, 122, 0, 'Cours', 1004, 'Cheseaux', 2, 2);
-INSERT INTO leçon VALUES(137, 11, 125, 2, 'Cours', 801, 'Cheseaux', 2, 2);
-INSERT INTO leçon VALUES(139, 10, 126, 5, 'Cours', 323, 'Cheseaux', 2, 2);
+INSERT INTO leçon VALUES(136, 12, 125, 0, 'Cours', 1004, 'Cheseaux', 2, 2);
+INSERT INTO leçon VALUES(137, 11, 126, 2, 'Cours', 801, 'Cheseaux', 2, 2);
+INSERT INTO leçon VALUES(139, 10, 2, 5, 'Cours', 323, 'Cheseaux', 2, 2);
 INSERT INTO leçon VALUES(140, 10, 2, 7, 'Cours', 337, 'Cheseaux', 2, 2);
-INSERT INTO leçon VALUES(141, 7, 2, 9, 'Cours', 105, 'Cheseaux', 2, 2);
+INSERT INTO leçon VALUES(141, 7, 1, 9, 'Cours', 105, 'Cheseaux', 2, 2);
 
 -- Mercredi
 INSERT INTO leçon VALUES(143, 10, 2, 2, 'Cours', 323, 'Cheseaux', 2, 3);

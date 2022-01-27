@@ -4,8 +4,8 @@
 Nom du fichier : buildings-db.php
 Auteur(s)      : Coduri Luca, Praz Tobie, Louis Hadrien
 Date creation  : 20.01.2022
-Description    : Ce fichier définit les methodes permettant de gérer les plages horaire
-                 dans la base de données
+Description    : Ce fichier définit les methodes permettant de gérer les horaires
+                 dans la base de données (etudiants / professeurs)
 Remarque(s)    : -
 -----------------------------------------------------------------------------------
 */
@@ -71,7 +71,7 @@ class Horaire
         $sth->bindParam('nosemestre', $noSemestre, PDO::PARAM_INT);
         $sth->bindParam('anneesemestre', $anneeSemestre, PDO::PARAM_INT);
         $sth->bindParam('idprofessseur', $idProfessseur, PDO::PARAM_INT);
-
+        $sth->execute();
 
         return $sth->fetchAll();
     }
@@ -88,7 +88,7 @@ class Horaire
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('nosemestre', $noSemestre, PDO::PARAM_INT);
         $sth->bindParam('anneesemestre', $anneeSemestre, PDO::PARAM_INT);
-
+        $sth->execute();
 
         return $sth->fetchAll();
     }

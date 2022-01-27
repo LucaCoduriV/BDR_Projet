@@ -4,7 +4,8 @@
 Nom du fichier : schedule-student.php
 Auteur(s)      : Coduri Luca, Praz Tobie, Louis Hadrien
 Date creation  : 20.01.2022
-Description    : Ce fichier définit la page permettant d'afficher les horaires d'un étudiant
+Description    : Ce fichier définit la page permettant d'afficher les horaires
+                 d'un étudiant ou d'un professeur
 Remarque(s)    : -
 -----------------------------------------------------------------------------------
 */
@@ -129,7 +130,7 @@ function pPrint($value)
                                     <label>
                                         Etudiant :
                                         <select name="idEtudiant" class="form-control" aria-label="Default select example">
-                                            <option selected>Choisissez un étudiant</option>
+                                            <option selected disabled>Choisissez un étudiant</option>
                                             <?php
                                             foreach ($db->etudiant->getEtudiants() as $etudiant) {
                                                 $selected = (isset($_POST['idEtudiant']) && $etudiant['idpersonne'] == $_POST['idEtudiant']) ? " selected" : "";
@@ -147,8 +148,50 @@ function pPrint($value)
                             </form>
                         </div>
                     </div>
-                    <?php if (isset($_POST['idEtudiant']) && isset($_POST['idSemestre'])) { ?>
 
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Afficher l'horaire d'un professeur</h6>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="">
+                                <div id="dataTable_filter" class="dataTables_filter">
+                                    <label>
+                                        Semestre :
+                                        <select name="idSemestre" class="form-control" aria-label="Default select example">
+                                            <?php
+                                            foreach ($semestres as $key => $semestre) {
+                                                $selected = $key == $_POST['idSemestre'] ? " selected" : "";
+                                                echo "<option" . $selected . " value='" . $key . "'>" . $semestre['numéro'] . " " . $semestre['année'] . "</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </label>
+
+                                    <label>
+                                        Professeur :
+                                        <select name="idProfesseur" class="form-control" aria-label="Default select example">
+                                            <option selected disabled>Choisissez un professeur</option>
+                                            <?php
+                                            foreach ($db->professeur->getProfesseurs() as $professeur) {
+                                                $selected = (isset($_POST['idProfesseur']) && $professeur['idpersonne'] == $_POST['idProfesseur']) ? " selected" : "";
+                                                echo "<option" . $selected . " value='" . $professeur['id'] . "'>" . mb_strtoupper($professeur['nom']) . " " . $professeur['prénom'] . "</option>";
+
+                                            }
+                                            ?>
+                                        </select>
+                                    </label>
+
+                                    <label>
+                                        <input type="submit" class="form-control btn btn-primary" value="Valider" />
+                                    </label>
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <?php if ((isset($_POST['idEtudiant']) || isset($_POST['idProfesseur'])) && isset($_POST['idSemestre'])) { ?>
 
                         <!-- DataTales Example -->
                         <div class="card shadow mb-4">
@@ -172,7 +215,12 @@ function pPrint($value)
 
                                             <?php
                                             $lignes = array_fill(0, 6, 0);
-                                            $horaires = $db->horaire->getHoraireEtudiant($semestres[$_POST['idSemestre']]['numéro'], $semestres[$_POST['idSemestre']]['année'], $_POST['idEtudiant']);
+
+                                            if(!empty($_POST['idEtudiant'])) {
+                                                $horaires = $db->horaire->getHoraireEtudiant($semestres[$_POST['idSemestre']]['numéro'], $semestres[$_POST['idSemestre']]['année'], $_POST['idEtudiant']);
+                                            } else if(isset($_POST['idProfesseur'])) {
+                                                $horaires = $db->horaire->getHoraireProf($semestres[$_POST['idSemestre']]['numéro'], $semestres[$_POST['idSemestre']]['année'], $_POST['idProfesseur']);
+                                            }
 
                                             //pPrint($horaires);
 
