@@ -18,6 +18,10 @@ function pPrint($value)
     echo "</pre>";
 }
 
+if (isset($_POST['supprimer'])) {
+    $error = $db->deleteNote($_POST['idEtudiant'], $_POST['idtest']);
+}
+
 if (isset($_POST['idtest']) && isset($_POST['note'])) {
     $error = $db->insertNote($_POST['idEtudiant'], $_POST['idtest'], $_POST['note']);
 }
@@ -207,6 +211,7 @@ if (isset($_POST['idEtudiant'])) {
                                                             <th>Moyenne de classe</th>
                                                             <th>coefficient</th>
                                                             <th>Note</th>
+                                                            <th>Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -221,7 +226,17 @@ if (isset($_POST['idEtudiant'])) {
                                                                 echo '<td>' . $moyenneClasseRounded . '</td>';
                                                                 echo '<td>' . $note['coefficient'] . '</td>';
                                                                 echo '<td>' . $note['note'] . '</td>';
+                                                        ?>
+                                                                <td>
+                                                                    <form action="" method="post">
+                                                                        <input type="hidden" name="idEtudiant" value="<?= $note['idetudiant'] ?>">
+                                                                        <input type="hidden" name="idtest" value="<?= $note['idtest'] ?>">
+                                                                        <input type="submit" name="supprimer" class="form-control btn btn-danger" value="Supprimer" />
+                                                                    </form>
+                                                                </td>
+                                                        <?php
                                                             }
+
                                                             echo "</tr>";
                                                         }
                                                         ?>

@@ -172,6 +172,20 @@ class Database
         return $sth->errorInfo();
     }
 
+    function deleteNote(int $idEtudiant, int $idTest)
+    {
+        $sql = <<<'SQL'
+        DELETE FROM etudiant_test 
+        WHERE etudiant_test.idtest = :idtest AND etudiant_test.idetudiant = :idetudiant;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
+        $sth->bindParam('idtest', $idTest, PDO::PARAM_INT);
+        $sth->bindParam('idetudiant', $idEtudiant, PDO::PARAM_INT);
+        $sth->execute();
+        return $sth->errorInfo();
+    }
+
     function getMoyenneCoursEtudiant(): array
     {
         $sql = <<<'SQL'
@@ -305,7 +319,8 @@ class Database
         return $sth->fetchAll()[0]["taux"];
     }
 
-    function getTauxEchec(int $idCours): float {
+    function getTauxEchec(int $idCours): float
+    {
         $sql = <<<'SQL'
         WITH moyennes AS (
             SELECT (SUM(notes.note * notes.coefficient) / SUM(notes.coefficient)) AS moyenne
@@ -350,7 +365,8 @@ class Database
         return $sth->fetchAll();
     }
 
-    function getTauxElevesParStatus(string $statut): float {
+    function getTauxElevesParStatus(string $statut): float
+    {
         $sql = <<<'SQL'
         SELECT (
             SELECT COUNT(*)
