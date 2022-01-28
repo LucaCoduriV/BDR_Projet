@@ -149,10 +149,10 @@ GROUP BY notes.idetudiant;
 
 -- Etudiants
 -- Taux terminé selon type
-SELECT (
+SELECT NULLIF(CAST((COUNT(*)) AS DECIMAL), 0) / (
     SELECT COUNT(*)
     FROM etudiant
     WHERE statut != 'En cours'
-) / NULLIF(CAST((COUNT(*)) AS DECIMAL), 0) AS "taux"
+) AS "taux"
 FROM etudiant
 WHERE statut = :statut;

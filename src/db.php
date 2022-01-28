@@ -251,11 +251,11 @@ class Database
     function getTauxElevesParStatus(string $statut)
     {
         $sql = <<<'SQL'
-        SELECT (
+        SELECT NULLIF(CAST((COUNT(*)) AS DECIMAL), 0) / (
             SELECT COUNT(*)
             FROM etudiant
             WHERE statut != 'En cours'
-        ) / NULLIF(CAST((COUNT(*)) AS DECIMAL), 0) AS "taux"
+        ) AS "taux"
         FROM etudiant
         WHERE statut = :statut;
         SQL;
