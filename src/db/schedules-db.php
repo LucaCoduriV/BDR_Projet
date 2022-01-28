@@ -19,21 +19,6 @@ class Horaire
     {
         $this->connexion = $connexion;
     }
-    
-    function getHoraire(): array
-    {
-        $sql = <<<'SQL'
-        SELECT leçon.*, début.heuredébut, fin.heurefin
-        FROM leçon
-        INNER JOIN plagehoraire as début on début.numéro = leçon.noplagehoraire
-        INNER JOIN plagehoraire as fin on fin.numéro = (leçon.noplagehoraire + leçon.nbrpériodes - 1);
-        SQL;
-
-        $sth = $this->connexion->prepare($sql);
-        $sth->execute();
-
-        return $sth->fetchAll();
-    }
 
     function getHoraireEtudiant($noSemestre, $anneeSemestre, $etudiantId): array
     {
@@ -76,20 +61,4 @@ class Horaire
         return $sth->fetchAll();
     }
 
-    function getHoraireCours(int $noSemestre, int $anneeSemestre): array
-    {
-        $sql = <<<'SQL'
-        SELECT * FROM cours
-        INNER JOIN horaire on cours.id = horaire.idcours
-        INNER JOIN professeur on horaire.idprofessseur = professeur.idpersonne
-        WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :anneesemestre;
-        SQL;
-
-        $sth = $this->connexion->prepare($sql);
-        $sth->bindParam('nosemestre', $noSemestre, PDO::PARAM_INT);
-        $sth->bindParam('anneesemestre', $anneeSemestre, PDO::PARAM_INT);
-        $sth->execute();
-
-        return $sth->fetchAll();
-    }
 }
