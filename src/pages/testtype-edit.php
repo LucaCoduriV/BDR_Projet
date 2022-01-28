@@ -16,7 +16,7 @@ if (!(isset($_GET['libelle']))) {
     header("Location: testtype-view.php");
 }
 
-$test = $db->getTest($_GET['libelle']);
+$test = $db->test->getTest($_GET['libelle']);
 echo $test;
 
 if (isset($_POST['modifierTypeTest'])) {

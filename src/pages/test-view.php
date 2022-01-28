@@ -19,19 +19,19 @@ function pPrint($value)
 }
 
 if (isset($_POST['supprimer'])) {
-    $error = $db->deleteTest($_POST['idtest']);
+    $error = $db->test->deleteTest($_POST['idtest']);
 }
 
 if (isset($_POST['nom']) && isset($_POST['idcours']) && isset($_POST['type'])) {
     echo $_POST['nom'] . "<br/>";
     echo $_POST['type'] . "<br/>";
     echo $_POST['idcours'] . "<br/>";
-    $db->insertTest($_POST['idcours'], $_POST['type'], $_POST['nom']);
+    $db->test->insertTest($_POST['idcours'], $_POST['type'], $_POST['nom']);
 }
 
 
 
-$tests = $db->getTests();
+$tests = $db->test->getTests();
 $cours = $db->cours->getAllCours();
 $types = $db->typetest->getTypesTest();
 
