@@ -89,7 +89,7 @@ SELECT (
         INNER JOIN cours ON etudiant_leçon.idleçon = cours.id
         --WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :anneesemestre
         GROUP BY etudiant_leçon.idetudiant, cours.annéeetude
-        HAVING COUNT(cours.annéeetude) = 2
+        HAVING COUNT(cours.annéeetude) != 1
     ) AS async
 ) / COUNT(DISTINCT etudiant_leçon.idetudiant) AS "taux"
 FROM etudiant_leçon
