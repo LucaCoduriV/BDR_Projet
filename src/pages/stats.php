@@ -130,10 +130,10 @@ $semestres = $db->semestre->getSemestres();
                                 ?>
                                 <div class="card">
                                     <div class="card-body">
-                                        <div>Nombres moyen de cours suivis par élèves: <?= round($db->getNombreMoyenCoursSuivi($noSemestre, $anneeSemestre),2) ?></div>
-                                        <div>Nombres moyen de leçon suivies par les élèves par semaine: <?= round($db->getNombreLeconMoyenPourEtudiants($noSemestre, $anneeSemestre), 2) ?></div>
-                                        <div>Nombres moyen de leçon données par les professeurs par semaine: <?= round($db->getNombreLeconMoyenPourProfesseurs($noSemestre, $anneeSemestre), 2) ?></div>
-                                        <div>Taux d'élèves asynchrones: <?= round($db->getTauxEleveAsync($noSemestre, $anneeSemestre) * 100, 2) ?>%</div>
+                                        <div>Nombres moyen de cours suivis par élèves: <?= round(floatval($db->getNombreMoyenCoursSuivi($noSemestre, $anneeSemestre)),2) ?></div>
+                                        <div>Nombres moyen de leçon suivies par les élèves par semaine: <?= round(floatval($db->getNombreLeconMoyenPourEtudiants($noSemestre, $anneeSemestre)), 2) ?></div>
+                                        <div>Nombres moyen de leçon données par les professeurs par semaine: <?= round(floatval($db->getNombreLeconMoyenPourProfesseurs($noSemestre, $anneeSemestre)), 2) ?></div>
+                                        <div>Taux d'élèves asynchrones: <?= round(floatval($db->getTauxEleveAsync($noSemestre, $anneeSemestre)) * 100, 2) ?>%</div>
                                     </div>
                                 </div>
                                 <?php
@@ -153,7 +153,14 @@ $semestres = $db->semestre->getSemestres();
                                     foreach ($db->statut->getAllStatut() as $key => $status) {
                                         if($status["libellé"] != "En cours") {
                                             ?>
-                                            <div>Taux "<?= $status["libellé"] ?>": <?= round($db->getTauxElevesParStatus($status["libellé"]) * 100, 2) ?>%</div>
+                                            <div>Taux "<?= $status["libellé"] ?>": <?php
+                                                $taux = $db->getTauxElevesParStatus($status["libellé"]);
+                                                if(!is_null($taux)) {
+                                                    echo round($taux * 100, 2) . "%";
+                                                } else {
+                                                    echo "N/A";
+                                                }
+                                                ?></div>
                                             <?php
                                         }
                                     }

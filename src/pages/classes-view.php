@@ -176,6 +176,7 @@ if(isset($_POST['supprimerCours'])) {
                                         <th>Nbr de semaine</th>
                                         <th>Année d'étude</th>
                                         <th>Semestre / Année</th>
+                                        <th>Taux échec</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -189,6 +190,14 @@ if(isset($_POST['supprimerCours'])) {
                                             <td><?= $class['duréesemaine']; ?></td>
                                             <td><?= $class['annéeetude']; ?></td>
                                             <td><?= $class['nosemestre'] . " / " . $class['annéesemestre'] ?></td>
+                                            <td><?php
+                                                $taux = $db->getTauxEchec($class['id']);
+                                                if(!is_null($taux)) {
+                                                    echo round($taux * 100, 2) . "%";
+                                                } else {
+                                                    echo "N/A";
+                                                }
+                                            ?></td>
                                             <td>
                                                 <form action="" method="post">
                                                     <input type="hidden" name="id" value="<?= $class['id'] ?>">
