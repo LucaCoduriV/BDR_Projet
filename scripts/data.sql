@@ -696,6 +696,16 @@ INSERT INTO personne VALUES (63, 'Manzell', '1995-05-27', true, 12);
 INSERT INTO personne VALUES (64, 'Johnes', '1992-07-12', true, 60);
 INSERT INTO personne VALUES (65, 'Spinelli', '1991-07-11', true, 44);
 INSERT INTO personne VALUES (66, 'Luther', '1997-07-19', false, 15);
+INSERT INTO personne VALUES (67, 'Doe', '1997-01-19', false, 0);
+INSERT INTO personne VALUES (68, 'Doe', '1997-02-19', false, 0);
+INSERT INTO personne VALUES (69, 'Doe', '1997-03-19', false, 0);
+INSERT INTO personne VALUES (70, 'Doe', '1997-04-19', false, 0);
+INSERT INTO personne VALUES (71, 'Doe', '1997-05-19', false, 0);
+INSERT INTO personne VALUES (72, 'Doe', '1997-06-19', false, 0);
+INSERT INTO personne VALUES (73, 'Doe', '1997-07-19', false, 0);
+INSERT INTO personne VALUES (74, 'Doe', '1997-08-19', false, 0);
+INSERT INTO personne VALUES (75, 'Doe', '1997-09-19', false, 0);
+INSERT INTO personne VALUES (76, 'Doe', '1997-10-19', false, 0);
 
 INSERT INTO prénom VALUES (7, 'Nathalie');
 INSERT INTO prénom VALUES (8, 'Ethel');
@@ -757,6 +767,16 @@ INSERT INTO prénom VALUES (63, 'Judas');
 INSERT INTO prénom VALUES (64, 'Haven');
 INSERT INTO prénom VALUES (65, 'Roosevelt');
 INSERT INTO prénom VALUES (66, 'Cello');
+INSERT INTO prénom VALUES (67, 'John');
+INSERT INTO prénom VALUES (68, 'Jack');
+INSERT INTO prénom VALUES (69, 'Jill');
+INSERT INTO prénom VALUES (70, 'Jean');
+INSERT INTO prénom VALUES (71, 'Joris');
+INSERT INTO prénom VALUES (72, 'Jarod');
+INSERT INTO prénom VALUES (73, 'Jacques');
+INSERT INTO prénom VALUES (74, 'Jules');
+INSERT INTO prénom VALUES (75, 'Justin');
+INSERT INTO prénom VALUES (76, 'Jonas');
 
 INSERT INTO etudiant VALUES (7, 'En cours');
 INSERT INTO etudiant VALUES (8, 'En cours');
@@ -818,6 +838,16 @@ INSERT INTO etudiant VALUES (63, 'En cours');
 INSERT INTO etudiant VALUES (64, 'En cours');
 INSERT INTO etudiant VALUES (65, 'En cours');
 INSERT INTO etudiant VALUES (66, 'En cours');
+INSERT INTO etudiant VALUES (67, 'Réussite');
+INSERT INTO etudiant VALUES (68, 'Echec');
+INSERT INTO etudiant VALUES (69, 'Abandon');
+INSERT INTO etudiant VALUES (70, 'Réussite');
+INSERT INTO etudiant VALUES (71, 'Echec');
+INSERT INTO etudiant VALUES (72, 'Abandon');
+INSERT INTO etudiant VALUES (73, 'Réussite');
+INSERT INTO etudiant VALUES (74, 'Echec');
+INSERT INTO etudiant VALUES (75, 'Abandon');
+INSERT INTO etudiant VALUES (76, 'Réussite');
 
 
 -- Lien leçons / étudiants
