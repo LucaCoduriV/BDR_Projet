@@ -24,6 +24,7 @@ include_once("db/rooms-db.php");
 include_once("db/buildings-db.php");
 include_once("db/testtypes-db.php");
 include_once("db/schedules-db.php");
+include_once("db/test-db.php");
 
 (new DotEnv(__DIR__ . '/.env'))->load();
 
@@ -42,11 +43,13 @@ class Database
     public Batiment $batiment;
     public TypeTest $typetest;
     public Horaire $horaire;
+    public Test $test;
+    public Note $note;
 
     function __construct()
     {
         $this->connexion = new PDO('pgsql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_NAME'), getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
-        //$this->connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
+        $this->connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
         $this->etudiant = new Etudiant($this->connexion);
         $this->statut = new Statut($this->connexion);
         $this->professeur = new Professeur($this->connexion);
@@ -61,129 +64,7 @@ class Database
         $this->horaire = new Horaire($this->connexion);
     }
 
-    /** Faudra en faire une classe je pense */
-    function getTests()
-    {
-        $sql = <<<'SQL'
-        SELECT test.id, test.nom as nomTest, test.libellétypetest, cours.nom as nomcours FROM test
-        INNER JOIN cours on test.idCours = cours.id
-        ORDER BY nomcours;
-        SQL;
 
-        $sth = $this->connexion->prepare($sql);
-        $sth->execute();
-
-
-        return $sth->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    function getTest(int $idTest)
-    {
-        $sql = <<<'SQL'
-        SELECT test.id, test.nom as nomTest, test.libellétypetest, test.idcours, cours.nom as nomcours FROM test
-        INNER JOIN cours on test.idCours = cours.id
-        WHERE test.id = :idtest
-        ORDER BY nomcours;
-        SQL;
-
-        $sth = $this->connexion->prepare($sql);
-        $sth->bindParam('idtest', $idTest, PDO::PARAM_INT);
-        $sth->execute();
-
-
-        return $sth->fetch(PDO::FETCH_ASSOC);
-    }
-
-    function insertTest(int $idCours, string $libelletypetest, string $nom)
-    {
-        $sql = <<<'SQL'
-        INSERT INTO test (id, idcours, libellétypetest, nom)
-        VALUES (DEFAULT, :idcours, :libelletypetest, :nom);
-        SQL;
-
-        $sth = $this->connexion->prepare($sql);
-        $sth->bindParam('idcours', $idCours, PDO::PARAM_INT);
-        $sth->bindParam('libelletypetest', $libelletypetest, PDO::PARAM_STR);
-        $sth->bindParam('nom', $nom, PDO::PARAM_STR);
-        $sth->execute();
-        return $sth->errorInfo();
-    }
-
-    function deleteTest(int $idTest)
-    {
-        $sql = <<<'SQL'
-        DELETE FROM test WHERE test.id = :idtest;
-        SQL;
-
-        $sth = $this->connexion->prepare($sql);
-        $sth->bindParam('idtest', $idTest, PDO::PARAM_INT);
-        $sth->execute();
-        return $sth->errorInfo();
-    }
-
-    function updateTest(int $id, int $idCours, string $nom, string $type)
-    {
-        $sql = <<<'SQL'
-        UPDATE test
-        SET idcours = :idcours, nom = :nom, libellétypetest = :type
-        WHERE id = :id;
-        SQL;
-
-        $sth = $this->connexion->prepare($sql);
-        $sth->bindParam('idcours', $idCours);
-        $sth->bindParam('nom', $nom);
-        $sth->bindParam('type', $type);
-        $sth->bindParam('id', $id);
-
-        $sth->execute();
-        return $sth->errorInfo();
-    }
-
-    /** Fin */
-
-    function getNotesEleve(int $idEtudiant): array
-    {
-        $sql = <<<'SQL'
-        SELECT * FROM notes
-        WHERE idetudiant = :idetudiant;
-        SQL;
-
-        $sth = $this->connexion->prepare($sql);
-        $sth->bindParam('idetudiant', $idEtudiant, PDO::PARAM_INT);
-        $sth->execute();
-
-
-        return $sth->fetchAll();
-    }
-
-    function insertNote($idEtudiant, $idTest, $note)
-    {
-        $sql = <<<'SQL'
-        INSERT INTO etudiant_test (idetudiant, idtest, note)
-        VALUES (:idetudiant, :idtest, :note);
-        SQL;
-
-        $sth = $this->connexion->prepare($sql);
-        $sth->bindParam('idetudiant', $idEtudiant);
-        $sth->bindParam('idtest', $idTest);
-        $sth->bindParam('note', $note);
-        $sth->execute();
-        return $sth->errorInfo();
-    }
-
-    function deleteNote(int $idEtudiant, int $idTest)
-    {
-        $sql = <<<'SQL'
-        DELETE FROM etudiant_test 
-        WHERE etudiant_test.idtest = :idtest AND etudiant_test.idetudiant = :idetudiant;
-        SQL;
-
-        $sth = $this->connexion->prepare($sql);
-        $sth->bindParam('idtest', $idTest, PDO::PARAM_INT);
-        $sth->bindParam('idetudiant', $idEtudiant, PDO::PARAM_INT);
-        $sth->execute();
-        return $sth->errorInfo();
-    }
 
     function getMoyenneCoursEtudiant(): array
     {

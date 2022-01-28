@@ -16,13 +16,13 @@ if (!(isset($_GET['idtest']))) {
     header("Location: testtype-view.php");
 }
 
-$test = $db->getTest($_GET['idtest']);
+$test = $db->test->getTest($_GET['idtest']);
 $types = $db->typetest->getTypesTest();
 $cours = $db->cours->getAllCours();
 
 
 if (isset($_POST['modifierTest'])) {
-    $error = $db->updateTest(
+    $error = $db->test->updateTest(
         $_POST['idtest'],
         $_POST['idcours'],
         $_POST['nomtest'],
