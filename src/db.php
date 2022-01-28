@@ -67,8 +67,6 @@ class Database
         $this->test = new Test($this->connexion);
     }
 
-
-
     function getMoyenneCoursEtudiant(): array
     {
         $sql = <<<'SQL'
@@ -281,6 +279,43 @@ class Database
 
         $sth = $this->connexion->prepare($sql);
         $sth->bindParam('idetudiant', $idEtudiant);
+
+        $sth->execute();
+        return $sth->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    function generateMacaronList()
+    {
+        $sql = <<<'SQL'
+        WITH places AS (
+            SELECT CAST(SUM(bâtiment.nbrplacesparking) AS float) / CAST(2 AS float) AS nb
+            FROM bâtiment
+        )
+
+        SELECT *
+        FROM (
+            SELECT personne.id, personne.nom, prénom.prénom
+            FROM professeur
+            INNER JOIN personne on professeur.idpersonne = personne.id
+            INNER JOIN prénom on personne.id = prénom.idpersonne
+            WHERE personne.souhaitemacaron
+            ORDER BY personne.distancedomicilekm DESC
+            LIMIT (SELECT places.nb / 100 * 40 FROM places)
+        ) AS placesProfs
+        UNION
+        SELECT *
+        FROM (
+            SELECT personne.id, personne.nom, prénom.prénom
+            FROM etudiant
+            INNER JOIN personne on etudiant.idpersonne = personne.id
+            INNER JOIN prénom on personne.id = prénom.idpersonne
+            WHERE personne.souhaitemacaron AND personne.distancedomicilekm > 20
+            ORDER BY personne.distancedomicilekm DESC
+            LIMIT (SELECT places.nb / 100 * 60 FROM places)
+        ) AS placesEtudiants;
+        SQL;
+
+        $sth = $this->connexion->prepare($sql);
 
         $sth->execute();
         return $sth->fetchAll(PDO::FETCH_ASSOC);

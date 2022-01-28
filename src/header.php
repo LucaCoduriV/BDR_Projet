@@ -47,6 +47,12 @@ Remarque(s)    : -
             <span>Notes</span></a>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link" href="/pages/parking-view.php">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>Macarons</span></a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider">
 

@@ -1,77 +1,77 @@
 -- Professeur
-INSERT INTO personne VALUES (1, 'Dumoulin', '1973-3-17', false, 23);
+INSERT INTO personne VALUES (1, 'Dumoulin', '1973-3-17', true, 23);
 INSERT INTO prénom VALUES (1, 'Vivienne');
 INSERT INTO professeur VALUES (1, 'VDN');
 
-INSERT INTO personne VALUES(2, 'Parent', '1987-10-5', false, 45);
+INSERT INTO personne VALUES(2, 'Parent', '1987-10-5', true, 45);
 INSERT INTO prénom VALUES (2, 'Pierre');
 INSERT INTO professeur VALUES (2, 'PPT');
 
-INSERT INTO personne VALUES(3, 'Charest', '1992-5-21', false, 12);
+INSERT INTO personne VALUES(3, 'Charest', '1992-5-21', true, 12);
 INSERT INTO prénom VALUES (3, 'Antoine');
 INSERT INTO professeur VALUES (3, 'ACT');
 
-INSERT INTO personne VALUES(4, 'Lamour', '1971-1-30', false, 62);
+INSERT INTO personne VALUES(4, 'Lamour', '1971-1-30', true, 62);
 INSERT INTO prénom VALUES (4, 'Yves');
 INSERT INTO professeur VALUES (4, 'YLR');
 
-INSERT INTO personne VALUES(5, 'Doucet', '1989-7-3', false, 32);
+INSERT INTO personne VALUES(5, 'Doucet', '1989-7-3', true, 32);
 INSERT INTO prénom VALUES (5, 'Grégoire');
 INSERT INTO professeur VALUES (5, 'GDT');
 
-INSERT INTO personne VALUES(6, 'Crête', '1971-5-25', false, 45);
+INSERT INTO personne VALUES(6, 'Crête', '1971-5-25', true, 45);
 INSERT INTO prénom VALUES (6, 'Rémy');
 INSERT INTO professeur VALUES (6, 'RCE');
 
-INSERT INTO personne VALUES(107, 'Lefèbvre', '1985-12-12', false, 32);
+INSERT INTO personne VALUES(107, 'Lefèbvre', '1985-12-12', true, 32);
 INSERT INTO prénom VALUES (107, 'Antoine');
 INSERT INTO professeur VALUES (107, 'ALE');
 
-INSERT INTO personne VALUES(108, 'Somer', '1973-1-31', false, 10);
+INSERT INTO personne VALUES(108, 'Somer', '1973-1-31', true, 10);
 INSERT INTO prénom VALUES (108, 'René');
 INSERT INTO professeur VALUES (108, 'RSR');
 
-INSERT INTO personne VALUES(109, 'Dupuis', '1977-11-23', false, 39);
+INSERT INTO personne VALUES(109, 'Dupuis', '1977-11-23', true, 39);
 INSERT INTO prénom VALUES (109, 'Thomas');
 INSERT INTO professeur VALUES (109, 'TDS');
 
-INSERT INTO personne VALUES(110, 'Berthiaume', '1981-02-14', false, 52);
+INSERT INTO personne VALUES(110, 'Berthiaume', '1981-02-14', true, 52);
 INSERT INTO prénom VALUES (110, 'Jacques');
 INSERT INTO professeur VALUES (110, 'JBE');
 
-INSERT INTO personne VALUES(111, 'Fortier', '1977-05-7', false, 20);
+INSERT INTO personne VALUES(111, 'Fortier', '1977-05-7', true, 20);
 INSERT INTO prénom VALUES (111, 'Michel');
 INSERT INTO professeur VALUES (111, 'MFR');
 
-INSERT INTO personne VALUES(112, 'Chandonnet', '1987-07-16', false, 42);
+INSERT INTO personne VALUES(112, 'Chandonnet', '1987-07-16', true, 42);
 INSERT INTO prénom VALUES (112, 'Emile');
 INSERT INTO professeur VALUES (112, 'ECT');
 
-INSERT INTO personne VALUES(113, 'Montminy', '1969-08-26', false, 15);
+INSERT INTO personne VALUES(113, 'Montminy', '1969-08-26', true, 15);
 INSERT INTO prénom VALUES (113, 'Eliot');
 INSERT INTO professeur VALUES (113, 'EMY');
 
-INSERT INTO personne VALUES(114, 'Rocher', '1971-09-12', false, 53);
+INSERT INTO personne VALUES(114, 'Rocher', '1971-09-12', true, 53);
 INSERT INTO prénom VALUES (114, 'Roger');
 INSERT INTO professeur VALUES (114, 'RRR');
 
-INSERT INTO personne VALUES(115, 'Hamilton', '1968-05-05', false, 42);
+INSERT INTO personne VALUES(115, 'Hamilton', '1968-05-05', true, 42);
 INSERT INTO prénom VALUES (115, 'David');
 INSERT INTO professeur VALUES (115, 'DHN');
 
-INSERT INTO personne VALUES(116, 'Daigneault', '1980-04-13', false, 28);
+INSERT INTO personne VALUES(116, 'Daigneault', '1980-04-13', true, 28);
 INSERT INTO prénom VALUES (116, 'Gabriel');
 INSERT INTO professeur VALUES (116, 'GDL');
 
-INSERT INTO personne VALUES(117, 'Raymond', '1959-03-27', false, 27);
+INSERT INTO personne VALUES(117, 'Raymond', '1959-03-27', true, 27);
 INSERT INTO prénom VALUES (117, 'Henri');
 INSERT INTO professeur VALUES (117, 'HRD');
 
-INSERT INTO personne VALUES(118, 'Trudeau', '1970-12-13', false, 21);
+INSERT INTO personne VALUES(118, 'Trudeau', '1970-12-13', true, 21);
 INSERT INTO prénom VALUES (118, 'Christiane');
 INSERT INTO professeur VALUES (118, 'CTU');
 
-INSERT INTO personne VALUES(119, 'Cloutier', '1972-08-08', false, 35);
+INSERT INTO personne VALUES(119, 'Cloutier', '1972-08-08', true, 35);
 INSERT INTO prénom VALUES (119, 'Didier');
 INSERT INTO professeur VALUES (119, 'DCR');
 
