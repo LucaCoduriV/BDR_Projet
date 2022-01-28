@@ -89,7 +89,7 @@ SELECT (
         INNER JOIN cours ON etudiant_leçon.idleçon = cours.id
         --WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :anneesemestre
         GROUP BY etudiant_leçon.idetudiant, cours.annéeetude
-        HAVING COUNT(cours.annéeetude) != 1
+        HAVING COUNT(cours.annéeetude) = 2 
     ) AS async
 ) / COUNT(DISTINCT etudiant_leçon.idetudiant) AS "taux"
 FROM etudiant_leçon
@@ -156,3 +156,29 @@ SELECT NULLIF(CAST((COUNT(*)) AS DECIMAL), 0) / (
 ) AS "taux"
 FROM etudiant
 WHERE statut = :statut;
+
+
+-- Macarons
+WITH places AS (
+    SELECT SUM(bâtiment.nbrplacesparking) / 2 AS nb
+    FROM bâtiment
+)
+SELECT *
+FROM (
+    SELECT idpersonne
+    FROM professeur
+    INNER JOIN personne on professeur.idpersonne = personne.id
+    WHERE personne.souhaitemacaron
+    ORDER BY random()
+    LIMIT (SELECT places.nb / 100 * 40 FROM places)
+) AS placesProfs
+UNION
+SELECT *
+FROM (
+    SELECT idpersonne
+    FROM etudiant
+    INNER JOIN personne on etudiant.idpersonne = personne.id
+    WHERE personne.souhaitemacaron AND personne.distancedomicilekm > 20
+    ORDER BY random()
+    LIMIT (SELECT places.nb / 100 * 60 FROM places)
+) AS placesEtudiants

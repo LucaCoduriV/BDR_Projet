@@ -186,7 +186,7 @@ class Database
                 INNER JOIN cours ON etudiant_leçon.idleçon = cours.id
                 --WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :annéesemestre
                 GROUP BY etudiant_leçon.idetudiant, cours.annéeetude
-                HAVING COUNT(cours.annéeetude) != 1
+                HAVING COUNT(cours.annéeetude) = 2
             ) AS async
         ) / NULLIF(COUNT(DISTINCT etudiant_leçon.idetudiant), 0) AS "taux"
         FROM etudiant_leçon
