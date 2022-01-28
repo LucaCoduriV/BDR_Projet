@@ -102,7 +102,7 @@ Remarque(s)    : -
                             <p class="mb-0">Ce site web est décomposé en deux parties. Une partie gestion
                             et une partie permettant d'afficher diverses statistiques en relation avec les données</p>
 
-                            <p class="mb-0">Utilisez le menu à droite pour commencer la gestion. </p>
+                            <p class="mb-0">Utilisez le menu à gauche pour commencer la gestion. </p>
                         </div>
                     </div>
 

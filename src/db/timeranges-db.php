@@ -24,7 +24,8 @@ class PlageHoraire
     {
         $sql = <<<'SQL'
         SELECT *
-        FROM plagehoraire;
+        FROM plagehoraire 
+        ORDER BY numéro ASC;
         SQL;
 
         $sth = $this->connexion->prepare($sql);
