@@ -133,7 +133,8 @@ CREATE TABLE Cours(
     noSemestre SMALLINT NOT NULL,
     annéeSemestre SMALLINT NOT NULL,
     CONSTRAINT PK_Cours PRIMARY KEY(id),
-    CONSTRAINT UC_Cours UNIQUE (nom, semaineDébut, noSemestre, annéeSemestre)
+    CONSTRAINT UC_Cours UNIQUE (nom, semaineDébut, noSemestre, annéeSemestre),
+    CONSTRAINT CK_Cours_annéeEtude CHECK(annéeEtude BETWEEN 1 AND 3)
 );
 
 DROP TABLE IF EXISTS Semestre CASCADE;
@@ -143,9 +144,7 @@ CREATE TABLE Semestre(
     semaineDébut SMALLINT NOT NULL,
     semaineFin SMALLINT NOT NULL,
     CONSTRAINT PK_Semestre PRIMARY KEY(année, numéro),
-    --CONSTRAINT CK_Semestre_semaineFin CHECK (semaineFin > semaineDébut),
     CONSTRAINT CK_Semestre_no CHECK (numéro = 1 OR numéro = 2)
-    --CONSTRAINT CK_Semestre_année CHECK (année >= date_part('year', CURRENT_DATE))
 );
 
 -- CONSTRAINT

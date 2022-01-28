@@ -116,23 +116,27 @@ $BODY$
     DECLARE plagehoraire leçon.noplagehoraire%type;
     DECLARE duree leçon.nbrpériodes%type;
     DECLARE jour leçon.joursemaine%type;
+    DECLARE annee cours.annéesemestre%type;
+    DECLARE no cours.nosemestre%type;
 
 BEGIN
-    SELECT noplagehoraire, nbrpériodes, joursemaine
+    SELECT noplagehoraire, nbrpériodes - 1, joursemaine, cours.annéesemestre, cours.nosemestre
     FROM leçon
+    INNER JOIN cours on leçon.idcours = cours.id
     WHERE numéro = NEW.noleçon AND idcours = NEW.idleçon
-    INTO plagehoraire, duree, jour;
+    INTO plagehoraire, duree, jour, annee, no;
 
     IF (EXISTS(
         SELECT leçon.nbrpériodes
         FROM leçon
         INNER JOIN etudiant_leçon ON leçon.numéro = etudiant_leçon.noleçon AND leçon.idcours = etudiant_leçon.idleçon
-        WHERE etudiant_leçon.idetudiant = NEW.idetudiant AND leçon.joursemaine = jour
+        INNER JOIN cours on leçon.idcours = cours.id
+        WHERE etudiant_leçon.idetudiant = NEW.idetudiant AND leçon.joursemaine = jour AND cours.annéesemestre = annee AND cours.nosemestre = no
             AND (
-                leçon.noplagehoraire BETWEEN plagehoraire AND plagehoraire + duree
-                OR leçon.noplagehoraire + leçon.nbrpériodes BETWEEN plagehoraire AND plagehoraire + duree
-                OR plagehoraire BETWEEN leçon.noplagehoraire AND leçon.noplagehoraire + leçon.nbrpériodes
-                OR plagehoraire + duree BETWEEN leçon.noplagehoraire AND leçon.noplagehoraire + leçon.nbrpériodes
+                (leçon.noplagehoraire BETWEEN plagehoraire AND plagehoraire + duree)
+                OR (leçon.noplagehoraire + leçon.nbrpériodes - 1 BETWEEN plagehoraire AND plagehoraire + duree)
+                OR (plagehoraire BETWEEN leçon.noplagehoraire AND leçon.noplagehoraire + leçon.nbrpériodes - 1)
+                OR (plagehoraire + duree BETWEEN leçon.noplagehoraire AND leçon.noplagehoraire + leçon.nbrpériodes - 1)
             )
         )
     ) THEN
@@ -157,22 +161,26 @@ $BODY$
     DECLARE plagehoraire leçon.noplagehoraire%type;
     DECLARE duree leçon.nbrpériodes%type;
     DECLARE jour leçon.joursemaine%type;
+    DECLARE annee cours.annéesemestre%type;
+    DECLARE no cours.nosemestre%type;
 
 BEGIN
-    SELECT noplagehoraire, nbrpériodes, joursemaine
+    SELECT noplagehoraire, nbrpériodes - 1, joursemaine, cours.annéesemestre, cours.nosemestre
     FROM leçon
-    WHERE numéro = NEW.numéro AND idcours = NEW.idcours
-    INTO plagehoraire, duree, jour;
+    INNER JOIN cours on leçon.idcours = cours.id
+    WHERE numéro = NEW.noleçon AND idcours = NEW.idleçon
+    INTO plagehoraire, duree, jour, annee, no;
 
     IF (EXISTS(
             SELECT leçon.nbrpériodes
             FROM leçon
-            WHERE leçon.idprofessseur = NEW.idprofessseur AND leçon.joursemaine = jour
+            INNER JOIN cours on leçon.idcours = cours.id
+            WHERE leçon.idprofessseur = NEW.idprofessseur AND leçon.joursemaine = jour AND cours.annéesemestre = annee AND cours.nosemestre = no
               AND (
                     leçon.noplagehoraire BETWEEN plagehoraire AND plagehoraire + duree
-                    OR leçon.noplagehoraire + leçon.nbrpériodes BETWEEN plagehoraire AND plagehoraire + duree
-                    OR plagehoraire BETWEEN leçon.noplagehoraire AND leçon.noplagehoraire + leçon.nbrpériodes
-                    OR plagehoraire + duree BETWEEN leçon.noplagehoraire AND leçon.noplagehoraire + leçon.nbrpériodes
+                    OR leçon.noplagehoraire + leçon.nbrpériodes - 1 BETWEEN plagehoraire AND plagehoraire + duree
+                    OR plagehoraire BETWEEN leçon.noplagehoraire AND leçon.noplagehoraire + leçon.nbrpériodes - 1
+                    OR plagehoraire + duree BETWEEN leçon.noplagehoraire AND leçon.noplagehoraire + leçon.nbrpériodes - 1
                 )
         )
     ) THEN
