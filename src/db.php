@@ -59,7 +59,6 @@ class Database
         $this->batiment = new Batiment($this->connexion);
         $this->typetest = new TypeTest($this->connexion);
         $this->horaire = new Horaire($this->connexion);
-        $this->horaire = new Horaire($this->connexion);
     }
 
     /** Faudra en faire une classe je pense */
@@ -254,7 +253,7 @@ class Database
         $sql = <<<'SQL'
         SELECT AVG(nbLeçons.nb) AS moyenne
         FROM (
-            SELECT COUNT(*) nb
+            SELECT COUNT(*) AS nb
             FROM leçon
             INNER JOIN cours ON leçon.idcours = cours.id
             INNER JOIN etudiant_leçon ON leçon.numéro = etudiant_leçon.noleçon AND leçon.idcours = etudiant_leçon.idleçon
@@ -276,7 +275,7 @@ class Database
         $sql = <<<'SQL'
         SELECT AVG(nbLeçons.nb) AS moyenne
         FROM (
-            SELECT COUNT(*) nb
+            SELECT COUNT(*) AS nb
             FROM leçon
             INNER JOIN cours ON leçon.idcours = cours.id
             WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :anneesemestre
@@ -372,7 +371,7 @@ class Database
             SELECT COUNT(*)
             FROM etudiant
             WHERE statut != 'En cours'
-        ) / CAST((COUNT(*)) AS DECIMAL) AS "taux"
+        ) / NULLIF(CAST((COUNT(*)) AS DECIMAL), 0) AS "taux"
         FROM etudiant
         WHERE statut = :statut;
         SQL;
@@ -381,7 +380,7 @@ class Database
         $sth->bindParam('statut', $statut, PDO::PARAM_INT);
         $sth->execute();
 
-        return $sth->fetchAll()[0]["taux"];
+        return $sth->fetchAll()[0]["taux"] || 0;
     }
 
     function getAllTestsEtudiantCanHave($idEtudiant)

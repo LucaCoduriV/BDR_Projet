@@ -62,7 +62,7 @@ WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :anneesemestre;
 -- Nombre moyen de leçon par professeur
 SELECT AVG(nbLeçons.nb) AS moyenne
 FROM (
-    SELECT COUNT(*) nb
+    SELECT COUNT(*) AS nb
     FROM leçon
     INNER JOIN cours ON leçon.idcours = cours.id
     INNER JOIN etudiant_leçon ON leçon.numéro = etudiant_leçon.noleçon AND leçon.idcours = etudiant_leçon.idleçon
@@ -73,7 +73,7 @@ FROM (
 -- Nombre moyen de leçon par professeur
 SELECT AVG(nbLeçons.nb) AS moyenne
 FROM (
-    SELECT COUNT(*) nb
+    SELECT COUNT(*) AS nb
     FROM leçon
     INNER JOIN cours ON leçon.idcours = cours.id
     WHERE cours.nosemestre = :nosemestre AND cours.annéesemestre = :anneesemestre
@@ -153,6 +153,6 @@ SELECT (
     SELECT COUNT(*)
     FROM etudiant
     WHERE statut != 'En cours'
-) / CAST((COUNT(*)) AS DECIMAL) AS "taux"
+) / NULLIF(CAST((COUNT(*)) AS DECIMAL), 0) AS "taux"
 FROM etudiant
 WHERE statut = :statut;
