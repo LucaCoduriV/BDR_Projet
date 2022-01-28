@@ -25,6 +25,7 @@ include_once("db/buildings-db.php");
 include_once("db/testtypes-db.php");
 include_once("db/schedules-db.php");
 include_once("db/test-db.php");
+include_once("db/note-db.php");
 
 (new DotEnv(__DIR__ . '/.env'))->load();
 
@@ -62,6 +63,8 @@ class Database
         $this->batiment = new Batiment($this->connexion);
         $this->typetest = new TypeTest($this->connexion);
         $this->horaire = new Horaire($this->connexion);
+        $this->note = new Note($this->connexion);
+        $this->test = new Test($this->connexion);
     }
 
 
