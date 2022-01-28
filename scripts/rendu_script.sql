@@ -403,7 +403,7 @@ BEGIN
     SELECT noplagehoraire, nbrpériodes - 1, joursemaine, cours.annéesemestre, cours.nosemestre
     FROM leçon
     INNER JOIN cours on leçon.idcours = cours.id
-    WHERE numéro = NEW.noleçon AND idcours = NEW.idleçon
+    WHERE numéro = NEW.numéro AND idcours = NEW.idcours
     INTO plagehoraire, duree, jour, annee, no;
 
     IF (EXISTS(
