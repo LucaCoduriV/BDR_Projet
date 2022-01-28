@@ -64,3 +64,41 @@ CREATE OR REPLACE TRIGGER before_insert_or_update_professeur
 BEFORE INSERT OR UPDATE ON professeur
 FOR EACH ROW
 EXECUTE FUNCTION check_professeur_not_etudiant();
+
+-- Check si plages horaires se chevauchent.
+
+CREATE OR REPLACE FUNCTION check_plagehoraire_chevauchent()
+    RETURNS TRIGGER LANGUAGE plpgsql AS
+$BODY$
+BEGIN
+    IF NOT EXISTS(SELECT * FROM plagehoraire WHERE (NEW.heuredébut > plagehoraire.heuredébut AND NEW.heuredébut < plagehoraire.heurefin) OR (NEW.heurefin > plagehoraire.heuredébut AND NEW.heurefin < plagehoraire.heurefin)) THEN
+        RETURN NEW;
+    ELSE
+        RAISE EXCEPTION 'Il n''est pas possible d''avoir une plage horaire aux heures spécifiées';
+    END IF;
+END;
+$BODY$;
+
+CREATE OR REPLACE TRIGGER before_insert_or_update_plagehoraire
+BEFORE INSERT OR UPDATE ON plagehoraire
+FOR EACH ROW
+EXECUTE FUNCTION check_plagehoraire_chevauchent();
+
+-- Une leçon ne peut pas durer plus longtemps qu’il n’y a de périodes dans la journée
+
+CREATE OR REPLACE FUNCTION check_duree_lecon()
+    RETURNS TRIGGER LANGUAGE plpgsql AS
+$BODY$
+BEGIN
+    IF (NEW.noplagehoraire + NEW.nbrpériodes - 1) <= (SELECT MAX(plagehoraire.numéro) FROM plagehoraire) THEN
+        RETURN NEW;
+    ELSE
+        RAISE EXCEPTION 'La durée de la leçon est trop longue.';
+    END IF;
+END;
+$BODY$;
+
+CREATE OR REPLACE TRIGGER before_insert_or_update_leçon
+BEFORE INSERT OR UPDATE ON leçon
+FOR EACH ROW
+EXECUTE FUNCTION check_duree_lecon();
